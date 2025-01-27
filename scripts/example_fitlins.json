@@ -1,0 +1,35 @@
+{
+  "Name": "Flanker",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {"subject": ["01", "02", "03"], "task": ["flanker"]},
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": ["run", "subject"],
+      "Model": {"X": [1, "incongruent_correct","incongruent_incorrect", "congruent_correct", "congruent_incorrect"], "Type": "glm"},
+      "Contrasts": [
+        {
+          "Name": "incong_vs_congruent",
+          "ConditionList": ["incongruent_correct","incongruent_incorrect", "congruent_correct", "congruent_incorrect"],
+          "Weights": [0.5, 0.5, -0.5, -0.5],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": ["subject", "contrast"],
+      "Model": {"X": [1], "Type": "meta"},
+      "DummyContrasts": {"Test": "t"}
+    },
+    {
+      "Level": "Dataset",
+      "Name": "one-sample_dataset",
+      "GroupBy": ["contrast"],
+      "Model": {"X": [1], "Type": "glm"},
+      "DummyContrasts": {"Test": "t"}
+    }
+  ]
+}

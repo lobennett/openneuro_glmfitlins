@@ -14,10 +14,10 @@ docker run --rm -it \
   poldracklab/fitlins:0.11.0 \
   /bids /analyses_out run \
   -m /bids/model_spec -d /fmriprep_deriv \
-  --space MNI152NLin2009cAsym \
-  --desc-label preproc \ 
-  -s 5:run:iso \
-  --estimator nilearn \
+  --space MNI152NLin2009cAsym --desc-label preproc \
+  --smoothing 5:run:iso --estimator nilearn \
+  --n-cpus 2 \
+  --mem-gb 24 \
   -w /workdir
 
 

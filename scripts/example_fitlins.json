@@ -7,6 +7,34 @@
       "Level": "Run",
       "Name": "run_level",
       "GroupBy": ["run", "subject"],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": ["trial_type"]
+          },
+          {
+            "Name": "Rename",
+            "Input": [
+              "trial_type.incongruent_correct",
+              "trial_type.congruent_correct"
+              ],
+            "Output": [
+              "incongruent_correct",
+              "congruent_correct"
+              ]
+            },
+      {
+        "Name": "Convolve",
+        "Model": "spm",
+        "Input": [
+          "incongruent_correct",
+          "congruent_correct"
+        ]
+      }
+    ]
+  },
       "Model": {"X": [1, "incongruent_correct","congruent_correct", "trans_*", "rot*", "cosine*"], "Type": "glm"},
       "Contrasts": [
         {
@@ -21,7 +49,7 @@
       "Level": "Subject",
       "Name": "subject_level",
       "GroupBy": ["subject", "contrast"],
-      "Model": {"X": [1], "Type": "GLM"},
+      "Model": {"X": [1], "Type": "glm"},
       "DummyContrasts": {"Test": "t"}
     }
   ]

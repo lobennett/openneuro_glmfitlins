@@ -1,0 +1,69 @@
+{
+  "Name": "Study",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {"subject": ["01", "02"], 
+                        "task": ["task_name"]},
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": ["run", "subject"],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": ["trial_type"]
+          },
+      {
+        "Name": "Convolve",
+        "Model": "spm",
+        "Input": [
+          "trial_type.*"
+        ]
+      }
+    ]
+  },
+      "Model": {"X": [
+                1, "trial_type.*", "trans_*", "rot*", "cosine*"], 
+                "Type": "glm"},
+                
+      "Contrasts": [
+        {
+          "Name": "ConAB",
+          "ConditionList": ["trial_type.A", "trial_type.B"],
+          "Weights": [1, -1],
+          "Test": "t"
+        },
+        {
+          "Name": "AVbase",
+          "ConditionList": ["trial_type.A"],
+          "Weights": [1],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": ["subject", "contrast"],
+      "Model": {"X": [1], 
+                "Type": "glm"},
+      "DummyContrasts": {"Test": "t"}
+    },
+    {
+      "Level":"Dataset",
+      "Name":"data_level",
+      "GroupBy":[
+         "contrast"
+      ],
+      "Model":{
+         "X":[1],
+         "Type":"glm"
+      },
+      "DummyContrasts":{
+         "Test":"t"
+      }
+   }
+  ]
+}

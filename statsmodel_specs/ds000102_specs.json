@@ -1,45 +1,96 @@
 {
-  "Name": "Flanker",
+  "Name": "ds000102",
   "BIDSModelVersion": "1.0.0",
-  "Input": {"subject": ["01", "02", "03", "04", "05","06","07","08","09","10",
-                        "11","12","13","14","15","16","17","18","19","20","21","22","23","24",
-                        "25","26"], 
-                        "task": ["flanker"]},
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26"
+    ],
+    "task": [
+      "flanker"
+    ]
+  },
   "Nodes": [
     {
       "Level": "Run",
       "Name": "run_level",
-      "GroupBy": ["run", "subject"],
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
       "Transformations": {
         "Transformer": "pybids-transforms-v1",
         "Instructions": [
           {
             "Name": "Factor",
-            "Input": ["trial_type"]
+            "Input": [
+              "trial_type"
+            ]
           },
-      {
-        "Name": "Convolve",
-        "Model": "spm",
-        "Input": [
-          "trial_type.*"
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
         ]
-      }
-    ]
-  },
-      "Model": {"X": [
-                1, "trial_type.*", "trans_*", "rot*", "cosine*"], 
-                "Type": "glm"},
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
       "Contrasts": [
         {
-          "Name": "inVcon",
-          "ConditionList": ["trial_type.incongruent_correct", "trial_type.congruent_correct"],
-          "Weights": [1, -1],
+          "Name": "newContrast1",
+          "ConditionList": [
+            "trial_type.incongruent_correct",
+            "trial_type.congruent_correct"
+          ],
+          "Weights": [
+            0.5,
+            -0.5
+          ],
           "Test": "t"
         },
         {
-          "Name": "inVbase",
-          "ConditionList": ["trial_type.incongruent_correct"],
-          "Weights": [1],
+          "Name": "newContrast2",
+          "ConditionList": [
+            "trial_type.incongruent_correct"
+          ],
+          "Weights": [
+            1
+          ],
           "Test": "t"
         }
       ]
@@ -47,24 +98,35 @@
     {
       "Level": "Subject",
       "Name": "subject_level",
-      "GroupBy": ["subject", "contrast"],
-      "Model": {"X": [1], 
-                "Type": "glm"},
-      "DummyContrasts": {"Test": "t"}
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
     },
     {
-      "Level":"Dataset",
-      "Name":"data_level",
-      "GroupBy":[
-         "contrast"
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
       ],
-      "Model":{
-         "X":[1],
-         "Type":"glm"
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
       },
-      "DummyContrasts":{
-         "Test":"t"
+      "DummyContrasts": {
+        "Test": "t"
       }
-   }
+    }
   ]
 }

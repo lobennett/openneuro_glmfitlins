@@ -1,10 +1,18 @@
 #!/bin/bash
+
+# Set data / environment paths for data download and BIDS Stats Models
 study_id="ds000102"
 data="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets"
-model_json="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/scripts/example_fitlins.json"
+model_json="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/statsmodel_specs/${study_id}_specs.json"
 scratch="/tmp/"
+scripts_dir=`pwd`
 
-# binding the bids input and fmriprep directory as read-only (e.g. :ro) and the output directory as read-write (e.g. :rw)
+
+# Check if data exist, if not, download
+python ${scripts_dir}/get_openneuro-data.py ${study_id} ${data}
+
+
+# binding the bids input bids, fmriprep derivatives and analyses output directory to docker container
 docker run --rm -it \
   -v ${data}/input/${study_id}:/bids \
   -v ${data}/fmriprep/${study_id}:/fmriprep_deriv \

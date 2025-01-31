@@ -1,0 +1,16 @@
+{
+    "Contrasts": [
+      {
+        "Name": "pumpsVcontrol",
+        "ConditionList": ["trial_type.pumps_demean", "trial_type.control_pumps_demean"],
+        "Weights": [1, -1],
+        "Test": "t"
+      },
+      {
+        "Name": "pumpsVexplode",
+        "ConditionList": ["trial_type.control_pumps_demean"],
+        "Weights": [1],
+        "Test": "t"
+      }
+    ]
+  }

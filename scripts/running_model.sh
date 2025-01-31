@@ -1,16 +1,23 @@
 #!/bin/bash
 
 # Set data / environment paths for data download and BIDS Stats Models
-openneuro_id="ds000102"
-task_label="flanker"
+openneuro_id=$1 # OpenNeuro ID, e.g. ds000102
+if [ -z "$openneuro_id" ]; then
+  echo "Please provide the OpenNeuro ID (e.g. ds000001) as the first argument."
+  exit 1
+fi
+
+task_label=${2} # Task label, e.g. 'flanker'
+if [ -z "$task_label" ]; then
+  echo "Please provide the task label (e.g. 'balloonanalogrisktask') as the second argument."
+  exit 1
+fi
+
+# set paths
 data="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets"
 model_json="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/statsmodel_specs/${openneuro_id}_specs.json"
 scratch="/tmp/"
 scripts_dir=`pwd`
-
-
-# Check if data exist, if not, download
-python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data}
 
 
 read -p "Do the files './statsmodel-specs/${openneuro_id}_*' exist and are set up? (yes/no): " user_input
@@ -23,16 +30,16 @@ if [[ "$user_input" == "yes" ]]; then
  
   # binding the bids input bids, fmriprep derivatives and analyses output directory to docker container
   echo
-  echio "Running docker with the paths:"
+  echo "Running docker with the paths:"
   echo "BIDS input: ${data}/input/${openneuro_id}"
-  echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}"
+  echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
   echo "Analyses output: ${data}/analyses/${openneuro_id}"
   echo "Model specs: ${model_json}"
   echo 
 
   docker run --rm -it \
     -v ${data}/input/${openneuro_id}:/bids \
-    -v ${data}/fmriprep/${openneuro_id}:/fmriprep_deriv \
+    -v ${data}/fmriprep/${openneuro_id}/derivatives:/fmriprep_deriv \
     -v ${data}/analyses/${openneuro_id}:/analyses_out \
     -v ${model_json}:/bids/model_spec \
     -v ${scratch}:/workdir \
@@ -41,7 +48,7 @@ if [[ "$user_input" == "yes" ]]; then
     -m /bids/model_spec -d /fmriprep_deriv \
     --space MNI152NLin2009cAsym --desc-label preproc \
     --smoothing 5:run:iso --estimator nilearn \
-    --n-cpus 2 \
+    --n-cpus 1 \
     --mem-gb 24 \
     -w /workdir
 

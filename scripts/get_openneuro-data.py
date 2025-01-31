@@ -29,13 +29,13 @@ print(f"    fMRIPrep Directory: {fmriprep_dir}")
 print(f"    Git Repo URL: {git_repo_url}")
 print()
 
-
-if os.path.exists(os.path.join(data_dir,openneuro_study)):
+bids_input_dir = os.path.join(bids_data, openneuro_study)
+if os.path.exists(bids_input_dir):
     print(f"        {openneuro_study} already exists. Skipping BIDS data clone.")
 else:
     try:
         # Run the datalad clone command
-        subprocess.run(['datalad', 'clone', git_repo_url, os.path.join(data_dir,openneuro_study)], check=True)
+        subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
         print(f"    {openneuro_study}. Dataset cloned successfully.")
 
     except subprocess.CalledProcessError as e:
@@ -49,14 +49,21 @@ else:
 
 
 # Build the AWS CLI command
+fmriprep_out_dir = os.path.join(fmriprep_dir, openneuro_study, "derivatives")
 download_fmriprep = [
     "aws", "s3", "sync", "--no-sign-request",
     f"s3://openneuro-derivatives/fmriprep/{openneuro_study}-fmriprep",
-    os.path.join(fmriprep_dir, openneuro_study)
+    fmriprep_out_dir
+]
+
+move_file_command = [
+    "cp", 
+    os.path.join(fmriprep_out_dir, "dataset_description.json"), 
+    os.path.join(fmriprep_out_dir, "..", "dataset_description.json")
 ]
 
 
-if os.path.exists(os.path.join(fmriprep_dir, openneuro_study)):
+if os.path.exists(fmriprep_out_dir):
     print(f"        fMRIprep Directory already exists. Skipping fMRIprep data download for {openneuro_study}")
 else:
     # Load and Add Exclusions to file
@@ -68,6 +75,8 @@ else:
     
     try:
         subprocess.run(download_fmriprep, check=True)
+        subprocess.run(move_file_command, check=True)
+
         print("     S3 sync completed successfully.")
     except subprocess.CalledProcessError as e:
         print(f"        An error occurred: {e}")

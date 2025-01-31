@@ -1,0 +1,48 @@
+#!/bin/bash
+
+# Set data / environment paths for data download and BIDS Stats Models
+openneuro_id=$1 # OpenNeuro ID, e.g. ds000001
+if [ -z "$openneuro_id" ]; then
+  echo "Please provide the OpenNeuro ID (e.g. ds000102) as the first argument."
+  exit 1
+fi
+
+# set paths
+data="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets"
+spec_dir="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/statsmodel_specs"
+scripts_dir=`pwd`
+
+# First, confirm data / files size of fMRIPrep derivatives on s3
+df_info=`aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
+
+# Extract the number of files and total size
+n_files=`echo "$df_info" | grep "Total Objects" | awk -F':' '{print $2}' | tr -d ' '`
+total_size_bytes=`echo "$df_info" | grep "Total Size" | awk -F':' '{print $2}' | tr -d ' '`
+
+# Convert bytes to GB
+gb_size=`echo "scale=6; $total_size_bytes / (1024*1024*1024)" | bc`
+gb_rnd=`printf "%.1f" $gb_size`
+echo
+echo "fMRIPrep derivatives size for ${openneuro_id} is ${gb_rnd}GB with ${n_files} files."
+echo "Downloading data to ${data}/fmriprep/${openneuro_id}/derivatives"
+echo -e "\tNote: You can reduce the size by adding file filters into the './scripts/file_exclusions.json' file."
+echo
+
+read -p "Do you want to proceed with the download? (yes/no): " user_input
+if [[ "$user_input" == "yes" ]]; then
+  # Clone BIDS non-binary and download fmriprep derivatives
+  python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data}
+  echo 
+  echo "Download completed."
+else
+  echo "Not downloading the data for ${openneuro_id}."
+  echo
+  exit 1
+fi
+
+
+python ${scripts_dir}/study_simple-details.py --openneuro_study ${openneuro_id} \
+                                              --bids_dir ${data}/input/${openneuro_id} \
+                                              --fmriprep_dir ${data}/fmriprep/${openneuro_id} \
+                                              --spec_dir ${spec_dir}
+

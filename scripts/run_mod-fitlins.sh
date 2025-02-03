@@ -54,7 +54,7 @@ if [[ "$user_input" == "yes" ]]; then
 
 else
     # If files are not set up, ask the user to update
-    echo "Please update './statsmodel-specs/${study_id}_*' files before proceeding and review the resulting spec file."
+    echo "Please update './statsmodel-specs/${openneuro_id}_*' files before proceeding and review the resulting spec file."
 
 fi
  

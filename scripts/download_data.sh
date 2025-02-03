@@ -7,10 +7,15 @@ if [ -z "$openneuro_id" ]; then
   exit 1
 fi
 
-# set paths
-data="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets"
-spec_dir="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/statsmodel_specs"
-scripts_dir=`pwd`
+# sets paths from config file
+config_file="../path_config.json"
+
+# Extract values using jq
+data=$(jq -r '.datasets_folder' "$config_file")
+repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
+spec_dir="${repo_dir}/statsmodel_specs/${openneuro_id}"
+scripts_dir="${repo_dir}/scripts"
+
 
 # First, confirm data / files size of fMRIPrep derivatives on s3
 df_info=`aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
@@ -40,7 +45,10 @@ else
   exit 1
 fi
 
+# create model spec dir if it doesnt exist
+[ ! -d "$spec_dir" ] && echo "Creating directory: $spec_dir" && mkdir -p "$spec_dir"
 
+# run python script to 
 python ${scripts_dir}/study_simple-details.py --openneuro_study ${openneuro_id} \
                                               --bids_dir ${data}/input/${openneuro_id} \
                                               --fmriprep_dir ${data}/fmriprep/${openneuro_id} \

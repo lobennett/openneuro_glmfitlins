@@ -13,14 +13,18 @@ if [ -z "$task_label" ]; then
   exit 1
 fi
 
-# set paths
-data="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets"
-model_json="/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins/statsmodel_specs/${openneuro_id}_specs.json"
-scratch="/tmp/"
-scripts_dir=`pwd`
+# sets paths from config file
+config_file="../path_config.json"
+
+# Extract values using jq
+data=$(jq -r '.datasets_folder' "$config_file")
+repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
+model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}_specs.json"
+scripts_dir="${repo_dir}/scripts"
+scratch=$(jq -r '.tmp_folder' "$config_file")
 
 
-read -p "Do the files './statsmodel-specs/${openneuro_id}_*' exist and are set up? (yes/no): " user_input
+read -p "Do the files ${model_json} exist and are set up? (yes/no): " user_input
   
 if [[ "$user_input" == "yes" ]]; then
   # create model specs if files are setup
@@ -54,7 +58,7 @@ if [[ "$user_input" == "yes" ]]; then
 
 else
     # If files are not set up, ask the user to update
-    echo "Please update './statsmodel-specs/${openneuro_id}_*' files before proceeding and review the resulting spec file."
+    echo "Please update ${model_json} files before proceeding and review the resulting spec file."
 
 fi
  

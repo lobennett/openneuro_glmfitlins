@@ -1,4 +1,5 @@
 import argparse
+import time
 import os
 import sys
 import subprocess
@@ -9,16 +10,21 @@ import json
 parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
 parser.add_argument("openneuro_study", type=str, help="OpenNeuro study ID")
 parser.add_argument("data_dir", type=str, help="Base directory for dataset storage")
+parser.add_argument("spec_dir", type=str, help="Specification directory where to output MRIQC group summaries") 
+
 args = parser.parse_args()
 
 # Assign arguments to variables
 openneuro_study = args.openneuro_study
 data_dir = os.path.abspath(args.data_dir)
+spec_dir = os.path.abspath(args.spec_dir)
 
 # Define paths
 file_exclude_list = os.path.join('.', "file_exclusions.json")
 bids_data = os.path.join(data_dir, "input")
 fmriprep_dir = os.path.join(data_dir, "fmriprep")
+mriqc_dir = os.path.join(data_dir, "mriqc", openneuro_study)
+
 git_repo_url = f"https://github.com/OpenNeuroDatasets/{openneuro_study}.git"
 
 print("Checking whether the BIDS data and fMRIprep directories exist for values: ")
@@ -55,14 +61,32 @@ download_fmriprep = [
     f"s3://openneuro-derivatives/fmriprep/{openneuro_study}-fmriprep",
     fmriprep_out_dir
 ]
-
-move_file_command = [
-    "cp", 
-    os.path.join(fmriprep_out_dir, "dataset_description.json"), 
-    os.path.join(fmriprep_out_dir, "..", "dataset_description.json")
+getfiles_mriqcgroup = [
+    "aws", "s3", "ls", "--no-sign-request", 
+    f"s3://openneuro-derivatives/mriqc/{openneuro_study}-mriqc", "--recursive"
 ]
 
+# Get list of MRIQC files in repo, then only download the group files
+if os.path.exists(spec_dir):
+    mriqc_files = subprocess.run(getfiles_mriqcgroup, capture_output=True, text=True)
+    files = [line.split()[-1] for line in mriqc_files.stdout.splitlines() if 'group' in line]
+    print(files)
+    
+    if not files:
+            print("No 'group' files found. Exiting.")
+    else:
+        for s3_file_path in files:
+            file_path = os.path.join(spec_dir, os.path.basename(s3_file_path))
+            download_mriqc_grpfile = [
+                    "aws", "s3", "cp", "--no-sign-request",
+                    f"s3://openneuro-derivatives/{s3_file_path}", file_path
+                ]
+        
+            subprocess.run(download_mriqc_grpfile, capture_output=True, text=True)
+            print(f"    Downloaded: {s3_file_path} to {file_path}")
 
+
+# Check if the fMRIprep directory exists, if not, download data
 if os.path.exists(fmriprep_out_dir):
     print(f"        fMRIprep Directory already exists. Skipping fMRIprep data download for {openneuro_study}")
 else:
@@ -75,8 +99,9 @@ else:
     
     try:
         subprocess.run(download_fmriprep, check=True)
-        subprocess.run(move_file_command, check=True)
-
         print("     S3 sync completed successfully.")
     except subprocess.CalledProcessError as e:
-        print(f"        An error occurred: {e}")
+        print(f"Download failed, retrying... {e}")
+        time.sleep(5)  # wait before retrying
+        subprocess.run(download_fmriprep, check=True)
+        print("     S3 re-sync completed successfully.")

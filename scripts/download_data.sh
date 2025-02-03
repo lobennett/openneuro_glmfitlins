@@ -17,6 +17,13 @@ spec_dir="${repo_dir}/statsmodel_specs/${openneuro_id}"
 scripts_dir="${repo_dir}/scripts"
 
 
+# creating directories that don't exist
+for subdir in analysis fmriprep input ; do 
+  [ ! -d "${data}/${subdir}" ] && echo "Creating directory: ${data}/${subdir}" && mkdir -p "${data}/${subdir}"
+done
+
+[ ! -d "$spec_dir" ] && echo "Creating directory: $spec_dir" && mkdir -p "$spec_dir"
+
 # First, confirm data / files size of fMRIPrep derivatives on s3
 df_info=`aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
 
@@ -35,18 +42,19 @@ echo
 
 read -p "Do you want to proceed with the download? (yes/no): " user_input
 if [[ "$user_input" == "yes" ]]; then
-  # Clone BIDS non-binary and download fmriprep derivatives
-  python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data}
+  # Clone BIDS non-binary, mriqc group outputs and download fmriprep derivatives
+  echo "Downloading the data..."
+  python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir}
   echo 
-  echo "Download completed."
+  echo -e "\t Download completed."
+  echo 
+  echo -e "\t Copy dataset_description.json file within the fmriprep root directory"
+  cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
 else
-  echo "Not downloading the data for ${openneuro_id}."
+  echo -e "\t Not downloading the data for ${openneuro_id}."
   echo
   exit 1
 fi
-
-# create model spec dir if it doesnt exist
-[ ! -d "$spec_dir" ] && echo "Creating directory: $spec_dir" && mkdir -p "$spec_dir"
 
 # run python script to 
 python ${scripts_dir}/study_simple-details.py --openneuro_study ${openneuro_id} \

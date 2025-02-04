@@ -1,13 +1,25 @@
 [project]
 name = "openneuro-glmfitlins"
 version = "0.1.0"
-description = "Add your description here"
+description = "A tool for downloading and analyzing OpenNeuro datasets with BIDS Stats Models: FitLins"
 readme = "README.md"
 authors = [
     { name = "Michael Demidenko", email = "demidenko.michael@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "numpy",
+    "pandas",
+    "pybids",
+    "datalad",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]
 
 [project.scripts]
 openneuro-glmfitlins = "openneuro_glmfitlins:main"

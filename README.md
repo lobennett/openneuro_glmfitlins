@@ -7,23 +7,23 @@
 
 `openneuro_glmfitlins` is a tool designed to process OpenNeuro datasets using [FitLins](https://github.com/poldracklab/fitlins) via [BIDS Stats Models](https://bids-standard.github.io/stats-models/), facilitating efficient and reproducible neuroimaging data analysis.
 
-## Featres of this repo
+## Features of this Repo
 
-- **Automated Data Retrieval**: Use DataLad and AWS CLI to clone BIDS input data and download fMRIPrep (preprocessed) MRI/fMRI data.
-- **Flexible Analysis Specifications**: Download provide summarizes of relevate subject, runs, task fMRI data. Allows for easier curation of statistical models via JSON files. 
-- **Reproducible Environments**: Uses docker for consistent computational reproducibile (environments)[https://fitlins.readthedocs.io/en/latest/installation.html#singularity-container].
+- **Automated Data Retrieval**: Uses DataLad and AWS CLI to clone BIDS input data and download fMRIPrep (preprocessed) MRI/fMRI data.
+- **Flexible Analysis Specifications**: Provides summaries of relevant subject, run, and task fMRI data, allowing for easier curation of statistical models via JSON files.
+- **Reproducible Environments**: Uses Docker for consistent computational reproducibility ([FitLins Installation Guide](https://fitlins.readthedocs.io/en/latest/installation.html#singularity-container)).
 
-In my case, I installed docker desktop for Mac with Apple Silicon via the (docker website)[https://docs.docker.com/desktop/setup/install/mac-install/]. This was about a 1.8GB application. After installing docker desktop and completing setup via the prompts, I ran the following to setup fitlins v0.11.0
+In my case, I installed Docker Desktop for Mac with Apple Silicon via the [Docker website](https://docs.docker.com/desktop/setup/install/mac-install/). This was about a 1.8GB application. After installing Docker Desktop and completing setup via the prompts, I ran the following to set up FitLins v0.11.0:
 
 ```bash
 docker pull poldracklab/fitlins:0.11.0
 ```
-This process took ~45-60 seconds to complete, ending with the prompt "Status: Downloaded newer image for poldracklab/fitlins:0.11.0
+This process took ~45-60 seconds to complete, ending with the prompt: `Status: Downloaded newer image for poldracklab/fitlins:0.11.0`.
 
 ## Repository Structure
 
-- `scripts/`: Contains scripts for data download, json file creation and fitlins model analysis. 
-- `statsmodel_specs/`: JSON files specifying statistical models for FitLins for *each* open-neuro study. Within each directory, there is also an `mriqc_summary` which is the .tsv and .html file. Within each `statsmodel_spec/STUDY_ID` there is a README file to summaries some basic information and have preview links to the .html file (i.e., git renders files)
+- `scripts/`: Contains scripts for data download, JSON file creation, and FitLins model analysis. 
+- `statsmodel_specs/`: JSON files specifying statistical models for FitLins for *each* OpenNeuro study. Each directory also contains an `mriqc_summary`, which includes `.tsv` and `.html` files. Inside `statsmodel_specs/STUDY_ID`, there is a README file summarizing basic information and providing preview links to the `.html` file (e.g., Git renders files).
 - `LICENSE`: MIT License governing the use of this repository.
 - `path_config.json`: Configuration file for directory paths. Use this to specify where the input/output data should be downloaded/saved.
 
@@ -43,38 +43,46 @@ Ensure the following are installed:
   - `pybids`
   - `datalad`
 
-Note, you will also need at least `git` version => 2.2. Check via `git --version`
+Ensure you have `git` version >= 2.2 by checking via:
+```bash
+git --version
+```
 
 Install Python dependencies using:
-
 ```bash
 pip install numpy pandas pybids datalad
 ```
 
 ## Usage
 
-1. Clone repository to your machine - Start by cloning the respository using git clone:
+1. **Clone the repository** - Start by cloning the repository using Git:
 ```bash
 git clone git@github.com:demidenm/openneuro_glmfitlins.git
 ```
-2. Setup paths - Before downloading the data, make sure to update paths in the `path_config.json`. There are three primary paths you'll want to setup:
-    - datasets_folder: This is where the 1) BIDS input clones files/folders, 2) fmriprep derivatives and 3) the resulting analyses data.
-    - openneuro_glmrepo: this is the path to the repository you clone in step 1.
-    - tmp_folder: this is your temporary/scratch folder, where intermediate files will be created for the fitlins model.
-3. Download the openneuro data - Once you have 1) cloned the repository [and dependencies are installed] and 2) setup your paths, you can download your open neuro data by navigating the the `openneuro_glmfitlins/scripts/` folder and running. This will create some preliminary files such as README e.g (ds000001 example)[./statsmdeol_specs/ds000001/README.md], mriqc_summary e.g. (ds000001 BOLD example)[https://htmlpreview.github.io/?https://github.com/demidenm/openneuro_glmfitlins/blob/main/statsmodel_specs/ds000001/mriqc_summary/group_bold.html]), and *_basic-details.json in the (./statsmodels_specs/STUDY_ID directory)[./statsmodels_specs]. At the end of the script, you will also get some results dumped into the terminal. You will use the task labels, subjects and trial_type / column name information to specify your _contrasts.json and _subjects.json file that will be used in the subject step
+
+2. **Setup paths** - Before downloading the data, update paths in `path_config.json`. The primary paths to set up are:
+    - `datasets_folder`: Location for BIDS input files, fMRIPrep derivatives, and analysis results.
+    - `openneuro_glmrepo`: Path to the repository cloned in step 1.
+    - `tmp_folder`: Temporary/scratch folder for FitLins intermediate files.
+
+3. **Download OpenNeuro data** - Once you have cloned the repository, installed dependencies, and set up paths, navigate to `openneuro_glmfitlins/scripts/` and run:
 ```bash
 bash download_data.sh ds000001
 ```
-Or, if your file is executable (e.g. chmod +x download_data.sh), you can run:
+Or, if the script is executable (e.g., `chmod +x download_data.sh`), you can run:
 ```bash
 ./download_data.sh ds000001
 ```
-Note, for each you will specify the open-neuro dataset number such as (ds000001)[https://openneuro.org/datasets/ds000001]. The script will prompt you with the size of the fmriprep directory that is on aws and the number of files that are in that [repository](https://github.com/OpenNeuroDerivatives/ds000001-fmriprep) and the question "Do you wnt to proceed with the download? (yes/no)". 
-You can reduce the download size and file quantity by specifying exclusions in [file_exclusions.json file](./scripts/file_exclusions.json). For example, if you are only going to be interested in task fMRI analyses on the volumetric MNI data, you can save space by exclude freesurfer (e.g., ./sourcedata/freesurfer) and CIFTI outputs (e.g., fsaverage*.gii, *dtseries.nii). If you are satisfied with the file size/quantity, type "yes" and hit return.
-*First, the BIDS input data will be cloned (only the non-binary files, such as .json and .tsv, as BOLD are not used). This will download quickly. **If you do not have the appropriate git or datalad install this part may return an error**.*
 
-4. Running model - Currently, the Fitlins model specs performs a run, subject and dataset level model. The example json that is dynamically modified is [./scripts/example_mod-specs.json](./scripts/example_mod-specs.json). Once the subject and contrast json files are specified within `statsmodel_specs/ds000001`, you can response 'yes' to the first prompt to generate the `statsmodels_specs/ds000001/ds000001_specs.json` file. It will add the necessary subjects, contrasts, study and task name information from the example model spec. Answer 'no' to the next question, to run the fitlins docker. First inspect the (ds000001_specs.json)[./statsmodels_specs/ds000001/ds000001_specs.json] to ensure that your model is what you'd like to run. Make any minor modifications you need, such as removing run or dataset level models. When doing so, use the (BIDS Model Validator)[https://bids-standard.github.io/stats-models/validator.html] to catch json errors.
+For each dataset, specify the OpenNeuro dataset number (e.g., [ds000001](https://openneuro.org/datasets/ds000001)). The script will prompt you with the size of the fMRIPrep directory on AWS and the number of files in that [repository](https://github.com/OpenNeuroDerivatives/ds000001-fmriprep), along with the question: *"Do you want to proceed with the download? (yes/no)"*.
 
+You can reduce the download size by specifying exclusions in [`file_exclusions.json`](./scripts/file_exclusions.json). For example, to save space, you can exclude FreeSurfer files (`./sourcedata/freesurfer`) and CIFTI outputs (`fsaverage*.gii`, `*dtseries.nii`). If satisfied with the file size, type "yes" and press Enter.
+
+*First, the BIDS input data will be cloned (excluding binary files such as BOLD images). If you do not have the appropriate Git or DataLad installation, this step may return an error.*
+
+4. **Running the model** - The FitLins model specs include run, subject, and dataset-level models. The example JSON dynamically modified is [`example_mod-specs.json`](./scripts/example_mod-specs.json). Once `statsmodel_specs/ds000001/` contains the required subject and contrast JSON files, respond "yes" to the first prompt to generate `ds000001_specs.json`.
+
+Then, answer "no" to the next question to run the FitLins Docker container. First, inspect [`ds000001_specs.json`](./statsmodels_specs/ds000001/ds000001_specs.json) to ensure the model is correct. Make modifications as needed (e.g., removing run or dataset-level models). Use the [BIDS Model Validator](https://bids-standard.github.io/stats-models/validator.html) to check for JSON errors.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

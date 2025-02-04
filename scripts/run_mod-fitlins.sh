@@ -24,15 +24,18 @@ scripts_dir="${repo_dir}/scripts"
 scratch=$(jq -r '.tmp_folder' "$config_file")
 
 
-read -p "Do the files ${model_json} exist and are set up? (yes/no): " user_input
-  
-if [[ "$user_input" == "yes" ]]; then
-  # create model specs if files are setup
-  if [ ! -f ${model_json} ]; then
+read -p "If subject/contrast specs are setup, do you want to run create_mod-specs.py? (yes/no): " run_create_specs
+
+if [[ "$run_create_specs" == "yes" ]]; then
     python ${scripts_dir}/create_mod-specs.py --openneuro_study ${openneuro_id} --task ${task_label} --script_dir ${scripts_dir}
-  fi
- 
-  # binding the bids input bids, fmriprep derivatives and analyses output directory to docker container
+
+else
+  echo "Skipping creation of model specs."
+fi
+
+read -p "If the ${openneuro_id}_specs.json file is read, do you want to run the Fitlins Docker container? (yes/no): " run_docker
+
+if [[ "$run_docker" == "yes" ]]; then
   echo
   echo "Running docker with the paths:"
   echo "BIDS input: ${data}/input/${openneuro_id}"
@@ -55,12 +58,11 @@ if [[ "$user_input" == "yes" ]]; then
     --n-cpus 1 \
     --mem-gb 24 \
     -w /workdir
-
 else
-    # If files are not set up, ask the user to update
-    echo "Please update ${model_json} files before proceeding and review the resulting spec file."
-
+  echo "Docker execution skipped."
+  exit 1
 fi
+
  
 
 

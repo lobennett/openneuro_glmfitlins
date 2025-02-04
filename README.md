@@ -80,7 +80,17 @@ You can reduce the download size by specifying exclusions in [`file_exclusions.j
 
 *First, the BIDS input data will be cloned (excluding binary files such as BOLD images). If you do not have the appropriate Git or DataLad installation, this step may return an error.*
 
-4. **Running the model** - The FitLins model specs include run, subject, and dataset-level models. The example JSON dynamically modified is [`example_mod-specs.json`](./scripts/example_mod-specs.json). Once `statsmodel_specs/ds000001/` contains the required subject and contrast JSON files, respond "yes" to the first prompt to generate `ds000001_specs.json`.
+4. **Running the model** - The FitLins model specs include run, subject, and dataset-level models. The example JSON dynamically modified is [`example_mod-specs.json`](./scripts/example_mod-specs.json). Run by specifying the STUDYID and the TASKNAME
+```bash
+bash run_mod-fitlins.sh ds000001 balloonanalogrisktask
+```
+Or, if the script is executable (e.g., `chmod +x run_mod-fitlins.sh`), you can run:
+```bash
+././run_mod-fitlins.sh ds000001 balloonanalogrisktask
+```
+
+Once `statsmodel_specs/ds000001/` contains the required subject and contrast JSON files, respond "yes" to the first prompt to generate `ds000001_specs.json`. 
+
 
 Then, answer "no" to the next question to run the FitLins Docker container. First, inspect [`ds000001_specs.json`](./statsmodels_specs/ds000001/ds000001_specs.json) to ensure the model is correct. Make modifications as needed (e.g., removing run or dataset-level models). Use the [BIDS Model Validator](https://bids-standard.github.io/stats-models/validator.html) to check for JSON errors.
 

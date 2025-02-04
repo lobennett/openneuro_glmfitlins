@@ -18,7 +18,7 @@ scripts_dir="${repo_dir}/scripts"
 
 
 # creating directories that don't exist
-for subdir in analysis fmriprep input ; do 
+for subdir in analyses fmriprep input ; do 
   [ ! -d "${data}/${subdir}" ] && echo "Creating directory: ${data}/${subdir}" && mkdir -p "${data}/${subdir}"
 done
 

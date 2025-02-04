@@ -10,8 +10,7 @@ import json
 parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
 parser.add_argument("openneuro_study", type=str, help="OpenNeuro study ID")
 parser.add_argument("data_dir", type=str, help="Base directory for dataset storage")
-parser.add_argument("spec_dir", type=str, help="Specification directory where to output MRIQC group summaries") 
-
+parser.add_argument("spec_dir", type=str, help="Directory for specification files for study")
 args = parser.parse_args()
 
 # Assign arguments to variables
@@ -67,16 +66,16 @@ getfiles_mriqcgroup = [
 ]
 
 # Get list of MRIQC files in repo, then only download the group files
-if os.path.exists(spec_dir):
+if os.path.exists(mriqc_dir):
     mriqc_files = subprocess.run(getfiles_mriqcgroup, capture_output=True, text=True)
     files = [line.split()[-1] for line in mriqc_files.stdout.splitlines() if 'group' in line]
     print(files)
-    
+
     if not files:
             print("No 'group' files found. Exiting.")
     else:
         for s3_file_path in files:
-            file_path = os.path.join(spec_dir, os.path.basename(s3_file_path))
+            file_path = os.path.join(spec_dir,"mriqc_summary", os.path.basename(s3_file_path))
             download_mriqc_grpfile = [
                     "aws", "s3", "cp", "--no-sign-request",
                     f"s3://openneuro-derivatives/{s3_file_path}", file_path

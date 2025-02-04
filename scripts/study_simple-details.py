@@ -4,6 +4,7 @@ import argparse
 import pandas as pd
 import numpy as np
 from bids.layout import BIDSLayout
+from create_readme import generate_readme
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
@@ -90,3 +91,6 @@ for task_name in Tasks:
 # save study and task details to json
 with open(os.path.join(spec_path, f'{study_id}_basic-details.json'), 'w') as f:
     json.dump(data, f, indent=4)
+
+# generate README.md file
+generate_readme(spec_path, study_id, data)

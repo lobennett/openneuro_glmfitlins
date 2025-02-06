@@ -21,7 +21,7 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
         readme_content += f"- **Column Names**: {', '.join(task_info['column_names'])}\n"
         readme_content += f"- **Data Types**: {', '.join([f'{col} ({dtype})' for col, dtype in task_info['column_data_types'].items()])}\n"
         if task_info['trial_type_values']:
-            readme_content += f"- **Unique 'trial_type' Values**: {', '.join(task_info['trial_type_values'])}\n"
+            readme_content += f"- **Unique 'trial_type' Values**: {', '.join(map(str, task_info['trial_type_values']))}\n"
         else:
             readme_content += "- **Unique 'trial_type' Values**: None\n"
         readme_content += "\n"

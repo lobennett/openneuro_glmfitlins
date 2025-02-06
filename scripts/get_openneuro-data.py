@@ -22,7 +22,6 @@ spec_dir = os.path.abspath(args.spec_dir)
 file_exclude_list = os.path.join('.', "file_exclusions.json")
 bids_data = os.path.join(data_dir, "input")
 fmriprep_dir = os.path.join(data_dir, "fmriprep")
-mriqc_dir = os.path.join(data_dir, "mriqc", openneuro_study)
 
 git_repo_url = f"https://github.com/OpenNeuroDatasets/{openneuro_study}.git"
 
@@ -66,7 +65,7 @@ getfiles_mriqcgroup = [
 ]
 
 # Get list of MRIQC files in repo, then only download the group files
-if os.path.exists(mriqc_dir):
+if os.path.exists(spec_dir):
     mriqc_files = subprocess.run(getfiles_mriqcgroup, capture_output=True, text=True)
     files = [line.split()[-1] for line in mriqc_files.stdout.splitlines() if 'group' in line]
     print(files)

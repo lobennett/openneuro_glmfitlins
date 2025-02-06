@@ -92,7 +92,7 @@ Or, if the script is executable (e.g., `chmod +x run_mod-fitlins.sh`), you can r
 Once `statsmodel_specs/ds000001/` contains the required subject and contrast JSON files, respond "yes" to the first prompt to generate `ds000001_specs.json`. 
 
 
-Then, answer "no" to the next question to run the FitLins Docker container. First, inspect [`ds000001_specs.json`](./statsmodels_specs/ds000001/ds000001_specs.json) to ensure the model is correct. Make modifications as needed (e.g., removing run or dataset-level models). Use the [BIDS Model Validator](https://bids-standard.github.io/stats-models/validator.html) to check for JSON errors.
+Then, answer "no" to the next question to run the FitLins Docker container. First, inspect [`ds000001_specs.json`](./statsmodel_specs/ds000001/ds000001_specs.json) to ensure the model is correct. Make modifications as needed (e.g., removing run or dataset-level models). Use the [BIDS Model Validator](https://bids-standard.github.io/stats-models/validator.html) to check for JSON errors.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.

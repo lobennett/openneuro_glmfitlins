@@ -28,7 +28,7 @@ else:
     exit(1)
 
 # Load the subjects JSON
-subjects_json = os.path.join(scripts, "..", "statsmodel_specs", f"{study_id}_subjects.json")
+subjects_json = os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}-{task}_subjects.json")
 if os.path.exists(subjects_json):
     print("working on file", subjects_json)    
     with open(subjects_json, "r") as file:
@@ -38,7 +38,7 @@ else:
     exit(1)
 
 # Load the contrasts JSON
-contrast_json = os.path.join(scripts, "..", "statsmodel_specs", f"{study_id}_contrasts.json")
+contrast_json = os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}-{task}_contrasts.json")
 if os.path.exists(contrast_json):
     print("working on file", contrast_json)
     with open(contrast_json, "r") as file:
@@ -67,7 +67,7 @@ for node in model_data["Nodes"]:
         break  # Exit loop after updating
 
 # Save the updated model JSON
-with open(os.path.join(scripts, "..", "statsmodel_specs", f"{study_id}_specs.json"), "w") as file:
+with open(os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}-{task}_specs.json"), "w") as file:
     json.dump(model_data, file, indent=2)
 
 print("Model specs created, updated study name, task, subjects and contrasts")

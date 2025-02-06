@@ -19,7 +19,7 @@ config_file="../path_config.json"
 # Extract values using jq
 data=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
-model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}_specs.json"
+model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
 scripts_dir="${repo_dir}/scripts"
 scratch=$(jq -r '.tmp_folder' "$config_file")
 

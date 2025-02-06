@@ -63,29 +63,32 @@ data = {
 for task_name in Tasks:
     # pull event files that match & load into single long df
     event_files = bids_layout.get(task=task_name, suffix="events", extension=".tsv")
-    group_df = pd.concat([pd.read_csv(file, sep='\t') for file in event_files], ignore_index=True)
 
-    # obtain col names and data types, get unique values for trial_type
-    column_names = list(group_df.columns)
-    column_data_types = {col: str(dtype) for col, dtype in zip(group_df.columns, group_df.dtypes)}
-    if 'trial_type' in group_df.columns:
-        trial_type_values = group_df['trial_type'].unique().tolist()
+    if not event_files:
+        print(f"No event files found for task: {task_name}")
     else:
-        trial_type_values = []
+        group_df = pd.concat([pd.read_csv(file, sep='\t') for file in event_files], ignore_index=True)
 
-    # task-specific data task dict, col names, dtypes and values within 'trial_type'
-    data["Tasks"][task_name] = {
-        "column_names": column_names,
-        "column_data_types": column_data_types,
-        "trial_type_values": trial_type_values
-    }
+        # Obtain column names and data types, get unique values for trial_type
+        column_names = list(group_df.columns)
+        column_data_types = {col: str(dtype) for col, dtype in zip(group_df.columns, group_df.dtypes)}
+        trial_type_values = group_df['trial_type'].unique().tolist() if 'trial_type' in group_df.columns else []
 
-    print(f"Task: {task_name}")
-    print(f"Number of event files: {len(event_files)}")
-    print(f"Column names: {column_names}")
-    print(f"Column data types: {column_data_types}")
-    print(f"Unique 'trial_type' values: {trial_type_values}")
-    print()
+        # Task-specific data dictionary update
+        data["Tasks"][task_name] = {
+            "column_names": column_names,
+            "column_data_types": column_data_types,
+            "trial_type_values": trial_type_values
+        }
+        print(data)
+        # Print results
+        print(f"Task: {task_name}")
+        print(f"Number of event files: {len(event_files)}")
+        print(f"Column names: {column_names}")
+        print(f"Column data types: {column_data_types}")
+        print(f"Unique 'trial_type' values: {trial_type_values}")
+        print()
+
 
 
 # save study and task details to json

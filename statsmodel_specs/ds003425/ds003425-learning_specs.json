@@ -3,8 +3,7 @@
   "BIDSModelVersion": "1.0.0",
   "Input": {
     "subject": [
-      "01",
-      "02"
+      "01"
     ],
     "task": [
       "learning"
@@ -16,7 +15,8 @@
       "Name": "run_level",
       "GroupBy": [
         "run",
-        "subject"
+        "subject",
+        "session"
       ],
       "Transformations": {
         "Transformer": "pybids-transforms-v1",
@@ -76,23 +76,8 @@
       "Name": "subject_level",
       "GroupBy": [
         "subject",
-        "contrast"
-      ],
-      "Model": {
-        "X": [
-          1
-        ],
-        "Type": "glm"
-      },
-      "DummyContrasts": {
-        "Test": "t"
-      }
-    },
-    {
-      "Level": "Dataset",
-      "Name": "data_level",
-      "GroupBy": [
-        "contrast"
+        "contrast",
+        "session"
       ],
       "Model": {
         "X": [

@@ -10,3 +10,4 @@ wheels/
 .venv
 .DS_Store
 scripts/qc_checks.ipynb
+*logs*

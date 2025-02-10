@@ -14,7 +14,8 @@ if [ -z "$task_label" ]; then
 fi
 
 # sets paths from config file
-config_file="../path_config.json"
+relative_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+config_file=$(realpath ${relative_path}/../path_config.json)
 
 # Extract values using jq
 data=$(jq -r '.datasets_folder' "$config_file")
@@ -33,33 +34,49 @@ else
   echo "Skipping creation of model specs."
 fi
 
-read -p "If the ${openneuro_id}_specs.json file is read, do you want to run the Fitlins Docker container? (yes/no): " run_docker
+read -p "If the ${openneuro_id}_specs.json file is ready, do you want to run the Fitlins container? (yes/no): " start_fitlins
 
-if [[ "$run_docker" == "yes" ]]; then
-  echo
-  echo "Running docker with the paths:"
-  echo "BIDS input: ${data}/input/${openneuro_id}"
-  echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
-  echo "Analyses output: ${data}/analyses/${openneuro_id}"
-  echo "Model specs: ${model_json}"
-  echo 
+if [[ "$start_fitlins" == "yes" ]]; then
 
-  docker run --rm -it \
-    -v ${data}/input/${openneuro_id}:/bids \
-    -v ${data}/fmriprep/${openneuro_id}/derivatives:/fmriprep_deriv \
-    -v ${data}/analyses/${openneuro_id}:/analyses_out \
-    -v ${model_json}:/bids/model_spec \
-    -v ${scratch}:/workdir \
-    poldracklab/fitlins:0.11.0 \
-    /bids /analyses_out run \
-    -m /bids/model_spec -d /fmriprep_deriv \
-    --space MNI152NLin2009cAsym --desc-label preproc \
-    --smoothing 5:run:iso --estimator nilearn \
-    --n-cpus 1 \
-    --mem-gb 24 \
-    -w /workdir
+  read -p "Are you running using docker or singularity on HPC? (dock/sing): " run_type
+
+  if [[ "$run_type" == "dock" ]]; then
+    echo
+    echo "Running docker with the paths:"
+    echo "BIDS input: ${data}/input/${openneuro_id}"
+    echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
+    echo "Analyses output: ${data}/analyses/${openneuro_id}"
+    echo "Model specs: ${model_json}"
+    echo 
+
+    docker run --rm -it \
+      -v ${data}/input/${openneuro_id}:/bids \
+      -v ${data}/fmriprep/${openneuro_id}/derivatives:/fmriprep_deriv \
+      -v ${data}/analyses/${openneuro_id}:/analyses_out \
+      -v ${model_json}:/bids/model_spec \
+      -v ${scratch}:/workdir \
+      poldracklab/fitlins:0.11.0 \
+      /bids /analyses_out run \
+      -m /bids/model_spec -d /fmriprep_deriv \
+      --space MNI152NLin2009cAsym --desc-label preproc \
+      --smoothing 5:run:iso --estimator nilearn \
+      --n-cpus 1 \
+      --mem-gb 24 \
+      -w /workdir
+  elif [[ "$run_type" == "sing" ]]; then
+      echo
+      echo "Running singularity: sbatch sing_fitlins.sh"
+      echo 
+      sbatch cluster_jobs/sing_fitlins.sh ${openneuro_id} ${task_label}
+  else
+    echo
+    echo "Value provided ${run_type} is not of: sing or dock. Exiting"
+    echo
+    exit 1
+  fi
+
 else
-  echo "Docker execution skipped."
+  echo "Execution skipped."
   exit 1
 fi
 

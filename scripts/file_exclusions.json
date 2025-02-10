@@ -1,7 +1,5 @@
 {
     "exclusions": [
-        "*freesurfer*",
-        "*fsaverage*",
         "*dtseries*"
     ]
 }

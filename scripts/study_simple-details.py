@@ -65,7 +65,8 @@ for task_name in Tasks:
     event_files = bids_layout.get(task=task_name, suffix="events", extension=".tsv")
 
     if not event_files:
-        print(f"No event files found for task: {task_name}")
+        print()
+        print(f"\033[91mNo event files found for task: {task_name}\033[0m")
     else:
         group_df = pd.concat([pd.read_csv(file, sep='\t') for file in event_files], ignore_index=True)
 
@@ -80,9 +81,9 @@ for task_name in Tasks:
             "column_data_types": column_data_types,
             "trial_type_values": trial_type_values
         }
-        print(data)
+
         # Print results
-        print(f"Task: {task_name}")
+        print(f"\033[92mTask: {task_name}\033[0m")
         print(f"Number of event files: {len(event_files)}")
         print(f"Column names: {column_names}")
         print(f"Column data types: {column_data_types}")

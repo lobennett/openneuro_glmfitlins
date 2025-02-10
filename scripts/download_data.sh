@@ -8,11 +8,13 @@ if [ -z "$openneuro_id" ]; then
 fi
 
 # sets paths from config file
-config_file="../path_config.json"
+relative_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+config_file=$(realpath ${relative_path}/../path_config.json)
 
 # Extract values using jq
 data=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
+minimal_user=$(jq -r '.is_fmriprep_minimal' "${config_file}")
 spec_dir="${repo_dir}/statsmodel_specs/${openneuro_id}"
 scripts_dir="${repo_dir}/scripts"
 
@@ -23,6 +25,8 @@ for subdir in analyses fmriprep input ; do
 done
 
 [ ! -d "$spec_dir" ] && echo "Creating directory: $spec_dir" && mkdir -p "$spec_dir"
+
+
 
 # First, confirm data / files size of fMRIPrep derivatives on s3
 df_info=`aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
@@ -39,19 +43,26 @@ echo "fMRIPrep derivatives size for ${openneuro_id} is ${gb_rnd}GB with ${n_file
 echo "Downloading data to ${data}/fmriprep/${openneuro_id}/derivatives"
 echo -e "\tNote: You can reduce the size by adding file filters into the './scripts/file_exclusions.json' file."
 echo
-
+echo
+# check if fMRIPrep are minimal derivatives and whether to download
 read -p "Do you want to proceed with the download? (yes/no): " user_input
+
 if [[ "$user_input" == "yes" ]]; then
-  # Clone BIDS non-binary, mriqc group outputs and download fmriprep derivatives
-  echo "Downloading the data..."
-  python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir}
+  if [[ "$minimal_user" == "yes" ]]; then
+      echo "Downloading complete BIDS and fMRIPrep'd minimal data..."
+      python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "True"
+  else
+      echo "Downloading minimal BIDS and all fMRIPrep'd derivatives..."
+      python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "False"
+      echo -e "\tCopying dataset_description.json file within the fmriprep root directory"
+      cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
+  fi  # <-- Make sure this closes properly
+
   echo 
-  echo -e "\t Download completed."
+  echo -e "\tDownload completed."
   echo 
-  echo -e "\t Copy dataset_description.json file within the fmriprep root directory"
-  cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
 else
-  echo -e "\t Not downloading the data for ${openneuro_id}."
+  echo -e "\tNot downloading the data for ${openneuro_id}."
   echo
   exit 1
 fi

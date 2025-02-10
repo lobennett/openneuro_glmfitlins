@@ -1,6 +1,12 @@
 {
-    "datasets_folder": "/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/datasets",
-    "openneuro_glmrepo": "/Users/demidenm/Desktop/Academia/Stanford/9_ResearchSci/OpenNeuro/openneuro_fitlins/openneuro_glmfitlins",
-    "tmp_folder": "/tmp/"
+    "datasets_folder": "/oak/stanford/groups/russpold/data/openneuro_fitlins",
+    "openneuro_glmrepo": "/oak/stanford/groups/russpold/users/demidenm/openneuro_glmfitlins",
+    "tmp_folder": "/scratch/groups/russpold/demidenm/openneuro_fitlins",
+    "is_fmriprep_minimal": "True",
+    "fmriprep_simg": "/home/groups/russpold/singularity_images/fmriprep_24.1.0.sif",
+    "freesurfer_license": "/home/users/demidenm/fs/license.txt",
+    "fitlins_simg": "/home/groups/russpold/singularity_images/fitlins-0.11.0.simg",
+    "cond_env_source": "/home/users/demidenm/miniconda3/etc/profile.d/conda.sh",
+    "cond_env": "fmri_env"
     }
   

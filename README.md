@@ -18,7 +18,11 @@ In my case, I installed Docker Desktop for Mac with Apple Silicon via the [Docke
 ```bash
 docker pull poldracklab/fitlins:0.11.0
 ```
-This process took ~45-60 seconds to complete, ending with the prompt: `Status: Downloaded newer image for poldracklab/fitlins:0.11.0`.
+This process took ~45-60 seconds to complete, ending with the prompt: `Status: Downloaded newer image for poldracklab/fitlins:0.11.0`. Alternatively, if you are wanting to run via singularity, you can download the container using:
+
+```bash
+singularity build fitlins-0.11.0.simg docker://poldracklab/fitlins:0.11.0
+```
 
 ## Repository Structure
 

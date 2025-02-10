@@ -1,0 +1,49 @@
+./../path_config.json
+#### Running Fitlins models to generate statistical maps ####
+Study ID ds003425 and Task Label learning
+data_in: /oak/stanford/groups/russpold/data/openneuro_fitlins/input/ds003425
+scratch_out: /scratch/groups/russpold/demidenm/openneuro_fitlins/mod
+fmriprep_dir: /oak/stanford/groups/russpold/data/openneuro_fitlins/fmriprep/ds003425/derivatives
+model spec: /oak/stanford/groups/russpold/users/demidenm/openneuro_glmfitlins/statsmodel_specs/ds003425/ds003425-learning_specs.json
+250207-12:36:55,251 nipype.workflow INFO:
+	 [Node] Setting-up "fitlins_wf.loader" in "/workdir/fitlins_wf/loader".
+250207-12:36:55,276 nipype.workflow INFO:
+	 [Node] Executing "loader" <fitlins.interfaces.bids.LoadBIDSModel>
+250207-12:38:02,60 nipype.workflow INFO:
+	 [Node] Finished "loader", elapsed time 66.770803s.
+250207-12:38:02,61 nipype.workflow WARNING:
+	 Storing result file without outputs
+250207-12:38:02,64 nipype.workflow WARNING:
+	 [Node] Error on "fitlins_wf.loader" (/workdir/fitlins_wf/loader)
+250207-12:38:03,443 nipype.workflow ERROR:
+	 Node loader failed to run on host sh03-06n05.int.
+250207-12:38:03,443 nipype.workflow ERROR:
+	 Saving crash info to /workdir/crash-20250207-123803-demidenm-loader-f4d50bf4-7223-4a6f-9cce-d9a840db097c.txt
+Traceback (most recent call last):
+  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/nipype/pipeline/plugins/multiproc.py", line 67, in run_node
+    result["result"] = node.run(updatehash=updatehash)
+  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/nipype/pipeline/engine/nodes.py", line 527, in run
+    result = self._run_interface(execute=True)
+  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/nipype/pipeline/engine/nodes.py", line 645, in _run_interface
+    return self._run_command(execute)
+  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/nipype/pipeline/engine/nodes.py", line 771, in _run_command
+    raise NodeExecutionError(msg)
+nipype.pipeline.engine.nodes.NodeExecutionError: Exception raised while executing Node loader.
+
+Traceback:
+	Traceback (most recent call last):
+	  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/nipype/interfaces/base/core.py", line 398, in run
+	    runtime = self._run_interface(runtime)
+	  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/fitlins/interfaces/bids.py", line 248, in _run_interface
+	    self._results['all_specs'] = self._load_graph(runtime, graph)
+	  File "/opt/miniconda-latest/envs/neuro/lib/python3.9/site-packages/fitlins/interfaces/bids.py", line 256, in _load_graph
+	    specs = node.run(inputs, group_by=node.group_by, **filters)
+	  File "/home/users/demidenm/.local/lib/python3.9/site-packages/bids/modeling/statsmodels.py", line 459, in run
+	    node_output = BIDSStatsModelsNodeOutput(
+	  File "/home/users/demidenm/.local/lib/python3.9/site-packages/bids/modeling/statsmodels.py", line 576, in __init__
+	    df = reduce(merge_dfs, dfs)
+	TypeError: reduce() of empty sequence with no initial value
+
+
+250207-12:38:05,443 nipype.workflow ERROR:
+	 could not run node: fitlins_wf.loader

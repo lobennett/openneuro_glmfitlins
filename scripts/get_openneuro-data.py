@@ -4,6 +4,7 @@ import os
 import sys
 import subprocess
 import json
+from pathlib import Path
 
 
 # Set up argument parsing
@@ -11,12 +12,14 @@ parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
 parser.add_argument("openneuro_study", type=str, help="OpenNeuro study ID")
 parser.add_argument("data_dir", type=str, help="Base directory for dataset storage")
 parser.add_argument("spec_dir", type=str, help="Directory for specification files for study")
+parser.add_argument("is_minimal", type=bool, help="Are fMRIPrep'd derivatives minimal output (True/False)?")
 args = parser.parse_args()
 
 # Assign arguments to variables
 openneuro_study = args.openneuro_study
 data_dir = os.path.abspath(args.data_dir)
 spec_dir = os.path.abspath(args.spec_dir)
+minimal_fp = args.is_minimal
 
 # Define paths
 file_exclude_list = os.path.join('.', "file_exclusions.json")
@@ -35,25 +38,38 @@ print()
 
 bids_input_dir = os.path.join(bids_data, openneuro_study)
 if os.path.exists(bids_input_dir):
-    print(f"        {openneuro_study} already exists. Skipping BIDS data clone.")
+    print(f"        {openneuro_study} already exists. Skipping BIDS data download.")
 else:
-    try:
-        # Run the datalad clone command
-        subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
-        print(f"    {openneuro_study}. Dataset cloned successfully.")
+    if minimal_fp is True:
+        try:
+            # clone & get entire dataset
+            subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
+            subprocess.run(['datalad', 'get', bids_input_dir], check=True)
+            print(f"    {openneuro_study}. Dataset files (.nii.gz) downloaded successfully.")
+        except subprocess.CalledProcessError as e:
+            print(f"        An error occurred while getting the files: {e}")
+    else:
+        try:
+            # Run the datalad clone command
+            subprocess.run(['datalad', 'siblings', '-d', git_repo_url, bids_input_dir, '-s', 's3-PRIVATE'], check=True)
+            subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
+            # Enable remote siblings after cloning
+            print(f"    {openneuro_study}. Dataset cloned successfully.")
 
-    except subprocess.CalledProcessError as e:
-        # Check if the error is related to an outdated Git version
-        if 'error: unknown option `show-origin`' in str(e):
-            print("     Error: Your Git version may be outdated. Please confirm and update Git.")
-            print("     Use 'git --version' to check your version.")
-
-        else:
-            print(f"        An error occurred while cloning the dataset: {e}")
+        except subprocess.CalledProcessError as e:
+            # Check if the error is related to an outdated Git version
+            if 'error: unknown option `show-origin`' in str(e):
+                print("     Error: Your Git version may be outdated. Please confirm and update Git.")
+                print("     Use 'git --version' to check your version.")
 
 
-# Build the AWS CLI command
-fmriprep_out_dir = os.path.join(fmriprep_dir, openneuro_study, "derivatives")
+
+# Build the AWS CLI command for FMRIPREP & MRIQC
+if minimal_fp is True:
+    fmriprep_out_dir = os.path.join(fmriprep_dir, openneuro_study)
+else:
+    fmriprep_out_dir = os.path.join(fmriprep_dir, openneuro_study, "derivatives")
+    
 download_fmriprep = [
     "aws", "s3", "sync", "--no-sign-request",
     f"s3://openneuro-derivatives/fmriprep/{openneuro_study}-fmriprep",
@@ -65,12 +81,16 @@ getfiles_mriqcgroup = [
 ]
 
 # Get list of MRIQC files in repo, then only download the group files
-if os.path.exists(spec_dir):
+mriqc_summ = os.path.join(spec_dir, openneuro_study, "mriqc_summary")
+if os.path.exists(mriqc_summ):
+    print(f"        {openneuro_study} MRIQC already exists. Skipping group summary data download.")
+else:    
     mriqc_files = subprocess.run(getfiles_mriqcgroup, capture_output=True, text=True)
     files = [line.split()[-1] for line in mriqc_files.stdout.splitlines() if 'group' in line]
     print(files)
 
     if not files:
+            print()
             print("No 'group' files found. Exiting.")
     else:
         for s3_file_path in files:
@@ -103,3 +123,4 @@ else:
         time.sleep(5)  # wait before retrying
         subprocess.run(download_fmriprep, check=True)
         print("     S3 re-sync completed successfully.")
+

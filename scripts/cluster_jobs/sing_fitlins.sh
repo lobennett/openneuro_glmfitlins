@@ -33,19 +33,19 @@ task_label=${2}
 
 # config paths
 singularity=$(which singularity || { echo "Singularity not found. Exiting."; exit 1; })
-config_file=./../../path_config.json
+config_file=./../path_config.json
 data_dir=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
 model_json="${repo_dir}/statsmodel_specs/${study_id}/${study_id}-${task_label}_specs.json"
 scratch_out=$(jq -r '.tmp_folder' "$config_file")
-conda_source=$(jq -r '.cond_env_source' "$config_file")
-conda_name=$(jq -r '.cond_env' "$config_file")
+env_source=$(jq -r '.env_source' "$config_file")
+env_name=$(jq -r '.env_name' "$config_file")
 singularity_img=$(jq -r '.fitlins_simg' "$config_file")
 
 
 # set conda env
-source ${conda_source}
-conda activate ${conda_name}
+source ${env_source}
+mamba activate ${env_name}
 
 # Run fitlins model
 # create derivative and scratch dirs
@@ -67,8 +67,9 @@ singularity run --cleanenv \
       -B ${model_json}:/bids/model_spec \
       -B ${scratch_out}/mod:/workdir \
       ${singularity_img} \
-      /bids /analyses_out run \
+      /bids /analyses_out participant \
       -m /bids/model_spec -d /fmriprep_deriv \
+      --ignore "sub-.*_physio\.(json|tsv\.gz)" \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing 5:run:iso --estimator nilearn \
       --n-cpus 4 \

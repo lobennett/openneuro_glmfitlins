@@ -3,7 +3,8 @@
   "BIDSModelVersion": "1.0.0",
   "Input": {
     "subject": [
-      "01"
+      "01",
+      "02"
     ],
     "task": [
       "learning"
@@ -76,6 +77,23 @@
       "Name": "subject_level",
       "GroupBy": [
         "subject",
+        "contrast",
+        "session"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
         "contrast",
         "session"
       ],

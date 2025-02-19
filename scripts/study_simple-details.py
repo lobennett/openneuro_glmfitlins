@@ -38,8 +38,8 @@ preproc_run_n = preproc_layout.get_runs()
 preproc_tasks = preproc_layout.get_tasks()
 preproc_runs_array = [run or run for run in preproc_run_n]
 
-Subjects = preproc_sub_n
-Tasks = preproc_tasks
+Subjects = bids_sub_n
+Tasks = bids_tasks
 
 # print to terminal subject details
 print()

@@ -1,0 +1,10 @@
+{
+  "Contrasts": [
+    {
+      "Name": "faceVscrabled",
+      "ConditionList": ["trial_type.faces", "trial_type.scrambled"],
+      "Weights": [1, -1],
+      "Test": "t"
+    }
+  ]
+}

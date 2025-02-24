@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Set data / environment paths for data download and BIDS Stats Models
 openneuro_id=$1 # OpenNeuro ID, e.g. ds000102

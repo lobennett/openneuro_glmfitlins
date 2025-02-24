@@ -7,8 +7,8 @@
 #SBATCH --mem-per-cpu=8GB
 #SBATCH -p russpold,normal,owners
 # Outputs ----------------------------------
-#SBATCH --output=./cluster_jobs/logs/regen_fmriprep.%A_%a.out
-#SBATCH --error=./cluster_jobs/logs/regen_fmriprep.%A_%a.err
+#SBATCH --output=./logs/regen_fmriprep.%A_%a.out
+#SBATCH --error=./logs/regen_fmriprep.%A_%a.err
 #SBATCH --mail-user=demidenm@stanford.edu
 #SBATCH --mail-type=ALL
 # ------------------------------------------
@@ -25,7 +25,7 @@ study_id=${1}
 
 # config paths
 singularity=$(which singularity || { echo "Singularity not found. Exiting."; exit 1; })
-config_file=./../path_config.json
+config_file=./../../path_config.json
 data_dir=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
 scratch_out=$(jq -r '.tmp_folder' "$config_file")
@@ -36,7 +36,7 @@ fs_license=$(jq -r '.freesurfer_license' "$config_file")
 
 # set conda env
 source ${conda_source}
-conda activate ${conda_name}
+mamba activate ${conda_name}
 
 # example from job array, sub=("21" "31" "78" "55" "106")
 subj=$( printf %02d ${SLURM_ARRAY_TASK_ID} )

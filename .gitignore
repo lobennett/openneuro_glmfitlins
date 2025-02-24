@@ -10,4 +10,5 @@ wheels/
 .venv
 .DS_Store
 scripts/qc_checks.ipynb
-*logs*
+scripts/cluster_jobs/logs 
+scripts/.ipynb_checkpoints

@@ -1,6 +1,0 @@
-#### Running Fitlins models to generate statistical maps ####
-Study ID ds003425 and Task Label learning
-data_in: /input/ds003425
-scratch_out: 
-fmriprep_dir: /fmriprep//derivatives
-model spec: /statsmodel_specs//-learning_specs.json

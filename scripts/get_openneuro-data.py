@@ -46,8 +46,7 @@ else:
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
             subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
             os.chdir(bids_input_dir)
-            subprocess.run(['datalad', 'get', bids_input_dir, bids_input_dir], checls
-            k=True)
+            subprocess.run(['datalad', 'get', bids_input_dir, bids_input_dir], check=True)
             print(f"    {openneuro_study}. Dataset files (.nii.gz) downloaded successfully.")
         except subprocess.CalledProcessError as e:
             print(f"        An error occurred while getting the files: {e}")

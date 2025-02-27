@@ -3,6 +3,8 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [email](mailto:demidenko.michael@gmail.com)
 
+*This repository is a work in-progress. It was last updated: 2025-02-27*
+
 ## Overview
 
 `openneuro_glmfitlins` is a tool designed to process OpenNeuro datasets using [FitLins](https://github.com/poldracklab/fitlins) via [BIDS Stats Models](https://bids-standard.github.io/stats-models/), facilitating efficient and reproducible neuroimaging data analysis.

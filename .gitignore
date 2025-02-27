@@ -12,3 +12,6 @@ wheels/
 scripts/qc_checks.ipynb
 scripts/cluster_jobs/logs 
 scripts/.ipynb_checkpoints
+scripts/troubleshoot_bids-stats-model copy.ipynb
+scripts/troubleshoot_bids-stats-model.ipynb
+scripts/troubleshoot_bids-stats-model.ipynb

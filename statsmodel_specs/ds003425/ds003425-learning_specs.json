@@ -40,33 +40,23 @@
             ]
           },
           {
-            "Name": "Factor",
-            "Input": [
-              "trial_type.1"
-            ],
-            "Output": [
-              "CSP_shock"
-          ]
-          },
-          {
             "Name": "Convolve",
             "Model": "spm",
+            "Derivative": "True",
             "Input": [
-              "trial_type.*",
-              "CSP_shock"
+              "trial_type.*"
             ]
           }
-          
         ]
       },
       "Model": {
         "X": [
           1,
           "trial_type.*",
-          "CSP_shock",
           "trans_*",
           "rot*",
-          "cosine*"
+          "cosine*",
+          "motion_outlier_*"
         ],
         "Type": "glm"
       },

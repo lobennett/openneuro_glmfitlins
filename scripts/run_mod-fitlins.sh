@@ -29,7 +29,7 @@ scratch=$(jq -r '.tmp_folder' "$config_file")
 read -p "If subject/contrast specs are setup, do you want to run create_mod-specs.py? (yes/no): " run_create_specs
 
 if [[ "$run_create_specs" == "yes" ]]; then
-    python ${scripts_dir}/create_mod-specs.py --openneuro_study ${openneuro_id} --task ${task_label} --script_dir ${scripts_dir}
+    uv run python ${scripts_dir}/create_mod-specs.py --openneuro_study ${openneuro_id} --task ${task_label} --script_dir ${scripts_dir}
 
 else
   echo "Skipping creation of model specs."

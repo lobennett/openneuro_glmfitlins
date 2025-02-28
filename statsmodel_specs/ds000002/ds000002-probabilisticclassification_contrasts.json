@@ -1,0 +1,10 @@
+{
+    "Contrasts": [
+      {
+        "Name": "feedback",
+        "ConditionList": ["trial_type.feedback"],
+        "Weights": [1],
+        "Test": "t"
+      }
+    ]
+  }

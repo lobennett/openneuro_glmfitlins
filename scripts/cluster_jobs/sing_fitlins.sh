@@ -44,8 +44,14 @@ singularity_img=$(jq -r '.fitlins_simg' "$config_file")
 
 
 # set conda env
-source ${env_source}
-mamba activate ${env_name}
+#source ${env_source}
+#mamba activate ${env_name}
+# Set up `uv` environment
+echo "Setting up Python environment with uv..."
+uv venv .venv
+source .venv/bin/activate
+uv pip install --editable .
+
 
 # Run fitlins model
 # create derivative and scratch dirs

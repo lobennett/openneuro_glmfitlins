@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=1-2%10 # 
+#SBATCH --array=1-10 # 
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=8GB
@@ -35,8 +35,14 @@ singularity_img=$(jq -r '.fmriprep_simg' "$config_file")
 fs_license=$(jq -r '.freesurfer_license' "$config_file")
 
 # set conda env
-source ${conda_source}
-mamba activate ${conda_name}
+#source ${conda_source}
+#mamba activate ${conda_name}
+# Set up `uv` environment
+echo "Setting up Python environment with uv..."
+uv venv .venv
+source .venv/bin/activate
+uv pip install --editable .
+
 
 # example from job array, sub=("21" "31" "78" "55" "106")
 subj=$( printf %02d ${SLURM_ARRAY_TASK_ID} )

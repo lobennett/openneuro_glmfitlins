@@ -1,5 +1,5 @@
 {
-  "Name": "ds003425",
+  "Name": "ds000002",
   "BIDSModelVersion": "1.0.0",
   "Input": {
     "subject": [
@@ -12,13 +12,10 @@
       "07",
       "08",
       "09",
-      "10",
-      "11",
-      "12",
-      "13"
-  ],
+      "10"
+    ],
     "task": [
-      "learning"
+      "probabilisticclassification"
     ]
   },
   "Nodes": [
@@ -27,8 +24,7 @@
       "Name": "run_level",
       "GroupBy": [
         "run",
-        "subject",
-        "session"
+        "subject"
       ],
       "Transformations": {
         "Transformer": "pybids-transforms-v1",
@@ -42,7 +38,6 @@
           {
             "Name": "Convolve",
             "Model": "spm",
-            "Derivative": "True",
             "Input": [
               "trial_type.*"
             ]
@@ -61,15 +56,13 @@
       },
       "Contrasts": [
         {
-          "Name": "VCSPvVCSN",
-          "ConditionList": ["trial_type.2", "trial_type.4"],
-          "Weights": [1, -1],
-          "Test": "t"
-        },
-        {
-          "Name": "ICSPvICSN",
-          "ConditionList": ["trial_type.3","trial_type.5"],
-          "Weights": [1, -1],
+          "Name": "feedback",
+          "ConditionList": [
+            "trial_type.feedback"
+          ],
+          "Weights": [
+            1
+          ],
           "Test": "t"
         }
       ]
@@ -79,8 +72,7 @@
       "Name": "subject_level",
       "GroupBy": [
         "subject",
-        "contrast",
-        "session"
+        "contrast"
       ],
       "Model": {
         "X": [
@@ -96,8 +88,7 @@
       "Level": "Dataset",
       "Name": "data_level",
       "GroupBy": [
-        "contrast",
-        "session"
+        "contrast"
       ],
       "Model": {
         "X": [

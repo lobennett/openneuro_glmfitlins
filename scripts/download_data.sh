@@ -29,7 +29,7 @@ done
 
 
 # First, confirm data / files size of fMRIPrep derivatives on s3
-df_info=`aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
+df_info=`uv run aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3`
 
 # Extract the number of files and total size
 n_files=`echo "$df_info" | grep "Total Objects" | awk -F':' '{print $2}' | tr -d ' '`
@@ -50,10 +50,10 @@ read -p "Do you want to proceed with the download? (yes/no): " user_input
 if [[ "$user_input" == "yes" ]]; then
   if [[ "$minimal_user" == "yes" ]]; then
       echo "Downloading complete BIDS and fMRIPrep'd minimal data..."
-      python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "True"
+      uv run python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "True"
   else
       echo "Downloading minimal BIDS and all fMRIPrep'd derivatives..."
-      python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "False"
+      uv run python ${scripts_dir}/get_openneuro-data.py ${openneuro_id} ${data} ${spec_dir} "False"
       echo -e "\tCopying dataset_description.json file within the fmriprep root directory"
       cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
   fi  # <-- Make sure this closes properly
@@ -68,8 +68,8 @@ else
 fi
 
 # run python script to 
-python ${scripts_dir}/study_simple-details.py --openneuro_study ${openneuro_id} \
-                                              --bids_dir ${data}/input/${openneuro_id} \
-                                              --fmriprep_dir ${data}/fmriprep/${openneuro_id} \
-                                              --spec_dir ${spec_dir}
+uv run python ${scripts_dir}/study_simple-details.py --openneuro_study ${openneuro_id} \
+                                                --bids_dir ${data}/input/${openneuro_id} \
+                                                --fmriprep_dir ${data}/fmriprep/${openneuro_id} \
+                                                --spec_dir ${spec_dir}
 

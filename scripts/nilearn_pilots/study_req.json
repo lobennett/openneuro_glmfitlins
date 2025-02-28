@@ -1,0 +1,36 @@
+{
+    "ds003425": {
+        "learning": {
+            "trial_type_map": {
+                "1": "view_csp_shk",
+                "2": "view_csp_noshk",
+                "3": "img_csp",
+                "4": "view_csm",
+                "5": "img_csm"
+            },
+            "con_labs": {
+                "ICSPvICSN": "img_csp - img_csm",
+                "VCSPvVCSN": "view_csp_noshk - view_csm"
+            },
+            "contrasts": [
+                "ICSPvICSN", 
+                "VCSPvVCSN"
+            ],
+            "volume": 125,
+            "tr": 2.0,
+            "runs": ["01", "02", "03"],
+            "slice_time_correct_true": true
+        },
+        "training": {
+            "trial_type_map": {
+            },
+            "con_labs": {
+            },
+            "contrasts": [
+            ],
+            "volume": 0,
+            "tr": 0,
+            "runs": []
+        }
+    }
+}

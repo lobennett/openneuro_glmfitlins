@@ -39,9 +39,8 @@ fs_license=$(jq -r '.freesurfer_license' "$config_file")
 #mamba activate ${conda_name}
 # Set up `uv` environment
 echo "Setting up Python environment with uv..."
-uv venv .venv
-source .venv/bin/activate
-uv pip install --editable .
+source "${repo_dir}/.venv/bin/activate"
+uv sync
 
 
 # example from job array, sub=("21" "31" "78" "55" "106")

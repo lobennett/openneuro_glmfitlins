@@ -28,6 +28,20 @@ else
     conda install -y -c conda-forge git
 fi
 
+
+# Check if jq is installed
+if ! command -v jq &> /dev/null; then
+    echo "jq not found. Installing..."
+    if command -v conda &> /dev/null; then
+        conda install -y -c conda-forge jq
+    else
+        echo "No supported package manager found for installing jq."
+        exit 1
+    fi
+else
+    echo "jq is already installed."
+fi
+
 # Check and install git-annex (version >= 8.20)
 required_annex_version="8.20"
 if command -v git-annex &> /dev/null; then

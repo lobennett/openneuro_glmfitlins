@@ -6,7 +6,8 @@
                 "2": "view_csp_noshk",
                 "3": "img_csp",
                 "4": "view_csm",
-                "5": "img_csm"
+                "5": "img_csm",
+                "6": "fstlst_csm"
             },
             "con_labs": {
                 "ICSPvICSN": "img_csp - img_csm",

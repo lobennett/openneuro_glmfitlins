@@ -78,9 +78,15 @@ for run in runs:
         sep='\t'
         )
 
+    # custom for task 
+    subset_df = eventsdat[eventsdat['trial_type'].isin([4, 5])]
+    first_last_df = subset_df.iloc[[0, -1]].copy()
+    first_last_df['trial_type'] = 6
+    events_cpy = pd.concat([eventsdat, first_last_df], ignore_index=True)
+
     # remap trial_type values if remappping exists
     if trial_type_map:
-        eventsdat["trial_type"] = eventsdat["trial_type"].map(trial_type_map)
+        events_cpy["trial_type"] = events_cpy["trial_type"].map(trial_type_map)
 
     # get path to confounds from fmriprep, func data + mask, set image path
     conf_path = Path(fmriprep_path) / subj / f"ses-{ses}" / "func" / f"{subj}_ses-{ses}_task-{task}_run-{run}_desc-confounds_timeseries.tsv"
@@ -95,9 +101,9 @@ for run in runs:
     print('\t\t 1/3 Create Regressors & Design Matrix for GLM')
     
     # design matrix
-    design_events = pd.DataFrame({'trial_type': eventsdat['trial_type'],
-                                    'onset': eventsdat['onset'],
-                                    'duration': eventsdat['duration']})
+    design_events = pd.DataFrame({'trial_type': events_cpy['trial_type'],
+                                    'onset': events_cpy['onset'],
+                                    'duration': events_cpy['duration']})
 
 
     frame_times = np.arange(numvols) * boldtr

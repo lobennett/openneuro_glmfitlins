@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=rn_nilearn
-#SBATCH --array=1-13%20 # 
+#SBATCH --array=1-10%20 # 
 #SBATCH --time=00:15:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=6GB
@@ -57,7 +57,9 @@ if [ $? -ne 0 ]; then
     exit 1
 else
     # copy recursively while preserving timestamps // attributes
-    cp -a "${tmp}/${study_id}/"* "${data_dir}/nilearn/${study_id}/"
+    #cp -a "${tmp}/${study_id}/"* "${data_dir}/nilearn/${study_id}/"
+    rsync -av "${tmp}/${study_id}/" "${data_dir}/nilearn/${study_id}/"
 
 fi
 
+ 

@@ -1,53 +1,62 @@
 #!/bin/bash
 set -euo pipefail
 
-# Set data / environment paths for data download and BIDS Stats Models
+# Check for required arguments
+if [ $# -lt 2 ]; then
+  echo "Usage: $0 <openneuro_id> <task_label>"
+  echo "Example: $0 ds000102 flanker"
+  exit 1
+fi
+
+# Get command line arguments
 openneuro_id=$1 # OpenNeuro ID, e.g. ds000102
-if [ -z "$openneuro_id" ]; then
-  echo "Please provide the OpenNeuro ID (e.g. ds000001) as the first argument."
-  exit 1
-fi
+task_label=$2 # Task label, e.g. 'flanker'
 
-task_label=${2} # Task label, e.g. 'flanker'
-if [ -z "$task_label" ]; then
-  echo "Please provide the task label (e.g. 'balloonanalogrisktask') as the second argument."
-  exit 1
-fi
-
-# sets paths from config file
+# Set paths from config file
 relative_path=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 config_file=$(realpath ${relative_path}/../path_config.json)
+
+# config file exists
+if [ ! -f "$config_file" ]; then
+  echo "Error: Config file not found at $config_file"
+  exit 1
+fi
 
 # Extract values using jq
 data=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
-model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
 scripts_dir="${repo_dir}/scripts"
 scratch=$(jq -r '.tmp_folder' "$config_file")
+model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
 
-
-read -p "If subject/contrast specs are setup, do you want to run create_mod-specs.py? (yes/no): " run_create_specs
-
-if [[ "$run_create_specs" == "yes" ]]; then
-    uv run python ${scripts_dir}/create_mod-specs.py --openneuro_study ${openneuro_id} --task ${task_label} --script_dir ${scripts_dir}
-
+# Create model specifications if desired
+read -p "Create model specifications? (yes/no): " run_create_specs
+if [[ "$run_create_specs" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    uv run python ${scripts_dir}/create_mod-specs.py \
+      --openneuro_study ${openneuro_id} \
+      --task ${task_label} \
+      --script_dir ${scripts_dir}
 else
-  echo "Skipping creation of model specs."
+    echo "Skipping creation of model specs."
 fi
 
-read -p "If the ${openneuro_id}_specs.json file is ready, do you want to run the Fitlins container? (yes/no): " start_fitlins
+# Run Fitlins if desired
+read -p "Run Fitlins container? (yes/no): " start_fitlins
+if [[ ! "$start_fitlins" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    echo "Execution skipped."
+    exit 0
+fi
 
-if [[ "$start_fitlins" == "yes" ]]; then
-
-  read -p "Are you running using docker or singularity on HPC? (dock/sing): " run_type
-
-  if [[ "$run_type" == "dock" ]]; then
+# Determine whether to use Docker or Singularity
+read -p "Run using docker or singularity? (dock/sing): " run_type
+if [[ "$run_type" == "dock" ]]; then
     echo
     echo "Running docker with the paths:"
     echo "BIDS input: ${data}/input/${openneuro_id}"
     echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
     echo "Analyses output: ${data}/analyses/${openneuro_id}"
     echo "Model specs: ${model_json}"
+    echo "Working directory: ${scratch}"
     echo 
 
     docker run --rm -it \
@@ -64,24 +73,15 @@ if [[ "$start_fitlins" == "yes" ]]; then
       --n-cpus 1 \
       --mem-gb 24 \
       -w /workdir
-  elif [[ "$run_type" == "sing" ]]; then
-      echo
-      echo "Running singularity: sbatch sing_fitlins.sh"
-      echo 
-      sbatch cluster_jobs/sing_fitlins.sh ${openneuro_id} ${task_label}
-  else
+elif [[ "$run_type" == "sing" ]]; then
     echo
-    echo "Value provided ${run_type} is not of: sing or dock. Exiting"
-    echo
-    exit 1
-  fi
-
+    echo "Running singularity: sbatch sing_fitlins.sh"
+    echo 
+    sbatch cluster_jobs/sing_fitlins.sh ${openneuro_id} ${task_label}
 else
-  echo "Execution skipped."
-  exit 1
+    echo "Invalid option: ${run_type}. Must be 'dock' or 'sing'. Exiting."
+    exit 1
 fi
-
- 
 
 
 #singularity run --cleanenv \

@@ -42,7 +42,7 @@ if os.path.exists(bids_input_dir):
 else:
     if minimal_fp is True:
         try:
-            # clone & get entire dataset
+            # clone & get entire BIDS dataset
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
             subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
             os.chdir(bids_input_dir)
@@ -84,24 +84,28 @@ getfiles_mriqcgroup = [
 
 # Get list of MRIQC files in repo, then only download the group files
 mriqc_summ = os.path.join(spec_dir, openneuro_study, "mriqc_summary")
+
 if os.path.exists(mriqc_summ):
     print(f"        {openneuro_study} MRIQC already exists. Skipping group summary data download.")
-else:    
+else:
+    # Create output directory if it doesn't exist
+    os.makedirs(mriqc_summ, exist_ok=True)
+    
+    # Get list of MRIQC group files
     mriqc_files = subprocess.run(getfiles_mriqcgroup, capture_output=True, text=True)
     files = [line.split()[-1] for line in mriqc_files.stdout.splitlines() if 'group' in line]
     print(files)
 
     if not files:
-            print()
-            print("No 'group' files found. Exiting.")
+        print("No 'group' files found. Exiting.")
     else:
         for s3_file_path in files:
-            file_path = os.path.join(spec_dir,"mriqc_summary", os.path.basename(s3_file_path))
+            file_path = os.path.join(mriqc_summ, os.path.basename(s3_file_path))
             download_mriqc_grpfile = [
-                    "aws", "s3", "cp", "--no-sign-request",
-                    f"s3://openneuro-derivatives/{s3_file_path}", file_path
-                ]
-        
+                "aws", "s3", "cp", "--no-sign-request",
+                f"s3://openneuro-derivatives/{s3_file_path}", file_path
+            ]
+            
             subprocess.run(download_mriqc_grpfile, capture_output=True, text=True)
             print(f"    Downloaded: {s3_file_path} to {file_path}")
 

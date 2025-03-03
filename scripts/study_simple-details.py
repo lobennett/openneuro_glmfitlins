@@ -26,17 +26,17 @@ spec_path = args.spec_dir
 bids_layout = BIDSLayout(bids_path)
 preproc_layout = BIDSLayout(fmriprep_path, derivatives=True)
 
-# did input basics
+# BIDS input basics
 bids_sub_n = bids_layout.get_subjects()
 bids_run_n = bids_layout.get_runs()
 bids_tasks = bids_layout.get_tasks()
-bids_runs_array = [run or run for run in bids_run_n]
+bids_runs_array = [run for run in bids_run_n]
 
 # fmriprep basics
 preproc_sub_n = preproc_layout.get_subjects()
 preproc_run_n = preproc_layout.get_runs()
 preproc_tasks = preproc_layout.get_tasks()
-preproc_runs_array = [run or run for run in preproc_run_n]
+preproc_runs_array = [run for run in preproc_run_n]
 
 Subjects = bids_sub_n
 Tasks = bids_tasks
@@ -89,7 +89,6 @@ for task_name in Tasks:
         print(f"Column data types: {column_data_types}")
         print(f"Unique 'trial_type' values: {trial_type_values}")
         print()
-
 
 
 # save study and task details to json

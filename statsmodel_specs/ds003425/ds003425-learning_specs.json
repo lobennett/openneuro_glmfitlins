@@ -71,6 +71,12 @@
           "ConditionList": ["trial_type.3","trial_type.5"],
           "Weights": [1, -1],
           "Test": "t"
+        },
+        {
+          "Name": "VCSPshck",
+          "ConditionList": ["trial_type.1"],
+          "Weights": [1],
+          "Test": "t"
         }
       ]
     },

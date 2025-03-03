@@ -11,11 +11,13 @@
             },
             "con_labs": {
                 "ICSPvICSN": "img_csp - img_csm",
-                "VCSPvVCSN": "view_csp_noshk - view_csm"
+                "VCSPvVCSN": "view_csp_noshk - view_csm",
+                "Shockbase": "view_csp_shk"
             },
             "contrasts": [
                 "ICSPvICSN", 
-                "VCSPvVCSN"
+                "VCSPvVCSN",
+                "VCSPshck"
             ],
             "volume": 125,
             "tr": 2.0,

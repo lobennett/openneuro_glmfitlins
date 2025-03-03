@@ -1,4 +1,7 @@
 import warnings
+from scipy.stats import t as t_dist
+from scipy.stats import norm
+from nilearn.image import new_img_like
 warnings.filterwarnings("ignore")
 import pandas as pd
 from pathlib import Path
@@ -9,7 +12,7 @@ from nilearn.glm.second_level import SecondLevelModel
 
 def group_onesample(fixedeffect_paths: list, session: str, task_type: str,
                     contrast_type: str, group_outdir: str,
-                    mask: str = None):
+                    mask: str = None, save_zstat: bool = True):
     """
     Computes a group (second-level) model by fitting an intercept to the length of maps.
     Saves computed statistics to disk.
@@ -34,6 +37,16 @@ def group_onesample(fixedeffect_paths: list, session: str, task_type: str,
 
     tstat_out = group_outdir / f"subs-{n_maps}_ses-{session}_task-{task_type}_contrast-{contrast_type}_stat-tstat.nii.gz"
     tstat_map.to_filename(tstat_out)
+
+    if save_zstat:
+        # t- to z-stat
+        df = n_maps - 1  # dfs
+        t_values = tstat_map.get_fdata()  # T-values from the image
+        z_values = norm.ppf(t_dist.cdf(t_values, df))  # T to Z
+        # create z-stat Nifti
+        z_map = new_img_like(tstat_map, z_values)
+        zstat_out = group_outdir / f"subs-{n_maps}_ses-{session}_task-{task_type}_contrast-{contrast_type}_stat-zstat.nii.gz"
+        z_map.to_filename(zstat_out)
 
 
 def fixed_effect(subject: str, session: str, task_type: str,

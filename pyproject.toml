@@ -20,6 +20,7 @@ dependencies = [
     "jupyter>=1.0.0",
     "notebook>=7.0.0",
     "awscli",
+    "scipy",
     "argparse"
 ]
 

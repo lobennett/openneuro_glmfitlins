@@ -45,5 +45,5 @@ for contrast in contrasts:
     print(f"For {contrast}, {len(list_maps)} images found.")
     group_onesample(fixedeffect_paths=list_maps, session=ses, task_type=task,
                     contrast_type=contrast, group_outdir=grp_out,
-                    mask=brainmask)
+                    mask=brainmask, save_zstat=True)
 

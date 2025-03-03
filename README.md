@@ -3,18 +3,22 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [email](mailto:demidenko.michael@gmail.com)
 
-*This repository is a work in-progress. It was last updated: 2025-02-27*
+*This repository is a work in-progress. It was last updated: 2025-03-03*
 
 ## Overview
 
-`openneuro_glmfitlins` is a tool designed to process OpenNeuro datasets using [FitLins](https://github.com/poldracklab/fitlins) via [BIDS Stats Models](https://bids-standard.github.io/stats-models/), facilitating efficient and reproducible neuroimaging data analysis.
+`openneuro_glmfitlins` is a repository of scripts created to assist in analyzing OpenNeuro datasets using [FitLins](https://github.com/poldracklab/fitlins) via [BIDS Stats Models](https://bids-standard.github.io/stats-models/). The goal: facilitate efficient and reproducible neuroimaging data analysis with minimal barriers to entry.
 
 ## Features of this Repo
 
+- **Automatic Setup**: Using [./setup_uv.sh](setup_uv.sh), Install [uv](https://docs.astral.sh/uv/guides/install-python/) python manager. Checks versions of github, datalad and git-annex to ensure cloning and downloading works w/o errors Creates an environment `.venv/bin` with package requirements for python to run.
 - **Automated Data Retrieval**: Uses DataLad and AWS CLI to clone BIDS input data and download fMRIPrep (preprocessed) MRI/fMRI data.
 - **Flexible Analysis Specifications**: Provides summaries of relevant subject, run, and task fMRI data, allowing for easier curation of statistical models via JSON files.
 - **Reproducible Environments**: Uses Docker for consistent computational reproducibility ([FitLins Installation Guide](https://fitlins.readthedocs.io/en/latest/installation.html#singularity-container)).
+-- **High performance compute analyses**: Facilitate the recomputation of minimially preprocessing MRI data and Fitlins modeling.
 
+
+***Local System Analyses***
 In my case, I installed Docker Desktop for Mac with Apple Silicon via the [Docker website](https://docs.docker.com/desktop/setup/install/mac-install/). This was about a 1.8GB application. After installing Docker Desktop and completing setup via the prompts, I ran the following to set up FitLins v0.11.0:
 
 ```bash
@@ -26,9 +30,16 @@ This process took ~45-60 seconds to complete, ending with the prompt: `Status: D
 singularity build fitlins-0.11.0.simg docker://poldracklab/fitlins:0.11.0
 ```
 
+***Remote System Analyses***
+Required building a singulaity container for fitlins. If you do not have fMRIPrep, you will need to do the same for fMRIPrep, as some datasets *do not* have the complete preprocessed data (e.g., minimal files, missing volumetric NiFtis and confounds.tsv files)
+
+```bash
+singularity build fitlins-0.11.0.simg docker://poldracklab/fitlins:0.11.0
+```
+
 ## Repository Structure
 
-- `scripts/`: Contains scripts for data download, JSON file creation, and FitLins model analysis. 
+- `scripts/`: Contains scripts for data download, JSON file creation, and FitLins model analysis. Include cluster jobs folder.
 - `statsmodel_specs/`: JSON files specifying statistical models for FitLins for *each* OpenNeuro study. Each directory also contains an `mriqc_summary`, which includes `.tsv` and `.html` files. Inside `statsmodel_specs/STUDY_ID`, there is a README file summarizing basic information and providing preview links to the `.html` file (e.g., Git renders files).
 - `LICENSE`: MIT License governing the use of this repository.
 - `path_config.json`: Configuration file for directory paths. Use this to specify where the input/output data should be downloaded/saved.
@@ -54,16 +65,22 @@ Ensure you have `git` version >= 2.2 by checking via:
 git --version
 ```
 
-Install Python dependencies using:
-```bash
-pip install numpy pandas pybids datalad
-```
-
 ## Usage
 
 1. **Clone the repository** - Start by cloning the repository using Git:
 ```bash
 git clone git@github.com:demidenm/openneuro_glmfitlins.git
+```
+
+after running the `setup_uv.sh` file
+```bash
+bash setup_uv.sh
+```
+
+Sync the environment. Note, after setup is complete, every time you restart terminal make sure to run uv sync in root. For more details, see Jeanette Mumford's [packaging repo](https://github.com/jmumford/packaging-notes?tab=readme-ov-file#uv)
+
+```bash
+uv sync
 ```
 
 2. **Setup paths** - Before downloading the data, update paths in `path_config.json`. The primary paths to set up are:
@@ -72,6 +89,7 @@ git clone git@github.com:demidenm/openneuro_glmfitlins.git
     - `tmp_folder`: Temporary/scratch folder for FitLins intermediate files.
 
 3. **Download OpenNeuro data** - Once you have cloned the repository, installed dependencies, and set up paths, navigate to `openneuro_glmfitlins/scripts/` and run:
+
 ```bash
 bash download_data.sh ds000001
 ```
@@ -92,7 +110,7 @@ bash run_mod-fitlins.sh ds000001 balloonanalogrisktask
 ```
 Or, if the script is executable (e.g., `chmod +x run_mod-fitlins.sh`), you can run:
 ```bash
-././run_mod-fitlins.sh ds000001 balloonanalogrisktask
+./run_mod-fitlins.sh ds000001 balloonanalogrisktask
 ```
 
 Once `statsmodel_specs/ds000001/` contains the required subject and contrast JSON files, respond "yes" to the first prompt to generate `ds000001_specs.json`. 

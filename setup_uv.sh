@@ -53,7 +53,7 @@ if command -v git-annex &> /dev/null; then
         conda install -y -c conda-forge git-annex
     fi
 else
-    echo "🚀 git-annex is not installed. Installing..."
+    echo "git-annex is not installed. Installing..."
     conda install -y -c conda-forge git-annex
 fi
 
@@ -64,5 +64,3 @@ uv sync
 #  step 2. activates the envrionment
 source .venv/bin/activate
 
-#  step 3 install in editabled mode (-e)
-uv pip install --editable .

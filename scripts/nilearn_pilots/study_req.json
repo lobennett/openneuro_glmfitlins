@@ -17,7 +17,7 @@
             "contrasts": [
                 "ICSPvICSN", 
                 "VCSPvVCSN",
-                "VCSPshck"
+                "Shockbase"
             ],
             "volume": 125,
             "tr": 2.0,

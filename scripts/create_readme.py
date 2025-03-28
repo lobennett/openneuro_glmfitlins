@@ -20,6 +20,10 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
         readme_content += f"### Task: {task_name}\n"
         readme_content += f"- **Column Names**: {', '.join(task_info['column_names'])}\n"
         readme_content += f"- **Data Types**: {', '.join([f'{col} ({dtype})' for col, dtype in task_info['column_data_types'].items()])}\n"
+        if task_info['bold_volumes']:
+            readme_content += f"- **BOLD Volumes**: {', '.join(map(str, task_info['bold_volumes']))}\n"
+        else:
+            readme_content += "- **BOLD Volumes**: None\n"
         if task_info['trial_type_values']:
             readme_content += f"- **Unique 'trial_type' Values**: {', '.join(map(str, task_info['trial_type_values']))}\n"
         else:

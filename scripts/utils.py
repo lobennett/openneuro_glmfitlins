@@ -2,9 +2,114 @@
 import os
 import nbformat
 import re
+import pandas as pd
 from IPython.display import display, Markdown
 from bids.modeling import BIDSStatsModelsGraph
 from bids.layout import BIDSLayout, BIDSLayoutIndexer
+from nilearn.image import index_img, load_img, new_img_like
+
+
+def get_numvolumes(nifti_path_4d):
+    """
+    Alternative method to get number of volumes using Nilearn.
+    
+    Parameters:
+    nifti_path(str) : Path to the fMRI NIfTI (.nii.gz) file
+    
+    Returns:
+    Number of volumes in the fMRI data using nilearn image + shape
+    """
+    try:
+        # Load 4D image
+        img = load_img(nifti_path_4d)
+        
+        # Get number of volumes
+        return img.shape[3] if len(img.shape) == 4 else None
+    
+    except Exception as e:
+        print(f"Nilearn error reading file {nifti_path_4d}: {e}")
+        return None
+
+
+def trim_derivatives(boldpath: str, confpath: str, num_totrim: int):
+    """
+    Trim a specified number of initial volumes from an fMRI NIfTI file and confounds file.
+    
+    Parameters:
+    boldpath (str) : Path to the fMRI NIfTI (.nii.gz) file
+    confpath (str) : Path to the counfounds (.tsv) file
+    num_totrim (int) : number of initial volumes to remove, int
+
+    Returns:
+    BOLD NIfTI, confounds dataframe
+    """
+    nifti_data = trim_calibration_volumes(bold_path=boldpath, num_voltotrim=num_totrim)
+    confounds_data = trim_confounds(confounds_path=confpath, num_rowstotrim=num_totrim)
+
+    return nifti_data, confounds_data
+
+
+def trim_calibration_volumes(bold_path: str, num_voltotrim:int):
+    """
+    Trim a specified number of initial volumes from an fMRI NIfTI file.
+    
+    Parameters:
+    bold_path (str): Path to the 4D fMRI NIfTI file (.nii or .nii.gz)
+    num_voltotrim (int): Number of initial volumes to remove
+    
+    Returns:
+    Trimmed nifti file
+    """
+    if not os.path.exists(nifti_path):
+        raise FileNotFoundError(f"File not found: {nifti_path}")
+    
+    # load nifti & trim
+    try:
+        img = load_img(nifti_path)
+        total_vols = img.shape[3] if len(img.shape) == 4 else None
+        if total_vols is None:
+            raise ValueError(f"Invalid NIfTI file: {nifti_path}")
+        
+        print("Trimming {} volumes from {} volumes".format(num_voltotrim, total_vols))
+        trimmed_img = index_img(img, slice(num_voltotrim, None))
+
+    except Exception as e:
+        raise ValueError(f"Error loading NIfTI file: {e}")    
+    
+    return trimmed_img
+
+
+def trim_confounds(confounds_path:str, num_rowstotrim:int):
+    """
+    Trim confounds rows by specified N of calibration volumes
+    
+    Parameters:
+    confounds_path (str) : Path to the confounds tsv file
+    num_rowstotrim (int) : Number of initial rows to remove
+    
+    Returns:
+    modified confounds dataframe
+    """
+    # file exists 
+    if not os.path.exists(confounds_path):
+        raise FileNotFoundError(f"File not found: {confounds_path}")
+    
+    # load file
+    try:
+        confounds_df = pd.read_csv(confounds_path, sep='\t')
+    except Exception as e:
+        raise ValueError(f"Error reading confounds file: {e}")
+    
+    # Check number of rows
+    total_rows = len(confounds_df)
+    
+    if num_rowstotrim >= total_rows:
+        raise ValueError(f"Number of rows to trim ({num_rowstotrim}) exceeds total rows ({total_rows}).")
+    
+    # trim rows
+    trimmed_df = confounds_df.iloc[num_rowstotrim:].reset_index(drop=True)
+    
+    return trimmed_df
 
 
 def generate_tablecontents(notebook_name):

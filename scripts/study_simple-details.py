@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 from bids.layout import BIDSLayout
 from create_readme import generate_readme
+from utils import get_numvolumes
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
@@ -64,6 +65,11 @@ for task_name in Tasks:
     # pull event files that match & load into single long df
     event_files = bids_layout.get(task=task_name, suffix="events", extension=".tsv")
 
+    # pull bold files that match & get first volume count
+    bold_files = bids_layout.get(task=task_name, suffix="bold", extension=".nii.gz")
+    if bold_files:
+        num_volumes = get_numvolumes(bold_files[0].path)
+
     if not event_files:
         print()
         print(f"\033[91mNo event files found for task: {task_name}\033[0m")
@@ -77,6 +83,7 @@ for task_name in Tasks:
 
         # Task-specific data dictionary update
         data["Tasks"][task_name] = {
+            "bold_volumes": num_volumes,
             "column_names": column_names,
             "column_data_types": column_data_types,
             "trial_type_values": trial_type_values

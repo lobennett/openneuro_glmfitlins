@@ -64,3 +64,7 @@ uv sync
 #  step 2. activates the envrionment
 source .venv/bin/activate
 
+# installing fixed fitlins from Jeanette
+uv pip install git+https://github.com/jmumford/fitlins.git@paddedint
+uv pip install setuptools
+uv pip install git+https://github.com/bids-standard/pybids.git

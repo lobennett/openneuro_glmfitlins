@@ -60,15 +60,15 @@ def trim_calibration_volumes(bold_path: str, num_voltotrim:int):
     Returns:
     Trimmed nifti file
     """
-    if not os.path.exists(nifti_path):
-        raise FileNotFoundError(f"File not found: {nifti_path}")
+    if not os.path.exists(bold_path):
+        raise FileNotFoundError(f"File not found: {bold_path}")
     
     # load nifti & trim
     try:
-        img = load_img(nifti_path)
+        img = load_img(bold_path)
         total_vols = img.shape[3] if len(img.shape) == 4 else None
         if total_vols is None:
-            raise ValueError(f"Invalid NIfTI file: {nifti_path}")
+            raise ValueError(f"Invalid NIfTI file: {bold_path}")
         
         print("Trimming {} volumes from {} volumes".format(num_voltotrim, total_vols))
         trimmed_img = index_img(img, slice(num_voltotrim, None))

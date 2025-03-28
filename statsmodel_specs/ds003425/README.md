@@ -3,25 +3,32 @@
 ## Number of Subjects
 - BIDS Input: 13
 
+## Sessions
+- Sessions: 01, 02
+
 ## Tasks and Trial Types
 ### Task: learning
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
+- **BOLD Volumes**: 125
 - **Unique 'trial_type' Values**: 4, 1, 2, 3, 5
 
 ### Task: prelearning
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
+- **BOLD Volumes**: 85
 - **Unique 'trial_type' Values**: 5, 3, 4, 2
 
 ### Task: training
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
+- **BOLD Volumes**: 98
 - **Unique 'trial_type' Values**: 2, 1
 
 ### Task: regulate
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
+- **BOLD Volumes**: 125
 - **Unique 'trial_type' Values**: 4, 1, 3, 2, 5
 
 ## MRIQC Summary Reports

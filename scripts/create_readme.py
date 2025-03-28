@@ -14,6 +14,12 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
 
     readme_content = f"# Study Details: {study_id}\n\n"
     readme_content += f"## Number of Subjects\n- BIDS Input: {len(data['Subjects'])}\n\n"
+
+    # Add sessions information if multiple sessions exist
+    if data.get('Sessions') and len(data['Sessions']) > 1:
+        readme_content += "## Sessions\n"
+        readme_content += f"- Sessions: {', '.join(data['Sessions'])}\n\n"
+
     readme_content += "## Tasks and Trial Types\n"
 
     for task_name, task_info in data["Tasks"].items():
@@ -21,7 +27,7 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
         readme_content += f"- **Column Names**: {', '.join(task_info['column_names'])}\n"
         readme_content += f"- **Data Types**: {', '.join([f'{col} ({dtype})' for col, dtype in task_info['column_data_types'].items()])}\n"
         if task_info['bold_volumes']:
-            readme_content += f"- **BOLD Volumes**: {', '.join(map(str, task_info['bold_volumes']))}\n"
+            readme_content += f"- **BOLD Volumes**: {task_info['bold_volumes']}\n"
         else:
             readme_content += "- **BOLD Volumes**: None\n"
         if task_info['trial_type_values']:
@@ -47,3 +53,4 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
         f.write(readme_content)
 
     print(f"README.md file created at {readme_path}")
+    print("\tReview output and update calibration and events preproc values, as needed\n")

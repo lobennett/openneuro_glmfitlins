@@ -14,8 +14,15 @@
         "12",
         "13"
     ],
+    "Sessions": [
+        "01",
+        "02"
+    ],
     "Tasks": {
         "learning": {
+            "bold_volumes": 125,
+            "dummy_volumes": 4,
+            "preproc_events": false,
             "column_names": [
                 "onset",
                 "duration",
@@ -35,6 +42,9 @@
             ]
         },
         "prelearning": {
+            "bold_volumes": 85,
+            "dummy_volumes": 4,
+            "preproc_events": false,
             "column_names": [
                 "onset",
                 "duration",
@@ -53,6 +63,9 @@
             ]
         },
         "training": {
+            "bold_volumes": 98,
+            "dummy_volumes": 4,
+            "preproc_events": false,
             "column_names": [
                 "onset",
                 "duration",
@@ -69,6 +82,9 @@
             ]
         },
         "regulate": {
+            "bold_volumes": 125,
+            "dummy_volumes": 4,
+            "preproc_events": false,
             "column_names": [
                 "onset",
                 "duration",

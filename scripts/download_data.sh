@@ -55,8 +55,7 @@ if [[ "$user_input" == "yes" ]]; then
     echo -e "\tCopying dataset_description.json file within the fmriprep root directory"
     cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
   fi
-
-  echo 
+ 
   echo -e "\tDownload completed."
   echo 
 else
@@ -65,8 +64,11 @@ else
   exit 1
 fi
 
+echo "Starting study summary. For large datasets, BIDSLayout may take a moment to run."
+echo
 # Run Python script for study details
-uv run python "${scripts_dir}/study_simple-details.py" --openneuro_study "${openneuro_id}" \
-                                                     --bids_dir "${data}/input/${openneuro_id}" \
-                                                     --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \
-                                                     --spec_dir "${spec_dir}"
+uv run python "${scripts_dir}/study_simple-details.py" \
+    --openneuro_study "${openneuro_id}" \
+    --bids_dir "${data}/input/${openneuro_id}" \
+    --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \
+    --spec_dir "${spec_dir}"

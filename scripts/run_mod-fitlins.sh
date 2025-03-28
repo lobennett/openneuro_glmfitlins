@@ -32,12 +32,24 @@ model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_
 # Create model specifications if desired
 read -p "Create model specifications? (yes/no): " run_create_specs
 if [[ "$run_create_specs" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    uv run python ${scripts_dir}/create_mod-specs.py \
+    uv --project ${repo_dir} run python ${scripts_dir}/create_mod-specs.py \
       --openneuro_study ${openneuro_id} \
       --task ${task_label} \
       --script_dir ${scripts_dir}
 else
-    echo "Skipping creation of model specs."
+    echo -e "\tSkipping creation of model specs."
+fi
+
+# Create model specifications if desired
+read -p "Trim BOLD and Prepare Events? (yes/no): " prep_bold
+if [[ "$prep_bold" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    uv --project ${repo_dir} run python ${scripts_dir}/prep_boldevents.py \
+      --openneuro_study ${openneuro_id} \
+      --task ${task_label} \
+      --deriv_dir ${data}/fmriprep/${openneuro_id}/derivatives \
+      --specs_dir ${repo_dir}/statsmodel_specs/${openneuro_id}
+else
+    echo -e "\tSkipping BOLD and events prep."
 fi
 
 # Run Fitlins if desired
@@ -47,50 +59,21 @@ if [[ ! "$start_fitlins" =~ ^[Yy]([Ee][Ss])?$ ]]; then
     exit 0
 fi
 
-# Determine whether to use Docker or Singularity
-read -p "Run using docker or singularity? (dock/sing): " run_type
-if [[ "$run_type" == "dock" ]]; then
-    echo
-    echo "Running docker with the paths:"
-    echo "BIDS input: ${data}/input/${openneuro_id}"
-    echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
-    echo "Analyses output: ${data}/analyses/${openneuro_id}"
-    echo "Model specs: ${model_json}"
-    echo "Working directory: ${scratch}"
-    echo 
+echo
+echo "Running Fitlins with the paths:"
+echo "BIDS input: ${data}/input/${openneuro_id}"
+echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
+echo "Analyses output: ${data}/analyses/${openneuro_id}"
+echo "Model specs: ${model_json}"
+echo "Working directory: ${scratch}"
+echo 
 
-    docker run --rm -it \
-      -v ${data}/input/${openneuro_id}:/bids \
-      -v ${data}/fmriprep/${openneuro_id}/derivatives:/fmriprep_deriv \
-      -v ${data}/analyses/${openneuro_id}:/analyses_out \
-      -v ${model_json}:/bids/model_spec \
-      -v ${scratch}:/workdir \
-      poldracklab/fitlins:0.11.0 \
-      /bids /analyses_out run \
-      -m /bids/model_spec -d /fmriprep_deriv \
+uv --project ${repo_dir} \
+      run fitlins ${data}/input/${openneuro_id} ${data}/analyses/${openneuro_id} \
+      participant \
+      -m ${model_json} \
+      -d ${data}/fmriprep/${openneuro_id}/derivatives \
+      --ignore "sub-.*_physio\.(json|tsv\.gz)" \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing 5:run:iso --estimator nilearn \
-      --n-cpus 1 \
-      --mem-gb 24 \
-      -w /workdir
-elif [[ "$run_type" == "sing" ]]; then
-    echo
-    echo "Running singularity: sbatch sing_fitlins.sh"
-    echo 
-    sbatch cluster_jobs/sing_fitlins.sh ${openneuro_id} ${task_label}
-else
-    echo "Invalid option: ${run_type}. Must be 'dock' or 'sing'. Exiting."
-    exit 1
-fi
-
-
-#singularity run --cleanenv \
-#-B ${data}/raw/dsX:/data/raw/dsX \
-#-B ${data}/prep/dsX/fmriprep:/data/prep/dsX/fmriprep \
-#-B ${data}/analyzed/dsX:/data/analyzed/dsX \
-#-B ${scratch}:/scratch \
-#  ${sif_img}/fitlins-0.11.0.simg \
-#    /data/raw/dsX /data/analyzed/dsX dataset \
-#    -d /data/prep/dsX/fmriprep \
-#    -w /scratch
-#
+      -w ${scratch}

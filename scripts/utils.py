@@ -217,25 +217,29 @@ def extract_model_info(model_spec):
             "regressors": node.get("Model", {}).get("X", []),
             "contrasts": [
                 {
-                    "name": contrast.get("Name"),
+                    "name": contrast.get("Name", "Unnamed Contrast"),
                     "conditions": contrast.get("ConditionList", []),
-                    "weights": contrast.get("Weights", [])
+                    "weights": contrast.get("Weights", []),
+                    "test": contrast.get("Test", "t")  # Default test type to "t"
                 }
                 for contrast in node.get("Contrasts", [])
-            ]
+            ],
+            "convolve_model": "spm",  # Default value spm
+            "if_derivative_hrf": False    # Track if HRF derivative is used
         }
 
-        # Extract convolve model type
-        node_info["convolve_model"] = "spm"  # Default to "spm"
-        if node.get("Transformations") and node["Transformations"].get("Instructions"):
-            for instruction in node["Transformations"]["Instructions"]:
-                if instruction.get("Name") == "Convolve":
-                    node_info["convolve_model"] = instruction.get("Model")
-                    break  
+        # Extract HRF convolution model type and derivative status
+        transformations = node.get("Transformations", {}).get("Instructions", [])
+        for instruction in transformations:
+            if instruction.get("Name") == "Convolve":
+                node_info["convolve_model"] = instruction.get("Model", "Unknown")
+                node_info["if_derivative_hrf"] = instruction.get("Derivative", "False") == "True"
+                break  # Stop searching after finding first Convolve transformation
 
         extracted_info["nodes"].append(node_info)
-
+    
     return extracted_info
+
 
 
 # below est_contrast_vifs code is courtsey of Jeanette Mumford's repo: https://github.com/jmumford/vif_contrasts

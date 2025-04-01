@@ -64,6 +64,13 @@ for node in spec_results['nodes']:
 # Extract study information
 num_subjects = len(spec_results['subjects'])
 hrf_model_type = spec_results['nodes'][0]['convolve_model']
+derivative_added = spec_results['nodes'][0]['if_derivative_hrf']
+
+if derivative_added:
+    hrf_model = f"{hrf_model_type} w/ derivatives"
+else:
+    hrf_model = hrf_model_type
+    
 run_node_regressors = spec_results['nodes'][0]['regressors']
 
 # Find and copy example contrast image
@@ -165,7 +172,7 @@ grp_readme = generate_groupmodsummary(
     study_id=study_id, 
     task=task, 
     num_subjects=num_subjects, 
-    hrf_model_type=hrf_model_type, 
+    hrf_model_type=hrf_model, 
     signal_regressors=signal_regressors, 
     noise_regressors=noise_regressors, 
     has_run=has_run, 

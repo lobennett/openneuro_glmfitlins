@@ -1,7 +1,7 @@
 import os 
 import json
 
-def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demidenm/openneuro_glmfitlins/blob/main"):
+def generate_studysummary(spec_path, study_id, data, repo_url="https://github.com/demidenm/openneuro_glmfitlins/blob/main"):
     """
     Generates a README.md file summarizing study details and links to MRIQC summary HTML files.
 
@@ -54,3 +54,43 @@ def generate_readme(spec_path, study_id, data, repo_url="https://github.com/demi
 
     print(f"README.md file created at {readme_path}")
     print("\tReview output and update calibration and events preproc values, as needed\n")
+
+
+def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
+    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, spec_imgs_dir):
+    # Add title and description
+    readme_content = f"# {study_id}: {task} Task Analysis Report\n"
+    readme_content += "## Analysis Overview\n"
+    readme_content += f"Subject-level models were fit for {num_subjects} subjects performing the {task} task.\n"
+    readme_content += f"HRF model type: {hrf_model_type}\n"
+    
+    readme_content += "### Regressors of Interest\n"
+    readme_content += ", ".join(signal_regressors) if signal_regressors else "None identified"
+    
+    readme_content += "\n### Nuisance Regressors\n"
+    readme_content += ", ".join(noise_regressors) if noise_regressors else "None identified"
+    
+    readme_content += "\n## Model Structure\n"
+    readme_content += f"- Run-level models: {'Yes' if has_run else 'No'}\n"
+    readme_content += f"- Subject-level models: {'Yes' if has_subject else 'No'}\n"
+    
+    if has_run and has_subject:
+        readme_content += "\nThe run-wise contrast estimates for each subject are averaged using a fixed-effects model."
+    
+    readme_content += "\n## Contrasts of Interest\n"
+    for name, expr in contrast_dict.items():
+        readme_content += f"- **{name}**: {expr}\n"
+    
+    readme_content += "\n## Figures\n"
+    readme_content += f"\n### Contrast Maps\n![Contrast Map]({f"./imgs/{contrast_image}"})\n"
+    readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./imgs/{study_id}_task-{task}_vif-boxplot.png"})\n"
+    
+    # Add contrast maps
+    readme_content += "\n### Statistical Maps\n"
+    for con_name in contrast_dict.keys():
+        map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
+        readme_content += f"\n#### {con_name}\n![{con_name} Map]({map_path})\n"
+    
+    return readme_content
+
+

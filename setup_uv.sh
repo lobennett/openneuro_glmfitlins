@@ -24,7 +24,7 @@ if command -v git &> /dev/null; then
         conda install -y -c conda-forge git
     fi
 else
-    echo "🚀 Git is not installed. Installing..."
+    echo "Git is not installed. Installing..."
     conda install -y -c conda-forge git
 fi
 
@@ -61,10 +61,9 @@ fi
 # Proceed with setting up the environment
 #  Step 1. Install based on pyproject.toml
 uv sync
-#  step 2. activates the envrionment
 source .venv/bin/activate
 
-# installing fixed fitlins from Jeanette
+# installing padding fix in fitlins from Jeanette
 uv pip install git+https://github.com/jmumford/fitlins.git@paddedint
 uv pip install setuptools
 uv pip install git+https://github.com/bids-standard/pybids.git

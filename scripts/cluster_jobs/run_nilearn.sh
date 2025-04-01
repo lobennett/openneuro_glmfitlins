@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=rn_nilearn
-#SBATCH --array=1-10%20 # 
+#SBATCH --array=1-13%20 # 
 #SBATCH --time=00:15:00
 #SBATCH --cpus-per-task=4
 #SBATCH --mem-per-cpu=6GB
@@ -40,7 +40,6 @@ mkdir -p "${analysis_out}"
 # Set up `uv` environment
 echo "Setting up Python environment with uv..."
 source "${repo_dir}/.venv/bin/activate"
-uv sync
 
 # Run Python script with correct syntax
 uv run python ${repo_dir}/scripts/nilearn_pilots/run_firstfixed.py --study ${study_id} \

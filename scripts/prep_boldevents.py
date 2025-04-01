@@ -1,8 +1,11 @@
 import argparse
 import os
 import json
+import importlib
+import modify_events
+import pandas as pd
 import numpy as np
-from utils import get_numvolumes, trim_derivatives
+from utils import get_numvolumes, trim_derivatives, trim_calibration_volumes, trim_confounds
 from bids.layout import BIDSLayout
 
 
@@ -11,16 +14,18 @@ parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
 parser.add_argument("--openneuro_study", type=str, required=True, help="OpenNeuro study ID")
 parser.add_argument("--task", type=str, required=True, help="Task label")
 parser.add_argument("--deriv_dir", type=str, required=True, help="fMRIprep Derivatives Folder")
+parser.add_argument("--bids_dir", type=str, required=True, help="BIDS Directory Containing Events .tsv files")
 parser.add_argument("--specs_dir", type=str, required=True, help="stat model specs containing study details")
 args = parser.parse_args()
 
 study_id = args.openneuro_study
 taskname = args.task
 fmriprep_path = args.deriv_dir
-spec_dir = args.specs_dir
+eventspath = args.bids_dir
+spec_path = args.specs_dir
 
 # grab task specific specs
-with open(f'{spec_dir}/{study_id}_basic-details.json', 'r') as file:
+with open(f'{spec_path}/{study_id}_basic-details.json', 'r') as file:
     specdata = json.load(file)
 
 taskspecs = specdata.get('Tasks').get(taskname)
@@ -28,7 +33,6 @@ boldvolumes = int(taskspecs.get('bold_volumes'))
 dummyvolumes = taskspecs.get('dummy_volumes')
 dummyvolumes = int(dummyvolumes) if dummyvolumes is not None else 0  # Default to 0 if None
 final_vols = (boldvolumes - dummyvolumes)
-
 preproc_events = taskspecs.get('preproc_events')
 
 print(f"\tGenerating Layout of Derivatives {fmriprep_path}/../")
@@ -80,4 +84,22 @@ for conf_file in task_conf_files:
     else:
         print(f"Confounds data for {conf_file.filename} appears to be preprocessed")
 
+
+if preproc_events:
+    print(f"\tGenerating Layout of BIDS Directory: {eventspath}/")
+    bids_layout = BIDSLayout(eventspath, derivatives=False)
+
+    task_event_files = bids_layout.get(task=taskname, suffix="events", extension=".tsv")
+
+    if hasattr(modify_events, study_id):
+        # grab function specific to study
+        refactor_events = getattr(modify_events, study_id)  
+    else:
+        raise ValueError(f"Function {study_id} not found in mod_events.py. Cannot modify events data for {taskname}")
+
+    for eventtsv_path in task_event_files:
+        try:
+            events_data = refactor_events(eventspath=eventtsv_path.path, task=taskname)
+        except Exception as e:
+            print(f"Error processing confounds file {eventtsv_path.filename}: {e}")
 

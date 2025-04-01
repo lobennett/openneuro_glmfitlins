@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=1-10 # 
+#SBATCH --array=11-13 # 1-13
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=8GB
@@ -40,7 +40,6 @@ fs_license=$(jq -r '.freesurfer_license' "$config_file")
 # Set up `uv` environment
 echo "Setting up Python environment with uv..."
 source "${repo_dir}/.venv/bin/activate"
-uv sync
 
 
 # example from job array, sub=("21" "31" "78" "55" "106")
@@ -69,6 +68,7 @@ singularity run --cleanenv \
     -B "${scratch_out}:/wd" \
     ${singularity_img} \
     /bids_dir /fmriprep_out participant \
+    --skip_bids_validation \
     --participant-label "${sub}" \
     --fs-license-file ${fs_license} \
     --fs-subjects-dir /freesurf_dir \

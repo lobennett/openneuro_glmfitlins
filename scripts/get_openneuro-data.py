@@ -83,7 +83,7 @@ getfiles_mriqcgroup = [
 ]
 
 # Get list of MRIQC files in repo, then only download the group files
-mriqc_summ = os.path.join(spec_dir, openneuro_study, "mriqc_summary")
+mriqc_summ = os.path.join(spec_dir, "mriqc_summary")
 
 if os.path.exists(mriqc_summ):
     print(f"        {openneuro_study} MRIQC already exists. Skipping group summary data download.")

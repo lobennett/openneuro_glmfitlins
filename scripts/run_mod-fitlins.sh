@@ -28,16 +28,26 @@ repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
 scripts_dir="${repo_dir}/scripts"
 scratch=$(jq -r '.tmp_folder' "$config_file")
 model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
+contrasts_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_contrasts.json"
+subjects_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_subjects.json"
 
 # Create model specifications if desired
-read -p "Create model specifications? (yes/no): " run_create_specs
-if [[ "$run_create_specs" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    uv --project ${repo_dir} run python ${scripts_dir}/create_mod-specs.py \
-      --openneuro_study ${openneuro_id} \
-      --task ${task_label} \
-      --script_dir ${scripts_dir}
+if [[ -f "$model_json" ]]; then
+  echo -e "\tModel specification file already exists: $model_json"
+  echo 
 else
-    echo -e "\tSkipping creation of model specs."
+  # Check if contrasts.json and _subjects.json exist
+  if [[ -f "$contrasts_json" && -f "$subjects_json" ]]; then
+    echo -e "\tRequired files (contrasts.json and _subjects.json) found. Creating model specs..."
+    # Run the script to create the model specs
+    uv --project ${repo_dir} run python "${scripts_dir}/create_mod-specs.py" \
+        --openneuro_study ${openneuro_id} \
+        --task ${task_label} \
+        --script_dir ${scripts_dir}
+  else
+      echo -e "\tCannot create model specs. Missing *_contrasts.json or *_subjects.json."
+      echo
+  fi
 fi
 
 # Create model specifications if desired
@@ -47,6 +57,7 @@ if [[ "$prep_bold" =~ ^[Yy]([Ee][Ss])?$ ]]; then
       --openneuro_study ${openneuro_id} \
       --task ${task_label} \
       --deriv_dir ${data}/fmriprep/${openneuro_id}/derivatives \
+      --bids_dir ${data}/input/${openneuro_id} \
       --specs_dir ${repo_dir}/statsmodel_specs/${openneuro_id}
 else
     echo -e "\tSkipping BOLD and events prep."

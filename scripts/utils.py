@@ -3,11 +3,12 @@ import os
 import nbformat
 import re
 import pandas as pd
+import numpy as np
 from IPython.display import display, Markdown
 from bids.modeling import BIDSStatsModelsGraph
 from bids.layout import BIDSLayout, BIDSLayoutIndexer
 from nilearn.image import index_img, load_img, new_img_like
-
+from nilearn.glm import expression_to_contrast_vector
 
 def get_numvolumes(nifti_path_4d):
     """
@@ -192,3 +193,121 @@ def get_bidstats_events(bids_inp, spec_cont, scan_length=125, ignored=None, retu
         print(f"Error processing root node collections: {e}")
         return None
 
+
+def extract_model_info(model_spec):
+    """
+    Extracts subject numbers, node levels, convolve model type, regressors, and contrasts from a BIDS model specification,
+    and multiplies each condition by its corresponding weight.
+
+    Parameters:
+    model_spec (dict): The BIDS model specification dictionary.
+
+    Returns:
+    dict: A dictionary containing the extracted information, including weighted conditions.
+    """
+
+    extracted_info = {
+        "subjects": model_spec.get("Input", {}).get("subject", []),
+        "nodes": [],
+    }
+
+    for node in model_spec.get("Nodes", []):
+        node_info = {
+            "level": node.get("Level"),
+            "regressors": node.get("Model", {}).get("X", []),
+            "contrasts": [
+                {
+                    "name": contrast.get("Name"),
+                    "conditions": contrast.get("ConditionList", []),
+                    "weights": contrast.get("Weights", [])
+                }
+                for contrast in node.get("Contrasts", [])
+            ]
+        }
+
+        # Extract convolve model type
+        node_info["convolve_model"] = "spm"  # Default to "spm"
+        if node.get("Transformations") and node["Transformations"].get("Instructions"):
+            for instruction in node["Transformations"]["Instructions"]:
+                if instruction.get("Name") == "Convolve":
+                    node_info["convolve_model"] = instruction.get("Model")
+                    break  
+
+        extracted_info["nodes"].append(node_info)
+
+    return extracted_info
+
+
+# below est_contrast_vifs code is courtsey of Jeanette Mumford's repo: https://github.com/jmumford/vif_contrasts
+def est_contrast_vifs(desmat, contrasts):
+    """
+    IMPORTANT: This is only valid to use on design matrices where each regressor represents a condition vs baseline
+     or if a parametrically modulated regressor is used the modulator must have more than 2 levels.  If it is a 2 level modulation,
+     split the modulation into two regressors instead.
+
+    Calculates VIF for contrasts based on the ratio of the contrast variance estimate using the
+    true design to the variance estimate where between condition correaltions are set to 0
+    desmat : pandas DataFrame, design matrix
+    contrasts : dictionary of contrasts, key=contrast name,  using the desmat column names to express the contrasts
+    returns: pandas DataFrame with VIFs for each contrast
+    """
+    desmat_copy = desmat.copy()
+    # find location of constant regressor and remove those columns (not needed here)
+    desmat_copy = desmat_copy.loc[
+        :, (desmat_copy.nunique() > 1) | (desmat_copy.isnull().any())
+    ]
+    # Scaling stabilizes the matrix inversion
+    nsamp = desmat_copy.shape[0]
+    desmat_copy = (desmat_copy - desmat_copy.mean()) / (
+        (nsamp - 1) ** 0.5 * desmat_copy.std()
+    )
+    vifs_contrasts = {}
+    for contrast_name, contrast_string in contrasts.items():
+        try:
+            contrast_cvec = expression_to_contrast_vector(
+                contrast_string, desmat_copy.columns
+            )
+            true_var_contrast = (
+                contrast_cvec
+                @ np.linalg.inv(desmat_copy.transpose() @ desmat_copy)
+                @ contrast_cvec.transpose()
+            )
+            # The folllowing is the "best case" scenario because the between condition regressor correlations are set to 0
+            best_var_contrast = (
+                contrast_cvec
+                @ np.linalg.inv(
+                    np.multiply(
+                        desmat_copy.transpose() @ desmat_copy,
+                        np.identity(desmat_copy.shape[1]),
+                    )
+                )
+                @ contrast_cvec.transpose()
+            )
+            vifs_contrasts[contrast_name] = true_var_contrast / best_var_contrast
+        except Exception as e:
+            print(f"Error computing VIF for regressor '{contrast_name}': {e}")
+
+    return vifs_contrasts
+
+
+def gen_vifdf(designmat, contrastdict, nuisance_regressors):
+    """
+    Create a Pandas DataFrame with VIF values for regressors.
+
+    Parameters:
+    designmat: The design matrix used in the analysis.
+    contrastdict (dict): dictionary containing contrast names and their corresponding expressions.
+    nuisance_regressors (list): A list containing nusiance regressors to exclude.
+
+    Returns:
+    Returns regressors vif dict & DataFrame of VIFs w/ columns ['type', 'name', 'value'].
+    """
+    # Filter columns by removing nuisance regressors & create dictionary that excludes intercept
+    filtered_columns = designmat.columns[~designmat.columns.isin(nuisance_regressors)]
+    regressor_dict = {item: item for item in filtered_columns if item != "intercept"}
+    reg_vifs = est_contrast_vifs(desmat=designmat, contrasts=regressor_dict)
+
+    df_reg = pd.DataFrame(list(reg_vifs.items()), columns=["name", "value"])
+    df_reg["type"] = "regressor"
+
+    return reg_vifs, df_reg

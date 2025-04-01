@@ -4,7 +4,7 @@ import argparse
 import pandas as pd
 import numpy as np
 from bids.layout import BIDSLayout
-from create_readme import generate_readme
+from create_readme import generate_studysummary
 from utils import get_numvolumes
 
 # Set up argument parsing
@@ -108,6 +108,7 @@ for task_name in Tasks:
 
         # Task-specific data dictionary update
         data["Tasks"][task_name] = {
+            "plot_coords": [0,0,0],
             "bold_volumes": num_volumes,
             "dummy_volumes": None,
             "preproc_events": False,
@@ -131,4 +132,4 @@ with open(os.path.join(spec_path, f'{study_id}_basic-details.json'), 'w') as f:
     json.dump(data, f, indent=4)
 
 # generate README.md file
-generate_readme(spec_path, study_id, data)
+generate_studysummary(spec_path, study_id, data)

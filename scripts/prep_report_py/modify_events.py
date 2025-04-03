@@ -35,7 +35,6 @@ def ds003425(eventspath: str, task: str):
                 eventsdat = pd.concat([eventsdat, first_and_last_events], ignore_index=True)
                 eventsdat.to_csv(eventspath, sep='\t', index=False)
                 print(f"Modified events file for {os.path.basename(eventspath)}")
-
         else:
             print(f"Trial type value '6' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")
 

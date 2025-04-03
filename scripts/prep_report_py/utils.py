@@ -2,12 +2,13 @@
 import os
 import nbformat
 import re
+import json
 import pandas as pd
 import numpy as np
 from IPython.display import display, Markdown
 from bids.modeling import BIDSStatsModelsGraph
 from bids.layout import BIDSLayout, BIDSLayoutIndexer
-from nilearn.image import index_img, load_img, new_img_like
+from nilearn.image import index_img, load_img, new_img_like, mean_img
 from nilearn.glm import expression_to_contrast_vector
 
 def get_numvolumes(nifti_path_4d):
@@ -315,3 +316,71 @@ def gen_vifdf(designmat, contrastdict, nuisance_regressors):
     df_reg["type"] = "regressor"
 
     return reg_vifs, df_reg
+
+
+# functions for subjects and contrasts generic files
+def create_subjects_json(subj_list, studyid, taskname, specpath):
+    subjects_file_path = os.path.join(specpath, f'{studyid}-{taskname}_subjects.json')
+    subjects_data = {
+        "Subjects": subj_list
+    }
+    with open(subjects_file_path, 'w') as f:
+        json.dump(subjects_data, f, indent=4)
+    print(f"\t\tSaved subjects file for task {taskname} to {subjects_file_path}")
+
+def create_gencontrast_json(studyid, taskname, specpath):
+    contrasts_file_path = os.path.join(specpath, f'{studyid}-{taskname}_contrasts.json')
+    contrasts_data = {
+        "Contrasts": [
+            {
+                "Name": "AvB",
+                "ConditionList": ["trial_type.a", "trial_type.b"],
+                "Weights": [1, -1],
+                "Test": "t"
+            },
+            {
+                "Name": "FacesvPlaces",
+                "ConditionList": ["trial_type.faces", "trial_type.places"],
+                "Weights": [1, -1],
+                "Test": "t"
+            }
+        ]
+    }
+    with open(contrasts_file_path, 'w') as f:
+        json.dump(contrasts_data, f, indent=4)
+    print(f"\t\tSaved contrasts file for task {taskname} to {contrasts_file_path}")
+
+
+def calc_niftis_meanstd(path_imgs):
+    """
+    Calculate the mean & standard deviation across a list of NIfTI images.
+
+    Parameters:
+    - images_paths: List of paths to NIfTI images.
+
+    Returns:
+    NIfTI Image for mean and std in position 1 , 2
+    """
+    # if path_imgs list is empty
+    assert len(path_imgs) > 0, "Error: The list of image paths is empty."
+
+    # load ref image to obtain header info
+    reference_img = load_img(path_imgs[0])
+    
+    # load / stack image data
+    loaded_images = [load_img(img_path).get_fdata() for img_path in path_imgs]
+    img_data_array = np.array(loaded_images)
+
+    # data array is not empty and has more than 1 image
+    assert img_data_array.size > 0, "Error: No valid image data were loaded."
+    assert img_data_array.shape[0] > 1, "Error: At least two images are required for mean and std calculation."
+
+    # calculate the mean and std across images (axis=0)
+    mean_imgs = np.mean(img_data_array, axis=0)
+    std_imgs = np.std(img_data_array, axis=0, ddof=1)  # ddof=1 for sample std
+
+    # Create NIfTI images for the mean and std
+    mean_nifti = new_img_like(reference_img, mean_imgs)
+    std_nifti = new_img_like(reference_img, std_imgs)
+
+    return mean_nifti, std_nifti

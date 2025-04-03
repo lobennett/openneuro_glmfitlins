@@ -5,7 +5,8 @@ import pandas as pd
 import numpy as np
 from bids.layout import BIDSLayout
 from create_readme import generate_studysummary
-from utils import get_numvolumes
+from utils import get_numvolumes, create_subjects_json, create_gencontrast_json
+
 
 # Set up argument parsing
 parser = argparse.ArgumentParser(description="Setup OpenNeuro study variables")
@@ -126,6 +127,9 @@ for task_name in Tasks:
         print(f"Unique 'trial_type' values: {trial_type_values}")
         print()
 
+        # Save subjects and contrasts files
+        create_subjects_json(subj_list=Subjects, studyid=study_id, taskname=task_name, specpath=spec_path)
+        create_gencontrast_json(studyid=study_id, taskname=task_name, specpath=spec_path)
 
 # save study and task details to json
 with open(os.path.join(spec_path, f'{study_id}_basic-details.json'), 'w') as f:

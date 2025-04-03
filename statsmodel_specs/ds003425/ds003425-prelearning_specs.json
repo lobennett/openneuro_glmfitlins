@@ -3,11 +3,9 @@
   "BIDSModelVersion": "1.0.0",
   "Input": {
     "subject": [
-      "01",
       "02",
       "03",
       "04",
-      "05",
       "06",
       "07",
       "08",
@@ -41,6 +39,7 @@
           {
             "Name": "Convolve",
             "Model": "spm",
+            "Derivative": "True",
             "Input": [
               "trial_type.*"
             ]

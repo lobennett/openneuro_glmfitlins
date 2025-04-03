@@ -17,7 +17,7 @@ task = args.task
 scripts = os.path.abspath(args.script_dir)
 
 # Load the model JSON
-sample_specs = os.path.join(scripts, "example_mod-specs.json")
+sample_specs = os.path.join(scripts, "prep_report_py", "example_mod-specs.json")
 
 if os.path.exists(sample_specs):
     print("working on file", sample_specs)

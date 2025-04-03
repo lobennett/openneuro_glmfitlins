@@ -6,7 +6,6 @@
       "01",
       "02",
       "03",
-      "04",
       "05",
       "06",
       "07",
@@ -41,6 +40,7 @@
           {
             "Name": "Convolve",
             "Model": "spm",
+            "Derivative": "True",
             "Input": [
               "trial_type.*"
             ]
@@ -60,7 +60,10 @@
       "Contrasts": [
         {
           "Name": "dwnreg",
-          "ConditionList": ["trial_type.5", "trial_type.2"],
+          "ConditionList": [
+            "trial_type.5",
+            "trial_type.2"
+          ],
           "Weights": [
             1,
             -1
@@ -69,7 +72,10 @@
         },
         {
           "Name": "upreg",
-          "ConditionList": ["trial_type.3","trial_type.4"],
+          "ConditionList": [
+            "trial_type.3",
+            "trial_type.4"
+          ],
           "Weights": [
             1,
             -1

@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=11-13 # 1-13
+#SBATCH --array=1-13 # subjects to iterate over - can modify below to match names in BIDS dir
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=8GB
@@ -29,17 +29,8 @@ config_file=./../../path_config.json
 data_dir=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
 scratch_out=$(jq -r '.tmp_folder' "$config_file")
-conda_source=$(jq -r '.cond_env_source' "$config_file")
-conda_name=$(jq -r '.cond_env' "$config_file")
 singularity_img=$(jq -r '.fmriprep_simg' "$config_file")
 fs_license=$(jq -r '.freesurfer_license' "$config_file")
-
-# set conda env
-#source ${conda_source}
-#mamba activate ${conda_name}
-# Set up `uv` environment
-echo "Setting up Python environment with uv..."
-source "${repo_dir}/.venv/bin/activate"
 
 
 # example from job array, sub=("21" "31" "78" "55" "106")

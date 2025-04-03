@@ -1,10 +1,12 @@
 import argparse
 import os
+import shutil
 import json
 import importlib
 import modify_events
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from utils import get_numvolumes, trim_derivatives, trim_calibration_volumes, trim_confounds
 from bids.layout import BIDSLayout
 
@@ -29,10 +31,8 @@ with open(f'{spec_path}/{study_id}_basic-details.json', 'r') as file:
     specdata = json.load(file)
 
 taskspecs = specdata.get('Tasks').get(taskname)
-boldvolumes = int(taskspecs.get('bold_volumes'))
 dummyvolumes = taskspecs.get('dummy_volumes')
 dummyvolumes = int(dummyvolumes) if dummyvolumes is not None else 0  # Default to 0 if None
-final_vols = (boldvolumes - dummyvolumes)
 preproc_events = taskspecs.get('preproc_events')
 
 print(f"\tGenerating Layout of Derivatives {fmriprep_path}/../")
@@ -44,45 +44,58 @@ if not task_bold_files or not task_conf_files:
     ValueError(f"No files found for task: {taskname}")
 
 # check and trim bold files if needed
-for bold_file in task_bold_files:
-    bold_volcheck = get_numvolumes(bold_file.path)
-    
-    if bold_volcheck != final_vols:
-        print(f"BOLD volumes in {bold_file.filename} do not match expected target")
-        print(f"\tBOLD volumes: {bold_volcheck} | Target volumes: {final_vols} | Adjusting by: {dummyvolumes}.")
+if dummyvolumes > 0:
+    for bold_file in task_bold_files:
+        bold_volcheck = get_numvolumes(bold_file.path)
+        
+        print(f"\tBOLD volumes: {bold_volcheck} | Adjusting by: {dummyvolumes}.")
         
         try:
             trimmed_nifti = trim_calibration_volumes(
                 bold_path=bold_file.path, 
                 num_voltotrim=dummyvolumes
             )
-            trimmed_nifti.to_filename(bold_file.path)
-            print(f"Trimmed BOLD file overwritten for {bold_file.filename}")
-        except Exception as e:
-            print(f"Error processing BOLD file {bold_file.filename}: {e}")
-    else:
-        print(f"BOLD data for {bold_file.filename} appears to be preprocessed")
+            og_path = Path(bold_file.path)
+            new_path = Path(str(og_path).replace("derivatives", "derivatives_alt"))
+            new_path.parent.mkdir(parents=True, exist_ok=True) 
+            trimmed_nifti.to_filename(new_path)
+            print(f"Trimmed BOLD file overwritten for {new_path.name}")
 
-# check and trim bold files if needed
-for conf_file in task_conf_files:
-    conf_df = pd.read_csv(conf_file.path, sep='\t')
-    conf_volcheck = len(conf_df)
-    
-    if conf_volcheck != final_vols:
-        print(f"Confounds rows in {conf_file.filename} do not match expected target")
-        print(f"\tConfounds rows: {conf_volcheck} | Target volumes: {final_vols} | Adjusting by: {dummyvolumes}.")
+            # cp associated .json file to new derivatives folder
+            json_file = Path(str(og_path).replace(".nii.gz", ".json")) 
+            if json_file.exists():
+                new_json_path = new_path.parent / json_file.name 
+                shutil.copy(json_file, new_json_path)  # Copy the JSON file
+                print(f"Copied associated JSON file to {new_json_path.name}")
+            else:
+                print(f"No associated JSON file found for {bold_file.filename}")
+
+        except Exception as e:
+
+            print(f"Error processing BOLD file {bold_file.filename}: {e}")
+
+    # trim confounds .tsv files to match BOLD length
+    for conf_file in task_conf_files:
+        conf_df = pd.read_csv(conf_file.path, sep='\t')
+        conf_volcheck = len(conf_df) 
+        
+        print(f"\tConfounds rows: {conf_volcheck} | Adjusting by: {dummyvolumes}.")
         
         try:
             trimmed_confounds = trim_confounds(
                 confounds_path=conf_file.path, 
                 num_rowstotrim=dummyvolumes
             )
-            trimmed_confounds.to_csv(conf_file.path, sep='\t', index=False)
-            print(f"Trimmed confounds file overwritten for {conf_file.filename}")
+            ogcf_path = Path(conf_file.path)
+            newcf_path = Path(str(ogcf_path).replace("derivatives", "derivatives_alt"))
+            newcf_path.parent.mkdir(parents=True, exist_ok=True) 
+            trimmed_confounds.to_csv(newcf_path, sep='\t', index=False)
+            print(f"Trimmed confounds file {newcf_path.name}")
         except Exception as e:
             print(f"Error processing confounds file {conf_file.filename}: {e}")
-    else:
-        print(f"Confounds data for {conf_file.filename} appears to be preprocessed")
+
+else:
+    print(f"Dummy volumes of {dummyvolumes}. Not modifying BOLD or confounds.tsv files")
 
 
 if preproc_events:

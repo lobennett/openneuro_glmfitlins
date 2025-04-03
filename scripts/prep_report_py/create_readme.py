@@ -57,7 +57,7 @@ def generate_studysummary(spec_path, study_id, data, repo_url="https://github.co
 
 
 def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
-    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, spec_imgs_dir):
+    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir):
     # Add title and description
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
     readme_content += "## Analysis Overview\n"
@@ -82,9 +82,30 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
         readme_content += f"- **{name}**: {expr}\n"
     
     readme_content += "\n## Figures\n"
-    readme_content += f"\n### Contrast Maps\n![Contrast Map]({f"./imgs/{contrast_image}"})\n"
+    readme_content += f"\n### Contrast Weights\n![Contrast Weight]({f"./imgs/{contrast_image}"})\n"
+    readme_content += f"The contrast maps represents the weights used to model brain activity.\n"
+    readme_content += f"\n### Design Matrixs\n![Design Matrix]({f"./imgs/{design_image}"})\n"
+    readme_content += f"The example design matrix illustrate the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interested, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).\n"
     readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./imgs/{study_id}_task-{task}_vif-boxplot.png"})\n"
+    readme_content += f"The Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the design matrices -- nusiance regressors are excluded here for brevity.\n"
+    readme_content += f"\n### Voxelwise Model Variance Explained (r-squared)\n"
+    readme_content += (
+    f"Voxelwise R-squared values represent the proportion of variance explained by the "
+    f"model at each voxel in the brain. The R-squared images shown here are calculated across runs, subjects and/or sessions (dependent on data Fitlins nodes) for the study and task.\n\n"
     
+    f"#### Voxelwise Average (Mean)\n"
+    f"The **mean** R-squared image reflect the average of the R-squared values across all subjects and runs."
+    f"In other words, the fluctuation in how much variability in the BOLD signal the model explains at a given voxel.\n"
+
+    f"![R Square]({f'./imgs/{study_id}_task-{task}_rsquare-mean.png'})\n\n"
+    
+    f"#### Voxelwise Variance (Standard Deviation)\n"
+    f"The **standard deviation** (or variance) image provides insights into the variability of model performance."
+    f"In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.\n"
+    f"![R Square]({f'./imgs/{study_id}_task-{task}_rsquare-std.png'})\n"
+    )
+
+ 
     # Add contrast maps
     readme_content += "\n### Statistical Maps\n"
     for con_name in contrast_dict.keys():
@@ -92,5 +113,3 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
         readme_content += f"\n#### {con_name}\n![{con_name} Map]({map_path})\n"
     
     return readme_content
-
-

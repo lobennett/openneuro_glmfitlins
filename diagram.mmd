@@ -1,0 +1,58 @@
+flowchart LR
+    %% Define the main sections
+    subgraph Setup ["Environment Setup"]
+        direction TB
+        A[Clone Repository] --> B[Setup uv Environment]
+        B --> C[Configure Paths]
+    end
+    
+    subgraph Acquisition ["Data Acquisition"]
+        direction TB
+        D[Download Dataset] --> E{Complete<br>Derivatives?}
+        E -->|Yes| H[Generate Summary]
+        E -->|No| F[Regenerate on HPC]
+        F --> H
+    end
+    
+    subgraph Processing ["Preprocessing"]
+        direction TB
+        I[Modify BOLD/Events<br>Files] --> J[Custom Event<br>Processing]
+    end
+    
+    subgraph Analysis ["Model & Analysis"]
+        direction TB
+        K[Create Model<br>Specification] --> L[Review & Customize]
+        L --> M{Run Location}
+        M -->|Local| N[Run FitLins<br>Locally]
+        M -->|HPC| O[Submit FitLins<br>Job]
+    end
+    
+    subgraph Reporting ["Reporting"]
+        direction TB
+        P[Generate Group<br>Report] --> Q[Subject-Level<br>Reports]
+        P --> R[Group-Level<br>Statistics]
+        P --> S[Contrast<br>Maps]
+    end
+    
+    %% Connect the sections
+    Setup --> Acquisition
+    Acquisition --> Processing
+    Processing --> Analysis
+    N --> Reporting
+    O --> Reporting
+    
+    %% Add logo reference (this will appear as text in Mermaid)
+    classDef logo fill:#fff,stroke:none
+    LOGOtext["OpenNeuro GLM Fitlins"]
+    class LOGOtext logo
+    
+    %% Define visual styles
+    classDef configNode fill:#f9f,stroke:#333,stroke-width:2px
+    classDef scriptNode fill:#bbf,stroke:#333,stroke-width:1px
+    classDef decisionNode fill:#ff9,stroke:#333,stroke-width:1px
+    classDef outputNode fill:#bfb,stroke:#333,stroke-width:1px
+    
+    class B,C configNode
+    class D,F,I,J,K,N,O,P scriptNode
+    class E,M decisionNode
+    class H,L,Q,R,S outputNode

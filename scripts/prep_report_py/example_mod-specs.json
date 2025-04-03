@@ -18,6 +18,9 @@
       {
         "Name": "Convolve",
         "Model": "spm",
+        "Derivative": "False", 
+        "Dispersion": "False", 
+        "FirDelays": "None",
         "Input": [
           "trial_type.*"
         ]
@@ -25,9 +28,8 @@
     ]
   },
       "Model": {"X": [
-                1, "trial_type.*", "trans_*", "rot*", "cosine*"], 
+                1, "trial_type.*", "trans_*", "rot_*", "cosine*"], 
                 "Type": "glm"},
-                
       "Contrasts": [
         {
           "Name": "ConAB",

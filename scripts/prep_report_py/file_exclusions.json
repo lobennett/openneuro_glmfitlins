@@ -1,0 +1,6 @@
+{
+    "exclusions": [
+        "*dtseries*",
+        "*.gii"
+    ]
+}

@@ -9,8 +9,9 @@ import seaborn as sns
 from pathlib import Path
 from bids.layout import BIDSLayout
 from create_readme import generate_groupmodsummary
-from utils import get_numvolumes, extract_model_info, gen_vifdf
+from utils import get_numvolumes, extract_model_info, gen_vifdf, calc_niftis_meanstd
 from nilearn.plotting import plot_stat_map
+from nilearn.image import load_img, concat_imgs, mean_img
 
 # Turn off back end display to create plots
 plt.switch_backend('Agg')
@@ -28,6 +29,12 @@ study_id = args.openneuro_study
 analysis_dir = args.analysis_dir
 spec_path = args.spec_dir
 task = args.taskname
+
+# Get plotting coordinates
+study_details = f"{spec_path}/{study_id}/{study_id}_basic-details.json"
+with open(study_details, 'r') as file:
+    study_info = json.load(file)
+    plt_coords = tuple(study_info.get("Tasks", {}).get(task, {}).get("plot_coords"))
 
 # Create images directory
 spec_imgs_dir = Path(f"{spec_path}/{study_id}/group_{task}/imgs")
@@ -73,12 +80,18 @@ else:
     
 run_node_regressors = spec_results['nodes'][0]['regressors']
 
-# Find and copy example contrast image
+# Find and copy example contrast image & design matrix
 contrast_images = list(Path(analysis_dir).rglob(f"*_task-{task}_*contrasts.svg"))
 if contrast_images:
     print(f"Found example contrasts image: {contrast_images[0].name}")
     con_matrix_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_contrast-matrix.svg"
     shutil.copy(contrast_images[0], con_matrix_copy)
+
+design_images = list(Path(analysis_dir).rglob(f"*_task-{task}_*design.svg"))
+if design_images:
+    print(f"Found example design mat image: {design_images[0].name}")
+    design_matrix_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_design-matrix.svg"
+    shutil.copy(design_images[0], design_matrix_copy)
 
 # Find design matrices
 design_matrices = list(Path(analysis_dir).rglob(f"*_task-{task}_*design.tsv"))
@@ -138,14 +151,42 @@ if all_vif_dfs:
 else:
     print("No VIF data available for visualization")
 
+# Estimate average and variance of r-square maps
+rquare_statmaps = list(Path(analysis_dir).rglob(f"*_task-{task}*_stat-rSquare_statmap.nii.gz"))
+r2mean, r2std = calc_niftis_meanstd(path_imgs=rquare_statmaps)
+
+        
+# Find and create the group map plot
+if r2mean:
+    r2mean_path = f"{spec_imgs_dir}/{study_id}_task-{task}_rsquare-mean.png"
+    plot_stat_map(
+        stat_map_img=r2mean,
+        cut_coords=plt_coords, 
+        cmap="Reds",
+        vmin=0,
+        vmax=1,
+        display_mode='ortho', 
+        colorbar=True,  
+        output_file=r2mean_path,
+        title=f"{task}: R-squared mean across {len(rquare_statmaps)} Subject/Run Images"
+    )
+if r2std:
+    r2std_path = f"{spec_imgs_dir}/{study_id}_task-{task}_rsquare-std.png"
+    plot_stat_map(
+        stat_map_img=r2std,
+        cut_coords=plt_coords, 
+        cmap="Reds",
+        vmin=0,
+        vmax=1,
+        display_mode='ortho', 
+        colorbar=True, 
+        output_file=r2std_path,
+        title=f"{task}: R-squared stdev across {len(rquare_statmaps)} Subject/Run Images"
+    )
+
 # Plot group maps if they exist
-grp_map_path = f"{analysis_dir}/{study_id}/task-{task}/node-dataLevel"
+grp_map_path = f"{analysis_dir}/node-dataLevel"
 if os.path.exists(grp_map_path):
-    # Get plotting coordinates
-    study_details = f"{spec_path}/{study_id}/{study_id}_basic-details.json"
-    with open(study_details, 'r') as file:
-        study_info = json.load(file)
-        plt_coords = tuple(study_info.get("Tasks", {}).get(task, {}).get("plot_coords"))
 
     # Create group maps and save them for each contrast
     for con_name in contrast_dict.keys():
@@ -179,6 +220,7 @@ grp_readme = generate_groupmodsummary(
     has_subject=has_subject, 
     contrast_dict=contrast_dict, 
     contrast_image=Path(con_matrix_copy).name if contrast_image else None, 
+    design_image=Path(design_matrix_copy).name if design_images else None, 
     spec_imgs_dir=spec_imgs_dir
 )
 

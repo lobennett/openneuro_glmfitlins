@@ -11,19 +11,19 @@
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
 - **BOLD Volumes**: 125
-- **Unique 'trial_type' Values**: 4, 1, 2, 3, 5, 6
+- **Unique 'trial_type' Values**: 4, 1, 2, 3, 5
 
 ### Task: prelearning
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
 - **BOLD Volumes**: 85
-- **Unique 'trial_type' Values**: 5, 3, 4, 2, 6
+- **Unique 'trial_type' Values**: 5, 3, 4, 2
 
 ### Task: regulate
 - **Column Names**: onset, duration, trial_type
 - **Data Types**: onset (float64), duration (float64), trial_type (int64)
 - **BOLD Volumes**: 125
-- **Unique 'trial_type' Values**: 4, 1, 3, 2, 5, 6
+- **Unique 'trial_type' Values**: 4, 1, 3, 2, 5
 
 ### Task: training
 - **Column Names**: onset, duration, trial_type

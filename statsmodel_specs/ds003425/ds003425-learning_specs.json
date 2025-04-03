@@ -16,7 +16,7 @@
       "11",
       "12",
       "13"
-  ],
+    ],
     "task": [
       "learning"
     ]
@@ -27,8 +27,7 @@
       "Name": "run_level",
       "GroupBy": [
         "run",
-        "subject",
-        "session"
+        "subject"
       ],
       "Transformations": {
         "Transformer": "pybids-transforms-v1",
@@ -62,14 +61,26 @@
       "Contrasts": [
         {
           "Name": "VCSPvVCSN",
-          "ConditionList": ["trial_type.2", "trial_type.4"],
-          "Weights": [1, -1],
+          "ConditionList": [
+            "trial_type.2",
+            "trial_type.4"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
           "Test": "t"
         },
         {
           "Name": "ICSPvICSN",
-          "ConditionList": ["trial_type.3","trial_type.5"],
-          "Weights": [1, -1],
+          "ConditionList": [
+            "trial_type.3",
+            "trial_type.5"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
           "Test": "t"
         },
         {
@@ -85,8 +96,7 @@
       "Name": "subject_level",
       "GroupBy": [
         "subject",
-        "contrast",
-        "session"
+        "contrast"
       ],
       "Model": {
         "X": [
@@ -102,8 +112,7 @@
       "Level": "Dataset",
       "Name": "data_level",
       "GroupBy": [
-        "contrast",
-        "session"
+        "contrast"
       ],
       "Model": {
         "X": [

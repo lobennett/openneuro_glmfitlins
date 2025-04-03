@@ -36,3 +36,8 @@ openneuro-glmfitlins = "openneuro_glmfitlins:main"
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]

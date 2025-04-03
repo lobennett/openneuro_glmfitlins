@@ -40,51 +40,14 @@ else
   if [[ -f "$contrasts_json" && -f "$subjects_json" ]]; then
     echo -e "\tRequired files (contrasts.json and _subjects.json) found. Creating model specs..."
     # Run the script to create the model specs
-    uv --project ${repo_dir} run python "${scripts_dir}/create_mod-specs.py" \
+    uv --project ${repo_dir} run python "${scripts_dir}/prep_report_py/create_mod_specs.py" \
         --openneuro_study ${openneuro_id} \
         --task ${task_label} \
         --script_dir ${scripts_dir}
+    echo -e "\t\tModel specification file created: $model_json"
+    echo
   else
       echo -e "\tCannot create model specs. Missing *_contrasts.json or *_subjects.json."
       echo
   fi
 fi
-
-# Create model specifications if desired
-read -p "Trim BOLD and Prepare Events? (yes/no): " prep_bold
-if [[ "$prep_bold" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    uv --project ${repo_dir} run python ${scripts_dir}/prep_boldevents.py \
-      --openneuro_study ${openneuro_id} \
-      --task ${task_label} \
-      --deriv_dir ${data}/fmriprep/${openneuro_id}/derivatives \
-      --bids_dir ${data}/input/${openneuro_id} \
-      --specs_dir ${repo_dir}/statsmodel_specs/${openneuro_id}
-else
-    echo -e "\tSkipping BOLD and events prep."
-fi
-
-# Run Fitlins if desired
-read -p "Run Fitlins container? (yes/no): " start_fitlins
-if [[ ! "$start_fitlins" =~ ^[Yy]([Ee][Ss])?$ ]]; then
-    echo "Execution skipped."
-    exit 0
-fi
-
-echo
-echo "Running Fitlins with the paths:"
-echo "BIDS input: ${data}/input/${openneuro_id}"
-echo "fmriprep derivatives: ${data}/fmriprep/${openneuro_id}/derivatives"
-echo "Analyses output: ${data}/analyses/${openneuro_id}"
-echo "Model specs: ${model_json}"
-echo "Working directory: ${scratch}"
-echo 
-
-uv --project ${repo_dir} \
-      run fitlins ${data}/input/${openneuro_id} ${data}/analyses/${openneuro_id} \
-      participant \
-      -m ${model_json} \
-      -d ${data}/fmriprep/${openneuro_id}/derivatives \
-      --ignore "sub-.*_physio\.(json|tsv\.gz)" \
-      --space MNI152NLin2009cAsym --desc-label preproc \
-      --smoothing 5:run:iso --estimator nilearn \
-      -w ${scratch}

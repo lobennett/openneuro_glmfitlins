@@ -14,6 +14,7 @@
       "09",
       "10",
       "11",
+      "12",
       "13"
     ],
     "task": [
@@ -40,6 +41,7 @@
           {
             "Name": "Convolve",
             "Model": "spm",
+            "Derivative": "True",
             "Input": [
               "trial_type.*"
             ]
@@ -51,7 +53,7 @@
           1,
           "trial_type.*",
           "trans_*",
-          "rot*",
+          "rot_*",
           "cosine*"
         ],
         "Type": "glm"

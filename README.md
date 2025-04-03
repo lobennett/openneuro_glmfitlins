@@ -56,8 +56,7 @@
 
 ## Installation & Usage
 
-```mermaid
-{{include workflow.mmd}}
+![Workflow Diagram](./docs/workflow.svg)
 
 1. **Clone the repository**:
    ```bash

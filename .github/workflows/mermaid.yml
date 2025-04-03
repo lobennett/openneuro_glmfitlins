@@ -9,14 +9,20 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Generate diagram from Mermaid file
-        uses: jp3492/mermaid-cli-action@v1
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          files: |
-            docs/workflow.mmd
-          output: |
-            docs/workflow.svg
+          node-version: '16'
+      
+      - name: Install Mermaid CLI
+        run: npm install -g @mermaid-js/mermaid-cli
+      
+      - name: Generate diagram from Mermaid file
+        run: |
+          mmdc -i docs/workflow.mmd -o docs/workflow.svg -b transparent
+      
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v4
         with:

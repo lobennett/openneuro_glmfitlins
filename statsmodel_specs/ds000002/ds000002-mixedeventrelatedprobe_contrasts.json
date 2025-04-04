@@ -1,0 +1,36 @@
+{
+    "Contrasts": [
+        {
+          "Name": "prob",
+          "ConditionList": [
+            "trial_type.classification-probabilistic"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "determ",
+          "ConditionList": [
+            "trial_type.classification-deterministic"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "probvdeterm",
+          "ConditionList": [
+            "trial_type.classification-probabilistic",
+            "trial_type.classification-deterministic"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
+      ]
+}

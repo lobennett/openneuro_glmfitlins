@@ -1,0 +1,15 @@
+{
+    "Contrasts": [
+      {
+        "Name": "inVcon",
+        "ConditionList": ["trial_type.incongruent_correct", "trial_type.congruent_correct"],
+        "Weights": [1, -1],
+        "Test": "t"
+      },
+      {
+        "Name": "inVbase",
+        "ConditionList": ["trial_type.incongruent_correct"],
+        "Weights": [1],
+        "Test": "t"
+      }
+  }

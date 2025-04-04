@@ -22,7 +22,7 @@
       "17"
     ],
     "task": [
-      "probabilisticclassification"
+      "deterministicclassification"
     ]
   },
   "Nodes": [

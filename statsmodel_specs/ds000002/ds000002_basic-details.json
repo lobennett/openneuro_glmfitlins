@@ -18,8 +18,17 @@
         "16",
         "17"
     ],
+    "Sessions": [],
     "Tasks": {
         "deterministicclassification": {
+            "plot_coords": [
+                0,
+                0,
+                -14
+            ],
+            "bold_volumes": 180,
+            "dummy_volumes": null,
+            "preproc_events": true,
             "column_names": [
                 "onset",
                 "duration",
@@ -52,6 +61,14 @@
             ]
         },
         "mixedeventrelatedprobe": {
+            "plot_coords": [
+                0,
+                0,
+                -14
+            ],
+            "bold_volumes": 237,
+            "dummy_volumes": null,
+            "preproc_events": true,
             "column_names": [
                 "onset",
                 "duration",
@@ -81,6 +98,14 @@
             ]
         },
         "probabilisticclassification": {
+            "plot_coords": [
+                0,
+                0,
+                -14
+            ],
+            "bold_volumes": 180,
+            "dummy_volumes": null,
+            "preproc_events": true,
             "column_names": [
                 "onset",
                 "duration",

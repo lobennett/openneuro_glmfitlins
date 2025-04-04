@@ -1,5 +1,9 @@
 #!/bin/bash
 
+if ! command -v aws &> /dev/null; then
+	echo "Error: AWS CLI is not installed. Confirm your environment is activated and AWS is installed."
+	exit 1
+fi
 # Set data / environment paths for data download and BIDS Stats Models
 openneuro_id=$1 # OpenNeuro ID, e.g. ds000001
 if [ -z "$openneuro_id" ]; then
@@ -28,7 +32,8 @@ done
 df_info=$(uv run aws s3 ls --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ --recursive --summarize | tail -n 3)
 
 # confirm whether minimal or not baesd on presesence of MNI.nii.gz
-if aws s3 ls --recursive --no-sign-request s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/ | grep ".*_space-MNI152.*_desc-preproc_bold.nii.gz" ; then
+# return quietly for check '-q'
+if aws s3 ls --recursive --no-sign-request "s3://openneuro-derivatives/fmriprep/${openneuro_id}-fmriprep/" 2>/dev/null | grep -q ".*_space-MNI152.*_desc-preproc_bold.nii.gz"; then
   minimal_derivatives="no"
   echo "Found .*_space-MNI152.*_desc-preproc_bold.nii.gz on s3, not minimal derivatives"
   echo
@@ -69,7 +74,7 @@ if [[ "$user_input" == "yes" ]]; then
 
   elif [[ "$minimal_derivatives" == "no" ]]; then
     echo "Downloading minimal BIDS and all fMRIPrep'd derivatives..."
-    uv run python "${scripts_dir}/get_openneuro_data.py" "${openneuro_id}" "${data}" "${spec_dir}" "False"
+    uv run python "${scripts_dir}/prep_report_py/get_openneuro_data.py" "${openneuro_id}" "${data}" "${spec_dir}" "False"
     echo -e "\tCopying dataset_description.json file within the fmriprep root directory"
     cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
     echo
@@ -91,3 +96,37 @@ uv run python "${scripts_dir}/prep_report_py/study_simple-details.py" \
     --bids_dir "${data}/input/${openneuro_id}" \
     --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \
     --spec_dir "${spec_dir}"
+
+
+# creating a symbolic link derivatives directory if complete fmri data is present.
+#!/bin/bash
+
+# Check if minimal_derivatives is set to "no"
+if [[ "$minimal_derivatives" == "no" ]]; then
+    # Define source and destination directories
+    source_dir="${data}/fmriprep/${openneuro_id}"
+    dest_dir="${source_dir}/derivatives"
+    
+    # Create the derivatives directory if it doesn't exist
+    mkdir -p "$dest_dir"
+    
+    # Find all files and directories in the source directory
+    find "$source_dir" -mindepth 1 -not -path "$dest_dir*" | while read item; do
+        # Calculate the relative path
+        rel_path="${item#$source_dir/}"
+        
+        # Create parent directories in the destination if needed
+        if [[ -d "$item" ]]; then
+            mkdir -p "$dest_dir/$rel_path"
+        else
+            # Create parent directory for the file if needed
+            mkdir -p "$(dirname "$dest_dir/$rel_path")"
+            
+            # Create symbolic link
+            ln -sf "$item" "$dest_dir/$rel_path"
+        fi
+    done
+    
+    echo "Data are not minimally processed, created symbolic link structure from fmriprep/${openneuro_id} in fmriprep/${openneuro_id}/derivatives."
+    echo
+fi

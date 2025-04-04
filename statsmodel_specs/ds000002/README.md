@@ -7,16 +7,19 @@
 ### Task: deterministicclassification
 - **Column Names**: onset, duration, trial_type, feedback, TrialNum, StimCond, StimulusNum, Response, response_time, Correct, Feedback
 - **Data Types**: onset (float64), duration (float64), trial_type (object), feedback (float64), TrialNum (float64), StimCond (float64), StimulusNum (float64), Response (object), response_time (float64), Correct (object), Feedback (object)
+- **BOLD Volumes**: 180
 - **Unique 'trial_type' Values**: feedback, nan
 
 ### Task: mixedeventrelatedprobe
 - **Column Names**: onset, duration, trial_type, TrialNum, StimCond, StimulusNum, Response, response_time, Correct
 - **Data Types**: onset (float64), duration (float64), trial_type (object), TrialNum (float64), StimCond (float64), StimulusNum (float64), Response (object), response_time (float64), Correct (float64)
+- **BOLD Volumes**: 237
 - **Unique 'trial_type' Values**: classification-probabilistic, classification-deterministic, nan
 
 ### Task: probabilisticclassification
 - **Column Names**: onset, duration, trial_type, feedback, TrialNum, StimCond, StimulusNum, Response, response_time, Correct, Feedback
 - **Data Types**: onset (float64), duration (float64), trial_type (object), feedback (float64), TrialNum (float64), StimCond (float64), StimulusNum (float64), Response (object), response_time (float64), Correct (object), Feedback (object)
+- **BOLD Volumes**: 180
 - **Unique 'trial_type' Values**: feedback, nan
 
 ## MRIQC Summary Reports

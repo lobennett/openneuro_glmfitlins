@@ -27,8 +27,17 @@
         "25",
         "26"
     ],
+    "Sessions": [],
     "Tasks": {
         "flanker": {
+            "plot_coords": [
+                38,
+                -26,
+                50
+            ],
+            "bold_volumes": 146,
+            "dummy_volumes": null,
+            "preproc_events": true,
             "column_names": [
                 "onset",
                 "duration",

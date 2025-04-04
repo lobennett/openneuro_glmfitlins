@@ -3,6 +3,58 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+
+def add_reactiontime_regressor(eventsdf, trial_type_col='trial_type', resp_trialtype: list = ['response'], 
+                                response_colname: str = 'response_time', rtreg_name: str ='rt_reg', 
+                                onset_colname: str = 'onset', duration_colname: str = 'duration', 
+                                new_trialtype: str = None, resp_in_ms: bool = False):
+    """
+    Pull reaction time regressor rows and add them to the dataframe as regressor.
+    Assumes reaction times are in milliseconds; converts [times] / 1000 to convert to seconds for "duration".
+
+    Parameters
+    ----------
+    eventsdf : DataFrame containing event data with response times.
+    trial_type_col (str): Column name for identifying response trials.
+    resp_trialtype (list): Values in trial_type_col that have associated response times.
+    response_colname (str): Column name containing response time.
+    rtreg_name (str): Name for new reaction time regressor.
+    onset_colname (str): Name for onset times column.
+    duration_colname (str): Name for duration times column.
+    new_trialtype (str): Column name to store the new regressor trial type.
+    resp_in_ms (bool): Whether response time is in milliseconds (convert to seconds if True).
+
+    Returns
+    -------
+    DataFrame with reaction time regressor rows added.
+    """
+    # Set name for new trialtype column
+    new_trial_name = new_trialtype if new_trialtype else trial_type_col
+
+    if isinstance(resp_trialtype, str):
+        resp_trialtype = [resp_trialtype]
+
+    # Filter and copy relevant rows
+    rt_reg_rows = eventsdf[eventsdf[trial_type_col].isin(resp_trialtype)].copy()
+    rt_reg_rows[new_trial_name] = rtreg_name
+
+    # Compute duration
+    if resp_in_ms:
+        rt_reg_rows[duration_colname] = rt_reg_rows[response_colname] / 1000
+    else:
+        rt_reg_rows[duration_colname] = rt_reg_rows[response_colname]
+
+    # Replace NAs with 0 and report how many were replaced
+    na_count = rt_reg_rows[duration_colname].isna().sum()
+    rt_reg_rows[duration_colname] = rt_reg_rows[duration_colname].fillna(0)
+
+    print(f"[INFO] Replaced {na_count} missing or None RT duration values with 0.")
+
+    # Select relevant columns and concatenate
+    rt_reg_rows = rt_reg_rows[[onset_colname, duration_colname, new_trial_name]]
+    return pd.concat([eventsdf, rt_reg_rows], ignore_index=True)
+
+
 def ds003425(eventspath: str, task: str):
     """
     Process event data for ds003425 by modifying trial types if applicable. 
@@ -40,3 +92,71 @@ def ds003425(eventspath: str, task: str):
 
         return eventsdat
 
+
+def ds000002(eventspath: str, task: str):
+    """
+    Process event data for ds000002 by modifying trial types if applicable. 
+    Per DOI: 10.1016/j.neuroimage.2005.08.010, 'PCL trials alone were modeled ...  A nuisance regressor was added, 
+    which consisted of trials on which no response was made.'
+    
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["deterministicclassification", "mixedeventrelatedprobe", "probabilisticclassification"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        if "missed" in eventsdat['trial_type'].values or eventsdat['trial_type'].isna().any():
+            # dropping unclear NaN values -- rest blocks?
+            eventsdat = eventsdat.dropna(subset=['duration', 'trial_type'])
+
+            # A nuisance regressor was added, which consisted of trials on which no response was made 
+            # setting as trial_type == 'missed'. Will convolve and include as nuisance
+            eventsdat.loc[eventsdat['response_time'].isna(), 'trial_type'] = 'missed'
+
+            # save file
+            eventsdat_cpy.to_csv(eventspath, sep='\t', index=False)
+            print(f"Modified events file for {os.path.basename(eventspath)}")
+
+        else:
+            print(f"Trial type value 'missed' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")
+
+
+def ds000102(eventspath: str, task: str):
+    """
+    Process event data for ds000102: adding rt regressor. 
+
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["flanker"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        if "rt_reg" not in eventsdat['trial_type'].values:
+            # create rt regressor
+
+            # RT appears important, adding RT 'rt_reg' into trial_type column. Missed is included, set to 0 by func since NaN
+            # include 'rt_reg' in spec file
+            eventsdat_cpy = eventsdat.copy()
+            cols_rt = ['congruent_correct', 'incongruent_incorrect', 'incongruent_correct', 'congruent_incorrect'] 
+            eventsdat_cpy = add_reactiontime_regressor(eventsdf=eventsdat_cpy, trial_type_col='trial_type', resp_trialtype = cols_rt, 
+            response_colname = 'response_time', rtreg_name ='rt_reg', resp_in_ms = False)
+            
+            # Sort by 'onset' column from low to high
+            eventsdat_cpy = eventsdat_cpy.sort_values(by='onset', ascending=True)
+
+            # save file
+            eventsdat_cpy.to_csv(eventspath, sep='\t', index=False)
+            print(f"Modified events file for {os.path.basename(eventspath)}")
+
+        else:
+            print(f"Trial type value 'missed' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")

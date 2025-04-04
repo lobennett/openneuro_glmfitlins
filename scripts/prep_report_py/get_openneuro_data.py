@@ -22,7 +22,7 @@ spec_dir = os.path.abspath(args.spec_dir)
 minimal_fp = args.is_minimal
 
 # Define paths
-file_exclude_list = os.path.join('.', "file_exclusions.json")
+file_exclude_list = os.path.join('.', 'prep_report_py', "file_exclusions.json")
 bids_data = os.path.join(data_dir, "input")
 fmriprep_dir = os.path.join(data_dir, "fmriprep")
 

@@ -3,7 +3,7 @@
 Subject-level models were fit for 17 subjects performing the probabilisticclassification task.
 HRF model type: spm w/ derivatives
 ### Regressors of Interest
-trial_type.feedback, trial_type.feedback_derivative, trial_type.rt_reg, trial_type.rt_reg_derivative, intercept
+trial_type.feedback, trial_type.feedback_derivative, intercept
 ### Nuisance Regressors
 trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_y, trans_y_derivative1, trans_y_derivative1_power2, trans_y_power2, trans_z, trans_z_derivative1, trans_z_derivative1_power2, trans_z_power2, rot_x, rot_x_derivative1, rot_x_derivative1_power2, rot_x_power2, rot_y, rot_y_derivative1, rot_y_derivative1_power2, rot_y_power2, rot_z, rot_z_derivative1, rot_z_derivative1_power2, rot_z_power2, cosine00, cosine01, cosine02, cosine03
 ## Model Structure

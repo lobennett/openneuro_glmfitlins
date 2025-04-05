@@ -1,0 +1,224 @@
+{
+  "Name": "ds000108",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "25",
+      "26",
+      "27",
+      "30",
+      "31",
+      "32",
+      "33"
+    ],
+    "task": [
+      "Emotionregulation"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "StimReappNegvLookNeg",
+          "ConditionList": [
+            "trial_type.Reapp_Neg_Stim",
+            "trial_type.Look_Neg_Stim"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimLookNegvNeutral",
+          "ConditionList": [
+            "trial_type.Look_Neg_Stim",
+            "trial_type.Look_Neutral_Stim"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimReappvLookNegNeut",
+          "ConditionList": [
+            "trial_type.Reapp_Neg_Stim",
+            "trial_type.Look_Neg_Stim",
+            "trial_type.Look_Neutral_Stim"
+          ],
+          "Weights": [
+            1,
+            -0.5,
+            -0.5
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimReappNeg",
+          "ConditionList": [
+            "trial_type.Reapp_Neg_Stim"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimLookNeg",
+          "ConditionList": [
+            "trial_type.Look_Neg_Stim"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimLookNeutral",
+          "ConditionList": [
+            "trial_type.Look_Neutral_Stim"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "StimPhase",
+          "ConditionList": [
+            "trial_type.Look_Neg_Stim",
+            "trial_type.Reapp_Neg_Stim",
+            "trial_type.Look_Neutral_Stim"
+          ],
+          "Weights": [
+            0.33,
+            0.33,
+            0.33
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "AntPhase",
+          "ConditionList": [
+            "trial_type.Look_Neg_Ant",
+            "trial_type.Reapp_Neg_Ant",
+            "trial_type.Look_Neutral_Ant"  
+          ],
+          "Weights": [
+            0.33,
+            0.33,
+            0.33
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "RatePhase",
+          "ConditionList": [
+            "trial_type.Look_Neg_Rating",
+            "trial_type.Reapp_Neg_Rating",
+            "trial_type.Look_Neutral_Rating"
+          ],
+          "Weights": [
+            0.33,
+            0.33,
+            0.33
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

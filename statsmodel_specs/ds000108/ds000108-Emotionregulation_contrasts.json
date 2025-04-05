@@ -1,0 +1,114 @@
+{
+    "Contrasts": [
+      {
+        "Name": "StimReappNegvLookNeg",
+        "ConditionList": [
+          "trial_type.Reapp_Neg_Stim",
+          "trial_type.Look_Neg_Stim"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimLookNegvNeutral",
+        "ConditionList": [
+          "trial_type.Look_Neg_Stim",
+          "trial_type.Look_Neutral_Stim"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimReappvLookNegNeut",
+        "ConditionList": [
+          "trial_type.Reapp_Neg_Stim",
+          "trial_type.Look_Neg_Stim",
+          "trial_type.Look_Neutral_Stim"
+        ],
+        "Weights": [
+          1,
+          -0.5,
+          -0.5
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimReappNeg",
+        "ConditionList": [
+          "trial_type.Reapp_Neg_Stim"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimLookNeg",
+        "ConditionList": [
+          "trial_type.Look_Neg_Stim"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimLookNeutral",
+        "ConditionList": [
+          "trial_type.Look_Neutral_Stim"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "StimPhase",
+        "ConditionList": [
+          "trial_type.Look_Neg_Stim",
+          "trial_type.Reapp_Neg_Stim",
+          "trial_type.Look_Neutral_Stim"
+        ],
+        "Weights": [
+          0.33,
+          0.33,
+          0.33
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "AntPhase",
+        "ConditionList": [
+          "trial_type.Look_Neg_Ant",
+          "trial_type.Reapp_Neg_Ant",
+          "trial_type.Look_Neutral_Ant"  
+        ],
+        "Weights": [
+          0.33,
+          0.33,
+          0.33
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "RatePhase",
+        "ConditionList": [
+          "trial_type.Look_Neg_Rating",
+          "trial_type.Reapp_Neg_Rating",
+          "trial_type.Look_Neutral_Rating"
+        ],
+        "Weights": [
+          0.33,
+          0.33,
+          0.33
+        ],
+        "Test": "t"
+      }
+    ]
+}

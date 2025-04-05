@@ -91,7 +91,7 @@ fi
 echo "Starting study summary. For large datasets, BIDSLayout may take a moment to run."
 echo
 # Run Python script for study details
-uv run python "${scripts_dir}/prep_report_py/study_simple-details.py" \
+uv run python "${scripts_dir}/prep_report_py/study_simple_details.py" \
     --openneuro_study "${openneuro_id}" \
     --bids_dir "${data}/input/${openneuro_id}" \
     --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \

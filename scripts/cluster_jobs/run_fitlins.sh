@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=fitlins
-#SBATCH --time=02:00:00
+#SBATCH --time=04:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=8GB
 #SBATCH -p russpold,normal,owners

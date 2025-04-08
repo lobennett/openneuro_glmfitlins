@@ -90,6 +90,7 @@ This step:
 - Determines if preprocessed MNI NIfTI files are present to identify minimal vs. complete derivatives
 - Generates:
   - A README summarizing the dataset
+    - Note: at the base of the README ([example](./statsmodel_specs/ds003425/README.md)), there will be links to the plotted distributions of [structural](https://mriqc.readthedocs.io/en/latest/iqms/t1w.html) and [functioanl](https://mriqc.readthedocs.io/en/latest/iqms/bold.html) MRIQC quality control metrics.
   - A details JSON file with metadata (subjects, sessions, tasks, BOLD volumes, event columns, trial types)
   - Subject and contrast list files for each task
 

@@ -12,10 +12,10 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 
 The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
-- **story_belief**: ['1 * `trial_type.false_belief_story`']
-- **story_photo**: ['1 * `trial_type.false_photo_story`']
-- **question_beliefvphoto**: ['1 * `trial_type.false_belief_question` - 1 * `trial_type.false_photo_question`']
-- **story_beliefvphoto**: ['1 * `trial_type.false_belief_story` - 1 * `trial_type.false_photo_story`']
+- **storyBelief**: ['1 * `trial_type.false_belief_story`']
+- **storyPhoto**: ['1 * `trial_type.false_photo_story`']
+- **questionBeliefvphoto**: ['1 * `trial_type.false_belief_question` - 1 * `trial_type.false_photo_question`']
+- **storyBeliefvphoto**: ['1 * `trial_type.false_belief_story` - 1 * `trial_type.false_photo_story`']
 
 ## Figures
 
@@ -47,14 +47,14 @@ The **standard deviation** (or variance) image provides insights into the variab
 
 ### Statistical Maps
 
-#### story_belief
-![story_belief Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-story_belief_map.png)
+#### storyBelief
+![storyBelief Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-storyBelief_map.png)
 
-#### story_photo
-![story_photo Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-story_photo_map.png)
+#### storyPhoto
+![storyPhoto Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-storyPhoto_map.png)
 
-#### question_beliefvphoto
-![question_beliefvphoto Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-question_beliefvphoto_map.png)
+#### questionBeliefvphoto
+![questionBeliefvphoto Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-questionBeliefvphoto_map.png)
 
-#### story_beliefvphoto
-![story_beliefvphoto Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-story_beliefvphoto_map.png)
+#### storyBeliefvphoto
+![storyBeliefvphoto Map](./imgs/ds000109_task-theoryofmindwithmanualresponse_contrast-storyBeliefvphoto_map.png)

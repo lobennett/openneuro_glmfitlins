@@ -79,9 +79,9 @@
       },
       "Contrasts": [
           {
-              "Name": "storyBelief",
+              "Name": "storybelief",
               "ConditionList": [
-                  "trial_type.false_belief_story"
+                  "trial_type.falsebeliefstory"
               ],
               "Weights": [
                   1
@@ -89,9 +89,9 @@
               "Test": "t"
           },
           {
-              "Name": "storyPhoto",
+              "Name": "storyphoto",
               "ConditionList": [
-                  "trial_type.false_photo_story"
+                  "trial_type.falsephotostory"
               ],
               "Weights": [
                   1
@@ -99,10 +99,10 @@
               "Test": "t"
           },
           {
-              "Name": "questionBeliefvphoto",
+              "Name": "questionbeliefvphoto",
               "ConditionList": [
-                  "trial_type.false_belief_question",
-                  "trial_type.false_photo_question"
+                  "trial_type.falsebeliefquestion",
+                  "trial_type.falsephotoquestion"
               ],
               "Weights": [
                   1,
@@ -111,10 +111,10 @@
               "Test": "t"
           },
           {
-              "Name": "storyBeliefvphoto",
+              "Name": "storybeliefvphoto",
               "ConditionList": [
-                  "trial_type.false_belief_story",
-                  "trial_type.false_photo_story"
+                  "trial_type.falsebeliefstory",
+                  "trial_type.falsephotostory"
               ],
               "Weights": [
                   1,

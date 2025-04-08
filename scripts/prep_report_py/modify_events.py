@@ -178,12 +178,12 @@ def ds000109(eventspath: str, task: str):
     if task in ["theoryofmindwithmanualresponse"]:
         eventsdat = pd.read_csv(eventspath, sep='\t')
 
-        # Check if there are any NAs in the specified columns
-        if eventsdat[['onset', 'duration', 'trial_type']].isna().any().any():
-            print("**NaN dropped and trial_type spaces replaced with underscores**")
+        # Check if there are any NAs in the specified columns or trial_type has spaces
+        if eventsdat[['onset', 'duration', 'trial_type']].isna().any().any() or eventsdat['trial_type'].str.contains(r'\s', na=False).any():
+            print("**NaN dropped and trial_type spaces removed**")
             # Only run this if there are NAs in those columns
             eventsdat_cpy = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
-            eventsdat_cpy.loc[:, 'trial_type'] = eventsdat_cpy['trial_type'].str.replace(' ', '_')
+            eventsdat_cpy.loc[:, 'trial_type'] = eventsdat_cpy['trial_type'].str.replace(' ', '')
 
             return eventsdat_cpy
         else:

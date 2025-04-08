@@ -168,7 +168,7 @@ if r2mean:
         display_mode='ortho', 
         colorbar=True,  
         output_file=r2mean_path,
-        title=f"{task}: R-squared mean across {len(rquare_statmaps)} Subject/Run Images"
+        title=f"R2 mean across {len(rquare_statmaps)} Subject/Run Imgs"
     )
 if r2std:
     r2std_path = f"{spec_imgs_dir}/{study_id}_task-{task}_rsquare-std.png"
@@ -181,7 +181,7 @@ if r2std:
         display_mode='ortho', 
         colorbar=True, 
         output_file=r2std_path,
-        title=f"{task}: R-squared stdev across {len(rquare_statmaps)} Subject/Run Images"
+        title=f"R2 stdev across {len(rquare_statmaps)} Subject/Run Imgs"
     )
 
 # Plot group maps if they exist
@@ -202,7 +202,7 @@ if os.path.exists(grp_map_path):
                 colorbar=True, 
                 threshold=1.5, 
                 output_file=output_img_path,
-                title=f"{task} {con_name}: z-stat map"
+                title=f"{con_name}: z-stat map"
             )
 else:
     print("Group map path not found.")

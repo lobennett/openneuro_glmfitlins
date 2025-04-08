@@ -72,6 +72,7 @@ uv --project "$repo_dir" \
       -m "${model_json}" \
       -d "${fmriprep_data_dir}" \
       --ignore "sub-.*_physio\.(json|tsv\.gz)" \
+      --drop-missing \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \
       --n-cpus 6 \

@@ -66,6 +66,7 @@ uv --project "$repo_dir" \
       participant \
       -m "${model_json}" \
       -d "${fmriprep_data_dir}" \
+      --drop-missing \
       --ignore "sub-.*_physio\.(json|tsv\.gz)" \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \

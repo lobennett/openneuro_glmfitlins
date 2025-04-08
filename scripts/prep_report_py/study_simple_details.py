@@ -25,7 +25,7 @@ spec_path = args.spec_dir
 
 # get layouts
 bids_layout = BIDSLayout(bids_path)
-preproc_layout = BIDSLayout(fmriprep_path, derivatives=True)
+preproc_layout = BIDSLayout(fmriprep_path, derivatives=False)
 
 # BIDS input basics
 bids_sub_n = bids_layout.get_subjects()

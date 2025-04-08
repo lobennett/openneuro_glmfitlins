@@ -18,7 +18,7 @@ if [ -z "$1" ] || [ -z "$2" ]; then
   exit 1
 fi
 
-study_id=$1
+openneuro_id=$1
 task_label=$2
 
 # -------------------- Load Configuration --------------------
@@ -31,7 +31,7 @@ fi
 
 data_dir=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
-model_json="${repo_dir}/statsmodel_specs/${study_id}/${study_id}-${task_label}_specs.json"
+model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
 scratch_out=$(jq -r '.tmp_folder' "$config_file")
 smoothing_type="5:run:iso"
 
@@ -42,14 +42,14 @@ cd "$repo_dir" || { echo "Error: Failed to change directory to $repo_dir"; exit 
 source ".venv/bin/activate"
 
 # -------------------- Set Up Input, Scratch, Output Directories --------------------
-input_data_dir="${data_dir}/input/${study_id}"
+bids_data_dir="${data_dir}/input/${openneuro_id}"
 scratch_data_dir="${scratch_out}/fitlins/task-${task_label}"
-output_data_dir="${data_dir}/analyses/${study_id}/task-${task_label}"
+output_data_dir="${data_dir}/analyses/${openneuro_id}/task-${task_label}"
 
-if [ -d "${data_dir}/fmriprep/${study_id}/derivatives_alt" ]; then
-  fmriprep_data_dir="${data_dir}/fmriprep/${study_id}/derivatives_alt"
+if [ -d "${data_dir}/fmriprep/${openneuro_id}/derivatives_alt" ]; then
+  fmriprep_data_dir="${data_dir}/fmriprep/${openneuro_id}/derivatives_alt"
 else
-  fmriprep_data_dir="${data_dir}/fmriprep/${study_id}/derivatives"
+  fmriprep_data_dir="${data_dir}/fmriprep/${openneuro_id}/derivatives"
 fi
 
 # make directories
@@ -58,16 +58,16 @@ mkdir -p "${output_data_dir}"
 
 # -------------------- Run Fitlins --------------------
 echo "#### Running Fitlins models to generate statistical maps ####"
-echo "Study ID: ${study_id}"
+echo "Study ID: ${openneuro_id}"
 echo "Task Label: ${task_label}"
-echo "Input Data: ${input_data_dir}"
+echo "Input Events: ${bids_data_dir}"
 echo "Scratch Output: ${scratch_data_dir}"
 echo "FMRIPrep Directory: ${fmriprep_data_dir}"
 echo "Model Spec: ${model_json}"
 echo "Smoothing type: ${smoothing_type}"
 
 uv --project "$repo_dir" \
-      run fitlins "${input_data_dir}" "${output_data_dir}" \
+      run fitlins "${bids_data_dir}" "${output_data_dir}" \
       participant \
       -m "${model_json}" \
       -d "${fmriprep_data_dir}" \

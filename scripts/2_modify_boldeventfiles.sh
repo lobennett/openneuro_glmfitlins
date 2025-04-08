@@ -54,6 +54,6 @@ uv --project ${repo_dir} run python ${scripts_dir}/prep_report_py/prep_boldevent
    --specs_dir ${spec_data_dir}
 
 
-if [ -d "${fmriprep_data_dir}" ]; then
+if [ -d "${fmriprep_data_dir_alt}" ]; then
   cp "${fmriprep_data_dir}/dataset_description.json" "${fmriprep_data_dir_alt}"
 fi

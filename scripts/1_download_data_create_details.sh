@@ -88,20 +88,9 @@ else
   exit 1
 fi
 
-echo "Starting study summary. For large datasets, BIDSLayout may take a moment to run."
-echo
-# Run Python script for study details
-uv run python "${scripts_dir}/prep_report_py/study_simple_details.py" \
-    --openneuro_study "${openneuro_id}" \
-    --bids_dir "${data}/input/${openneuro_id}" \
-    --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \
-    --spec_dir "${spec_dir}"
 
-
-# creating a symbolic link derivatives directory if complete fmri data is present.
-#!/bin/bash
-
-# Check if minimal_derivatives is set to "no"
+# creating a symbolic link "derivatives" directory if complete fmri data is present.
+# if minimal_derivatives is set to "no"
 if [[ "$minimal_derivatives" == "no" ]]; then
     # Define source and destination directories
     source_dir="${data}/fmriprep/${openneuro_id}"
@@ -110,8 +99,9 @@ if [[ "$minimal_derivatives" == "no" ]]; then
     # Create the derivatives directory if it doesn't exist
     mkdir -p "$dest_dir"
     
-    # Find all files and directories in the source directory
-    find "$source_dir" -mindepth 1 -not -path "$dest_dir*" | while read item; do
+    # Find all files and directories in the source directory (fmriprep base). Exclude hidden and events files
+    echo -e "\t Creating [hard] symbolic links from fmriprep/${openneuro_id} to fmriprep/${openneuro_id}/derivatives."
+    find "$source_dir" -mindepth 1 -not -path "$dest_dir*" -not -path "*/\.*" -not -name "*_events.tsv" | while read item; do
         # Calculate the relative path
         rel_path="${item#$source_dir/}"
         
@@ -122,11 +112,38 @@ if [[ "$minimal_derivatives" == "no" ]]; then
             # Create parent directory for the file if needed
             mkdir -p "$(dirname "$dest_dir/$rel_path")"
             
-            # Create symbolic link
-            ln -sf "$item" "$dest_dir/$rel_path"
+            # [hard] symbolic link for beh files so fitlins recognizes
+            ln -f "$item" "$dest_dir/$rel_path"
         fi
     done
     
     echo "Data are not minimally processed, created symbolic link structure from fmriprep/${openneuro_id} in fmriprep/${openneuro_id}/derivatives."
     echo
 fi
+
+
+# create symbolics links of events files, to account for cases where modifications are
+inp_dir="${data}/input/${openneuro_id}"
+fmriprep_dest="${data}/fmriprep/${openneuro_id}"
+
+find "$inp_dir" -type f -name '*_events.tsv' | while read -r file; do
+    rel_path="${file#$inp_dir/}"
+    dest_path="${fmriprep_dest}/${rel_path}"
+
+    # if destination eexist, symbolic link eents file
+    if [ -d "$(dirname "$dest_path")" ]; then
+        #  [hard] symbolic link for beh files so fitlins recognizes
+        ln -f "$file" "$dest_path"
+    else 
+      echo "$(dirname "$dest_path") folder missing"
+    fi
+done
+
+echo "Starting study summary. For large datasets, BIDSLayout may take a moment to run."
+echo
+# Run Python script for study details
+uv run python "${scripts_dir}/prep_report_py/study_simple_details.py" \
+    --openneuro_study "${openneuro_id}" \
+    --bids_dir "${data}/input/${openneuro_id}" \
+    --fmriprep_dir "${data}/fmriprep/${openneuro_id}" \
+    --spec_dir "${spec_dir}"

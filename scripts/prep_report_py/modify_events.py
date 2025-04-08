@@ -52,7 +52,11 @@ def add_reactiontime_regressor(eventsdf, trial_type_col='trial_type', resp_trial
 
     # Select relevant columns and concatenate
     rt_reg_rows = rt_reg_rows[[onset_colname, duration_colname, new_trial_name]]
-    return pd.concat([eventsdf, rt_reg_rows], ignore_index=True)
+
+    # sort and reset to avoid fitlins convolution error
+    result_rts = pd.concat([eventsdf, rt_reg_rows], ignore_index=True).sort_values(by="onset", ascending=True).reset_index(drop=True)
+    
+    return result_rts
 
 
 def ds003425(eventspath: str, task: str):
@@ -85,12 +89,12 @@ def ds003425(eventspath: str, task: str):
 
                 # Append modified first and last events back to the original dataset
                 eventsdat = pd.concat([eventsdat, first_and_last_events], ignore_index=True)
-                eventsdat.to_csv(eventspath, sep='\t', index=False)
-                print(f"Modified events file for {os.path.basename(eventspath)}")
+                return eventsdat
         else:
             print(f"Trial type value '6' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")
-
-        return eventsdat
+            return None
+    else:
+        return None
 
 
 def ds000002(eventspath: str, task: str):
@@ -117,14 +121,11 @@ def ds000002(eventspath: str, task: str):
             # A nuisance regressor was added, which consisted of trials on which no response was made 
             # setting as trial_type == 'missed'. Will convolve and include as nuisance
             eventsdat.loc[eventsdat['response_time'].isna(), 'trial_type'] = 'missed'
-
-            # save file
-            eventsdat_cpy.to_csv(eventspath, sep='\t', index=False)
-            print(f"Modified events file for {os.path.basename(eventspath)}")
+            return eventsdat_cpy
 
         else:
             print(f"Trial type value 'missed' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")
-
+            return None
 
 def ds000102(eventspath: str, task: str):
     """
@@ -153,10 +154,38 @@ def ds000102(eventspath: str, task: str):
             
             # Sort by 'onset' column from low to high
             eventsdat_cpy = eventsdat_cpy.sort_values(by='onset', ascending=True)
-
-            # save file
-            eventsdat_cpy.to_csv(eventspath, sep='\t', index=False)
-            print(f"Modified events file for {os.path.basename(eventspath)}")
+            return eventsdat_cpy
 
         else:
             print(f"Trial type value 'missed' already contained in events file. Skipping modification for {os.path.basename(eventspath)}")
+            return None
+
+
+
+def ds000109(eventspath: str, task: str):
+    """
+    Process event data for ds000109 by modifying trial types if applicable. 
+    Per DOI: 10.1523/JNEUROSCI.5511-11.2012, Dropping NaN in timing columns that are incorrect
+    
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["theoryofmindwithmanualresponse"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        # Check if there are any NAs in the specified columns
+        if eventsdat[['onset', 'duration', 'trial_type']].isna().any().any():
+            print("**NaN dropped and trial_type spaces replaced with underscores**")
+            # Only run this if there are NAs in those columns
+            eventsdat_cpy = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
+            eventsdat_cpy.loc[:, 'trial_type'] = eventsdat_cpy['trial_type'].str.replace(' ', '_')
+
+            return eventsdat_cpy
+        else:
+            print("No NaNs found in the specified columns. Skipping modification.")
+            return None

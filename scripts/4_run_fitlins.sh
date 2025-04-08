@@ -32,7 +32,7 @@ smoothing_type="5:run:iso"
 
 
 # -------------------- Set Up Input, Scratch, Output Directories --------------------
-bids_data_dir="${data_dir}/input/${openneuro_id}"
+bids_data_dir="${data_dir}/fmriprep/${openneuro_id}"
 scratch_data_dir="${scratch_out}/fitlins/task-${task_label}"
 output_data_dir="${data_dir}/analyses/${openneuro_id}/task-${task_label}"
 
@@ -53,7 +53,7 @@ mkdir -p "${output_data_dir}"
 echo "#### Running Fitlins models to generate statistical maps ####"
 echo -e "\tStudy ID: ${openneuro_id}"
 echo -e "\tTask Label: ${task_label}"
-echo -e "\tInput Data: ${bids_data_dir}"
+echo -e "\tInput Events: ${bids_data_dir}"
 echo -e "\tScratch Output: ${scratch_data_dir}"
 echo -e "\tFMRIPrep Directory: ${fmriprep_data_dir}"
 echo -e "\tModel Spec: ${model_json}"

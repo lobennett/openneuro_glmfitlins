@@ -1,0 +1,49 @@
+{
+    "Contrasts": [
+        {
+            "Name": "story_belief",
+            "ConditionList": [
+                "trial_type.false_belief_story"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "story_photo",
+            "ConditionList": [
+                "trial_type.false_photo_story"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "question_beliefvphoto",
+            "ConditionList": [
+                "trial_type.false_belief_question",
+                "trial_type.false_photo_question"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "story_beliefvphoto",
+            "ConditionList": [
+                "trial_type.false_belief_story",
+                "trial_type.false_photo_story"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}
+

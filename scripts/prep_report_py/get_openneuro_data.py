@@ -43,22 +43,22 @@ if os.path.exists(bids_input_dir):
 else:
     if minimal_fp is True:
         try:
-            # clone & get entire BIDS dataset
+            # clone & get entire BIDS dataset except derivatives and .git
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
             subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
             os.chdir(bids_input_dir)
-            subprocess.run(['datalad', 'get', bids_input_dir, bids_input_dir], check=True)
-            print(f"    {openneuro_study}. Dataset files (.nii.gz) downloaded successfully.")
+            subprocess.run(['datalad', 'get', '-J', '4', 
+                           '.'], check=True)
+            print(f"    {openneuro_study}. Dataset files (.nii.gz) downloaded successfully (excluding derivatives and .git).")
         except subprocess.CalledProcessError as e:
             print(f"        An error occurred while getting the files: {e}")
     else:
         try:
-            # Run the datalad clone command
-            subprocess.run(['datalad', 'siblings', '-d', git_repo_url, bids_input_dir, '-s', 's3-PRIVATE'], check=True)
+            # Run the datalad clone command with exclusions
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
             # Enable remote siblings after cloning
-            print(f"    {openneuro_study}. Dataset cloned successfully.")
-
+            subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
+            print(f"    {openneuro_study}. Dataset cloned successfully (excluding derivatives and .git).")
         except subprocess.CalledProcessError as e:
             # Check if the error is related to an outdated Git version
             if 'error: unknown option `show-origin`' in str(e):
@@ -75,6 +75,7 @@ else:
     
 download_fmriprep = [
     "aws", "s3", "sync", "--no-sign-request",
+    "--parallel-count", "4",
     f"s3://openneuro-derivatives/fmriprep/{openneuro_study}-fmriprep",
     fmriprep_out_dir
 ]

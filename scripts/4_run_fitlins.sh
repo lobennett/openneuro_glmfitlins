@@ -70,8 +70,8 @@ uv --project "$repo_dir" \
       --ignore "sub-.*_physio\.(json|tsv\.gz)" \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \
-      --n-cpus 4 \
-      --mem-gb 48 \
+      --n-cpus 6 \
+      --mem-gb 32 \
       -w "${scratch_data_dir}"
 
 else

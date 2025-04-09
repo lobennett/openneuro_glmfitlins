@@ -189,3 +189,30 @@ def ds000109(eventspath: str, task: str):
         else:
             print("No NaNs found in the specified columns. Skipping modification.")
             return None
+
+
+def ds000115(eventspath: str, task: str):
+    """
+    Process event data for ds000115 by modifying trial types if applicable. 
+    Modifying to not use '-' in python column names. Do not use '_' to replace as that is a parsing value in PyBIDS
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["letter0backtask", "letter1backtask", "letter2backtask"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        # Check if there are hyphens or whitespace in 'trial_type'
+        if eventsdat['trial_type'].astype(str).str.contains(r'[-\s]', na=False).any():
+            print("Cleaning 'trial_type' values: removing hyphens and spaces")
+            # remove hyphens and whitespace from 'trial_type'
+            eventsdat.loc[:, 'trial_type'] = eventsdat['trial_type'].str.replace(r'[-\s]', '', regex=True)
+            return eventsdat
+
+        else:
+            print("No NaNs found in the specified columns. Skipping modification.")
+            return None

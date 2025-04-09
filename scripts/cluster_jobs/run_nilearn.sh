@@ -2,8 +2,8 @@
 #
 #SBATCH --job-name=rn_nilearn
 #SBATCH --array=1-13%20 # 
-#SBATCH --time=00:15:00
-#SBATCH --cpus-per-task=4
+#SBATCH --time=05:00:00
+#SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=6GB
 #SBATCH -p russpold,normal,owners
 # Outputs ----------------------------------

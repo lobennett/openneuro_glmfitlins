@@ -123,21 +123,21 @@ fi
 
 
 # create symbolics links of events files, to account for cases where modifications are
-inp_dir="${data}/input/${openneuro_id}"
-fmriprep_dest="${data}/fmriprep/${openneuro_id}"
-
-find "$inp_dir" -type f -name '*_events.tsv' | while read -r file; do
-    rel_path="${file#$inp_dir/}"
-    dest_path="${fmriprep_dest}/${rel_path}"
-
-    # if destination eexist, symbolic link eents file
-    if [ -d "$(dirname "$dest_path")" ]; then
-        #  [hard] symbolic link for beh files so fitlins recognizes
-        ln -f "$file" "$dest_path"
-    else 
-      echo "$(dirname "$dest_path") folder missing"
-    fi
-done
+#inp_dir="${data}/input/${openneuro_id}"
+#fmriprep_dest="${data}/fmriprep/${openneuro_id}"
+#
+#find "$inp_dir" -type f -name '*_events.tsv' | while read -r file; do
+#    rel_path="${file#$inp_dir/}"
+#    dest_path="${fmriprep_dest}/${rel_path}"
+#
+#    # if destination eexist, symbolic link eents file
+#    if [ -d "$(dirname "$dest_path")" ]; then
+#        #  [hard] symbolic link for beh files so fitlins recognizes
+#        ln -f "$file" "$dest_path"
+#    else 
+#      echo "$(dirname "$dest_path") folder missing"
+#    fi
+#done
 
 echo "Starting study summary. For large datasets, BIDSLayout may take a moment to run."
 echo

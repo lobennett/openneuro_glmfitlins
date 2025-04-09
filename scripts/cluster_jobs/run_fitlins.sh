@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=fitlins
-#SBATCH --time=04:00:00
-#SBATCH --cpus-per-task=8
+#SBATCH --time=05:00:00
+#SBATCH --cpus-per-task=10
 #SBATCH --mem-per-cpu=8GB
 #SBATCH -p russpold,normal,owners
 
@@ -75,6 +75,7 @@ uv --project "$repo_dir" \
       --drop-missing \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \
-      --n-cpus 6 \
-      --mem-gb 60 \
-      -w "${scratch_data_dir}"
+      --n-cpus 10 \
+      --mem-gb 80 \
+      -w "${scratch_data_dir}" \
+      -v 

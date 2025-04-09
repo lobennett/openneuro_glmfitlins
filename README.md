@@ -7,14 +7,14 @@
 
 ## Overview
 
-`openneuro_glmfitlins` provides a streamlined workflow for analyzing OpenNeuro datasets using <a href="https://github.com/poldracklab/fitlins" target="_blank">FitLins</a> via <a href="https://bids-standard.github.io/stats-models/" target="_blank">BIDS Stats Models</a>. The repository generates comprehensive reports for datasets and tasks processed through OpenNeuro GLM Fitlins, with two primary goals:
+`openneuro_glmfitlins` provides a streamlined workflow for analyzing OpenNeuro datasets using [FitLins](https://github.com/poldracklab/fitlins)</a> via [BIDS Stats Models](https://bids-standard.github.io/stats-models/). The repository generates comprehensive reports for datasets and tasks processed through OpenNeuro GLM Fitlins, with two primary goals:
 
 1. Facilitate efficient and reproducible neuroimaging data analysis
 2. Provide minimal barriers to entry for researchers at all levels
 
 ## Features
 
-- **Automatic Environment Setup**: Uses [setup_uv.sh](setup_uv.sh) to install <a href="https://docs.astral.sh/uv/guides/install-python/" target="_blank">uv</a> Python package manager, verify dependencies (GitHub, DataLad, git-annex), and create an environment with required packages (for more details on uv and packaging notes, see <a href="https://github.com/jmumford/packaging-notes?tab=readme-ov-file#uv" target="_blank">Dr. Mumford's repo</a>
+- **Automatic Environment Setup**: Uses [setup_uv.sh](setup_uv.sh) to install [uv](https://docs.astral.sh/uv/guides/install-python/) Python package manager, verify dependencies (GitHub, DataLad, git-annex), and create an environment with required packages (for more details on uv and packaging notes, see [Dr. Mumford's repo](https://github.com/jmumford/packaging-notes?tab=readme-ov-file#uv)
 - **Automated Data Retrieval**: Leverages DataLad and AWS CLI to clone BIDS input data and download fMRIPrep preprocessed MRI/fMRI data, automatically determining preprocessing completeness
 - **Flexible Analysis Configuration**: Generates summaries of relevant subject, run, and task fMRI data to facilitate statistical model creation
 - **Reproducible Environments**: Ensures computational reproducibility through `uv` environment and exported specification files
@@ -36,8 +36,8 @@
 ## Prerequisites
 
 - **System Dependencies**:
-  - <a href="https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html" target="_blank">AWS CLI</a>
-  - <a href="https://www.datalad.org/" target="_blank">DataLad</a>
+  - [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html))
+  - [DataLad](https://www.datalad.org/)
   - Git (≥ 2.2)
 
 - **Python Dependencies**:
@@ -90,7 +90,7 @@ This step:
 - Determines if preprocessed MNI NIfTI files are present to identify minimal vs. complete derivatives
 - Generates:
   - A README summarizing the dataset
-    - Note: at the base of the README <a href="./statsmodel_specs/ds003425/README.md" target="_blank">example</a>, there will be links to the plotted distributions of <a href="https://mriqc.readthedocs.io/en/latest/iqms/t1w.html" target="_blank">structural</a> and <a href="https://mriqc.readthedocs.io/en/latest/iqms/bold.html" target="_blank">functional</a> MRIQC quality control metrics.
+    - Note: at the base of the README [example](./statsmodel_specs/ds003425/README.md), there will be links to the plotted distributions of <a href="https://mriqc.readthedocs.io/en/latest/iqms/t1w.html" target="_blank">structural</a> and [functiona](https://mriqc.readthedocs.io/en/latest/iqms/bold.html) MRIQC quality control metrics.
   - A details JSON file with metadata (subjects, sessions, tasks, BOLD volumes, event columns, trial types)
   - Subject and contrast list files for each task
 
@@ -174,7 +174,7 @@ This executes the FitLins analysis based on the specification file. Results will
 bash run_grouprepo.sh ds003425 learning
 ```
 
-This executes a command that will return images and README file based on your study details and task-specific specification and Fitlins output. Similar to <a href="./statsmodel_specs/ds003425/group_regulate/" target="_blank">ds003425 regulate task</a>, you'll obtain model, regressor and contrast maps.
+This executes a command that will return images and README file based on your study details and task-specific specification and Fitlins output. Similar to [ds003425 regulate task](./statsmodel_specs/ds003425/group_regulate/), you'll obtain model, regressor and contrast maps.
 
 
 ## License
@@ -196,6 +196,11 @@ Before running fitlins, based on you grouping structure of nodes, ensure files a
 2. Differences in runs across subjects for BOLD and/or events files (e.g., ds003425 ses-02 regulate task runs). 
 
 However, by using `--drop-missing` flag in the Fitlins call (default in this repo), if a subject is missing a run or contrast the models will still be estimated. However, if a subject is missing all values in a contrast matrices or all runs, the computation will fail with an error.  
+
+## Removing Downloaded Data
+
+When downloading the repositories off of s3, there are sometimes write-protected directors in the hidden `.git/annex` folder. Thus, you will need to run `chmod +w -R /input/<openneuro_id>/` and then `rm -rf /input/<openneuro_id>/` to remove the contents
+
 
 
 

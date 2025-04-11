@@ -1,6 +1,13 @@
 {
     "exclusions": [
+        ".reproman*",
         "*dtseries*",
-        "*.gii"
+        "*.gii",
+        "*AROMA*",
+        "*space-fsaverage*",
+        "*space-fsLR_den-91k*",
+        "*MELODIC*",
+        "*boldref*",
+        "*fmapid*"
     ]
 }

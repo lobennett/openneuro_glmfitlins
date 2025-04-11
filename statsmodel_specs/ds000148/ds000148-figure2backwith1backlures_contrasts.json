@@ -1,0 +1,47 @@
+{
+    "Contrasts": [
+      {
+        "Name": "distractcorr",
+        "ConditionList": [
+          "trial_type.distractorcorrectrejection"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "lurecorr",
+        "ConditionList": [
+          "trial_type.lurecorrectrejection"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "targethit",
+        "ConditionList": [
+          "trial_type.targethit"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "hittargetvlure",
+        "ConditionList": [
+          "trial_type.targethit",
+          "trial_type.lurecorrectrejection"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      }
+    ]
+  }
+  

@@ -1,0 +1,54 @@
+{
+    "Contrasts": [
+        {
+            "Name": "alltrials",
+            "ConditionList": [
+                "trial_type.decision"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "gain",
+            "ConditionList": [
+                "gain_demean"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "loss",
+            "ConditionList": [
+                "loss_demean"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "gainvloss",
+            "ConditionList": [
+                "gain_demean", "loss_demean"
+            ],
+            "Weights": [
+                1, -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "rt",
+            "ConditionList": [
+                "rt_reg.rt"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

@@ -75,7 +75,6 @@ else:
     
 download_fmriprep = [
     "aws", "s3", "sync", "--no-sign-request",
-    "--parallel-count", "4",
     f"s3://openneuro-derivatives/fmriprep/{openneuro_study}-fmriprep",
     fmriprep_out_dir
 ]

@@ -187,7 +187,7 @@ def ds000109(eventspath: str, task: str):
 
             return eventsdat_cpy
         else:
-            print("No NaNs found in the specified columns. Skipping modification.")
+            print("No NaNs or spaces found in the specified columns. Skipping modification.")
             return None
 
 
@@ -214,5 +214,59 @@ def ds000115(eventspath: str, task: str):
             return eventsdat
 
         else:
-            print("No NaNs found in the specified columns. Skipping modification.")
+            print("No spaces or hyphens found in the specified columns. Skipping modification.")
+            return None
+
+
+def ds001734(eventspath: str, task: str):
+    """
+    Process event data for NARPS ds001734 by modifying trial types if applicable. 
+    PyBIDS Replace() transformation fails for 'NoResp" in participant_response column. Renaming to noresp
+
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["MGT"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        # Check if there are hyphens or whitespace in 'trial_type'
+        if "NoResp" in eventsdat['participant_response'].values:
+            print("Replace NoResp with noresp in 'participant_response'")
+            eventsdat.loc[eventsdat['participant_response'] == 'NoResp', 'participant_response'] = 'noresp'
+ 
+            return eventsdat
+
+        else:
+            print(" NoResp not found in the specified columns. Skipping modification.")
+            return None
+
+
+def ds000148(eventspath: str, task: str):
+    """
+    Process event data for ds000148 by modifying trial types if applicable. 
+    Modifying to not use ' ' in python column names. 
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["figure2backwith1backlures"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        # Check if there are hyphens or whitespace in 'trial_type'
+        if eventsdat['trial_type'].astype(str).str.contains(r'\s', na=False).any():
+            print("Cleaning 'trial_type' values: removing spaces")
+            eventsdat.loc[:, 'trial_type'] = eventsdat['trial_type'].str.replace(r'\s', '', regex=True)
+            return eventsdat
+
+        else:
+            print("No spaces found in the specified columns. Skipping modification.")
             return None

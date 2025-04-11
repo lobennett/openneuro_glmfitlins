@@ -31,7 +31,6 @@ scratch=$(jq -r '.tmp_folder' "$config_file")
 # -------------------- Set Up Input, Scratch, Output Directories --------------------
 spec_data_dir="${repo_dir}/statsmodel_specs/${openneuro_id}"
 bids_dir_data_dir="${data}/input/${openneuro_id}"
-scratch_data_dir="${scratch}/fitlins/task-${task_label}"
 output_data_dir="${data}/analyses/${openneuro_id}/task-${task_label}"
 fmriprep_data_dir="${data}/fmriprep/${openneuro_id}/derivatives"
 fmriprep_data_dir_alt="${data}/fmriprep/${openneuro_id}/derivatives_alt"
@@ -41,7 +40,6 @@ echo "#### Running Fitlins models to generate statistical maps ####"
 echo -e "\tStudy ID: ${openneuro_id}"
 echo -e "\tTask Label: ${task_label}"
 echo -e "\tInput Data: ${bids_dir_data_dir}"
-echo -e "\tScratch Output: ${scratch_data_dir}"
 echo -e "\tfMRIPrep Derivatives Directory: ${fmriprep_data_dir}"
 echo
 sleep 2

@@ -62,7 +62,7 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
     readme_content += "## Analysis Overview\n"
     readme_content += f"Subject-level models were fit for {num_subjects} subjects performing the {task} task.\n"
-    readme_content += f"HRF model type: {hrf_model_type}\n"
+    readme_content += f"HRF model type: {hrf_model_type}. Data were smoothed at the each run using a 5mm FWHM (default: isotropic additive smoothing)\n"
     
     readme_content += "### Regressors of Interest\n"
     readme_content += ", ".join(signal_regressors) if signal_regressors else "None identified"

@@ -113,9 +113,9 @@
     "Tasks": {
         "MGT": {
             "plot_coords": [
-                45,
-                -62,
-                -60
+                10,
+                10,
+                -6
             ],
             "bold_volumes": null,
             "dummy_volumes": null,

@@ -44,7 +44,7 @@ spec_imgs_dir.mkdir(parents=True, exist_ok=True)
 noise_reg = [
     "motion_", "c_comp_", "a_comp_", "w_comp_", "t_comp_",
     "global_signal", "csf", "white_matter",
-    "rot_", "trans_", "cosine"
+    "rot_", "trans_", "cosine", "drift_"
 ]
 
 # Load model specifications & study details

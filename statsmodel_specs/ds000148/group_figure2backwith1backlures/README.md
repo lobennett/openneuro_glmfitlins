@@ -2,13 +2,10 @@
 ## Analysis Overview
 Subject-level models were fit for 49 subjects performing the figure2backwith1backlures task.
 HRF model type: spm. Data were smoothed at the each run using a 5mm FWHM (default: isotropic additive smoothing)
-
-*Note: There was an issue with the input confound timeseries derivatives that prevents from modeling the motion and cosine parameters. As a result, only the cosine regressors (drift parameters estimated by fitlins) were used.*
-
 ### Regressors of Interest
-trial_type.distractorcorrectrejection, trial_type.distractorfalsealarm, trial_type.lurecorrectrejection, trial_type.targethit, trial_type.targetmiss, drift_1, drift_2, drift_3, drift_4, drift_5, drift_6, drift_7, drift_8, drift_9, intercept
+trial_type.distractorcorrectrejection, trial_type.distractorfalsealarm, trial_type.lurecorrectrejection, trial_type.targethit, trial_type.targetmiss, intercept
 ### Nuisance Regressors
-None identified
+drift_1, drift_2, drift_3, drift_4, drift_5, drift_6, drift_7, drift_8, drift_9
 ## Model Structure
 - Run-level models: Yes
 - Subject-level models: Yes

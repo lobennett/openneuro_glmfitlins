@@ -75,7 +75,6 @@ uv --project "$repo_dir" \
       --drop-missing \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \
-      --drift-model cosine \
       --n-cpus 8 \
       --mem-gb 78 \
       -w "${scratch_data_dir}" \

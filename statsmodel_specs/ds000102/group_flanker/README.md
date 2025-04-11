@@ -3,7 +3,7 @@
 Subject-level models were fit for 26 subjects performing the flanker task.
 HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
-trial_type.congruent_correct, trial_type.congruent_incorrect, trial_type.incongruent_correct, trial_type.incongruent_incorrect, intercept
+trial_type.congruent_correct, trial_type.congruent_incorrect, trial_type.incongruent_correct, trial_type.incongruent_incorrect, rt_reg.rt, intercept
 ### Nuisance Regressors
 trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_y, trans_y_derivative1, trans_y_derivative1_power2, trans_y_power2, trans_z, trans_z_derivative1, trans_z_derivative1_power2, trans_z_power2, rot_x, rot_x_derivative1, rot_x_derivative1_power2, rot_x_power2, rot_y, rot_y_derivative1, rot_y_derivative1_power2, rot_y_power2, rot_z, rot_z_derivative1, rot_z_derivative1_power2, rot_z_power2, cosine00, cosine01, cosine02
 ## Model Structure
@@ -14,6 +14,7 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 ## Contrasts of Interest
 - **inVcon**: ['1 * `trial_type.incongruent_correct` - 1 * `trial_type.congruent_correct`']
 - **inVbase**: ['1 * `trial_type.incongruent_correct`']
+- **rt**: ['1 * `rt_reg.rt`']
 
 ## Figures
 
@@ -50,3 +51,6 @@ The **standard deviation** (or variance) image provides insights into the variab
 
 #### inVbase
 ![inVbase Map](./imgs/ds000102_task-flanker_contrast-inVbase_map.png)
+
+#### rt
+![rt Map](./imgs/ds000102_task-flanker_contrast-rt_map.png)

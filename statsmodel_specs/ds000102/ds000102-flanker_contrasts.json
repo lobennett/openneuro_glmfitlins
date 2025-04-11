@@ -11,5 +11,12 @@
         "ConditionList": ["trial_type.incongruent_correct"],
         "Weights": [1],
         "Test": "t"
+      },
+      {
+        "Name": "rt",
+        "ConditionList": ["rt_reg.rt"],
+        "Weights": [1],
+        "Test": "t"
       }
+    ]
   }

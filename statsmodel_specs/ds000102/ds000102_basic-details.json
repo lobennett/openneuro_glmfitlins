@@ -37,7 +37,7 @@
             ],
             "bold_volumes": 146,
             "dummy_volumes": null,
-            "preproc_events": true,
+            "preproc_events": false,
             "column_names": [
                 "onset",
                 "duration",

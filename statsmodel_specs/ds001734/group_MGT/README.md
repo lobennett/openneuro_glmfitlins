@@ -26,7 +26,7 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 The contrast maps represents the weights used to model brain activity.
 
 ### Design Matrixs
-![Design Matrix](./imgs/ds001734_task-MGT_design-matrix.tsv)
+![Design Matrix](./imgs/ds001734_task-MGT_design-matrix.svg)
 
 The example design matrix illustrate the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interested, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).
 

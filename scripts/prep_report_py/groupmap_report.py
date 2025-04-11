@@ -98,9 +98,9 @@ if design_images:
 design_matrices = list(Path(analysis_dir).rglob(f"*_task-{task}_*design.tsv"))
 if design_matrices:
     print(f"Found design matrix TSV file: {design_matrices[0].name}")
-    design_matrix_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_design-matrix.tsv"
-    shutil.copy(design_matrices[0], design_matrix_copy)
-    
+    design_tsv_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_design-matrix.tsv"
+    shutil.copy(design_matrices[0], design_tsv_copy)
+
 # Extract contrast specifications
 contrast_dict = {}
 for node in spec_results['nodes']:

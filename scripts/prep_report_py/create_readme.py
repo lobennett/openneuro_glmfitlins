@@ -84,10 +84,10 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     readme_content += "\n## Figures\n"
     readme_content += f"\n### Contrast Weights\n![Contrast Weight]({f"./imgs/{contrast_image}"})\n"
     readme_content += f"\nThe contrast maps represents the weights used to model brain activity.\n"
-    readme_content += f"\n### Design Matrixs\n![Design Matrix]({f"./imgs/{design_image}"})\n"
-    readme_content += f"\nThe example design matrix illustrate the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interested, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).\n"
+    readme_content += f"\n### Design Matrix\n![Design Matrix]({f"./imgs/{design_image}"})\n"
+    readme_content += f"\nThe example design matrix illustrates the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interest, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).\n"
     readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./imgs/{study_id}_task-{task}_vif-boxplot.png"})\n"
-    readme_content += f"\nThe Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the design matrices -- nusiance regressors are excluded here for brevity.\n"
+    readme_content += f"\nThe Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.\n"
     readme_content += f"\n### Voxelwise Model Variance Explained (r-squared)\n"
     readme_content += (
     f"Voxelwise R-squared values represent the proportion of variance explained by the "

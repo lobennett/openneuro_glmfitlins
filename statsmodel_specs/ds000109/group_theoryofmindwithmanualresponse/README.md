@@ -1,7 +1,7 @@
 # ds000109: theoryofmindwithmanualresponse Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 33 subjects performing the theoryofmindwithmanualresponse task.
-HRF model type: spm
+HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.falsebeliefquestion, trial_type.falsebeliefstory, trial_type.falsephotoquestion, trial_type.falsephotostory, intercept
 ### Nuisance Regressors

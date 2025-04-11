@@ -1,7 +1,7 @@
 # ds000102: flanker Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 26 subjects performing the flanker task.
-HRF model type: spm
+HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.congruent_correct, trial_type.congruent_incorrect, trial_type.incongruent_correct, trial_type.incongruent_incorrect, intercept
 ### Nuisance Regressors
@@ -19,14 +19,17 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 
 ### Contrast Weights
 ![Contrast Weight](./imgs/ds000102_task-flanker_contrast-matrix.svg)
+
 The contrast maps represents the weights used to model brain activity.
 
 ### Design Matrixs
 ![Design Matrix](./imgs/ds000102_task-flanker_design-matrix.svg)
+
 The example design matrix illustrate the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interested, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).
 
 ### Variance Inflation Factor (VIF)
 ![VIF Distribution](./imgs/ds000102_task-flanker_vif-boxplot.png)
+
 The Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the design matrices -- nusiance regressors are excluded here for brevity.
 
 ### Voxelwise Model Variance Explained (r-squared)

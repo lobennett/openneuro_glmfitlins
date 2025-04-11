@@ -1,7 +1,10 @@
 # ds000148: figure2backwith1backlures Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 49 subjects performing the figure2backwith1backlures task.
-HRF model type: spm. Data were smoothed at the each run using a 5mm FWHM (default: isotropic additive smoothing)
+HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+*Note*: Due to an error/issue with confounds timerseries files, fmriprep computed nuisance regressors were not used and a default fitlins drift model was estimate. This will be investigated and rerun at a later date.
+
 ### Regressors of Interest
 trial_type.distractorcorrectrejection, trial_type.distractorfalsealarm, trial_type.lurecorrectrejection, trial_type.targethit, trial_type.targetmiss, intercept
 ### Nuisance Regressors

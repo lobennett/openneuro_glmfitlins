@@ -1,7 +1,7 @@
 # ds001734: MGT Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 108 subjects performing the MGT task.
-HRF model type: spm. Data were smoothed at the each run using a 5mm FWHM (default: isotropic additive smoothing)
+HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.decision, trial_type.missed, gain_demean, loss_demean, rt_reg.rt, intercept
 ### Nuisance Regressors

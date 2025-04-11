@@ -1,7 +1,7 @@
 # ds000002: probabilisticclassification Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 17 subjects performing the probabilisticclassification task.
-HRF model type: spm w/ derivatives
+HRF model type: spm w/ derivatives. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.feedback, trial_type.feedback_derivative, intercept
 ### Nuisance Regressors
@@ -18,14 +18,17 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 
 ### Contrast Weights
 ![Contrast Weight](./imgs/ds000002_task-probabilisticclassification_contrast-matrix.svg)
+
 The contrast maps represents the weights used to model brain activity.
 
 ### Design Matrixs
 ![Design Matrix](./imgs/ds000002_task-probabilisticclassification_design-matrix.svg)
+
 The example design matrix illustrate the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interested, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).
 
 ### Variance Inflation Factor (VIF)
 ![VIF Distribution](./imgs/ds000002_task-probabilisticclassification_vif-boxplot.png)
+
 The Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the design matrices -- nusiance regressors are excluded here for brevity.
 
 ### Voxelwise Model Variance Explained (r-squared)

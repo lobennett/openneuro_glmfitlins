@@ -1,0 +1,58 @@
+{
+    "Contrasts": [
+        {
+            "Name": "digitsvletter",
+            "ConditionList": [
+                "trial_type.hash__red"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "digitsvletter",
+            "ConditionList": [
+                "trial_type.digits",
+                "trial_type.letters"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "srmdigitsvsrmletters",
+            "ConditionList": [
+                "trial_type.scrambled_digits",
+                "trial_type.scrambled_letters"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "digits",
+            "ConditionList": [
+                "trial_type.digits"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "letters",
+            "ConditionList": [
+                "trial_type.letters"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

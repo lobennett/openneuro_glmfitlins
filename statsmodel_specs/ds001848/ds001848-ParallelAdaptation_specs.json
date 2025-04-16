@@ -1,0 +1,232 @@
+{
+  "Name": "ds001848",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34",
+      "35",
+      "36",
+      "37",
+      "38",
+      "39",
+      "40",
+      "41",
+      "42",
+      "43",
+      "44",
+      "45",
+      "46",
+      "47",
+      "48",
+      "49",
+      "50",
+      "51",
+      "52"
+    ],
+    "task": [
+      "ParallelAdaptation"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+          {
+              "Name": "devsym4vdevsym1",
+              "ConditionList": [
+                  "trial_type.deviant_symbolic4",
+                  "trial_type.deviant_symbolic1"
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "devnonsym4vnondevsym1",
+              "ConditionList": [
+                  "trial_type.deviant_nonsymbolic4",
+                  "trial_type.deviant_nonsymbolic1"
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "devphys4vdevphys1",
+              "ConditionList": [
+                  "trial_type.deviant_physical_size4",
+                  "trial_type.deviant_physical_size1"
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "catchsym4vcatchsym1",
+              "ConditionList": [
+                  "trial_type.catch_symbolic4",
+                  "trial_type.catch_symbolic1"
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "symnonsym4vphys4",
+              "ConditionList": [
+                  "trial_type.deviant_symbolic4",
+                  "trial_type.deviant_nonsymbolic4",
+                  "trial_type.deviant_physical_size4"
+              ],
+              "Weights": [
+                  1,
+                  1,
+                  -2
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "symnonsym4vcatch4",
+              "ConditionList": [
+                  "trial_type.deviant_symbolic4",
+                  "trial_type.deviant_nonsymbolic4",
+                  "trial_type.catch_symbolic4"
+              ],
+              "Weights": [
+                  1,
+                  1,
+                  -2
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "dist4v1",
+              "ConditionList": [
+                  "trial_type.deviant_symbolic4",
+                  "trial_type.deviant_nonsymbolic4",
+                  "trial_type.deviant_physical_size4",
+                  "trial_type.deviant_symbolic1",
+                  "trial_type.deviant_nonsymbolic1",
+                  "trial_type.deviant_physical_size1"
+              ],
+              "Weights": [
+                  1,
+                  1,
+                  1,
+                  -1,
+                  -1,
+                  -1
+              ],
+              "Test": "t"
+          }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

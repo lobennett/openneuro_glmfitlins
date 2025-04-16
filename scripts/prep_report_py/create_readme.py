@@ -57,7 +57,7 @@ def generate_studysummary(spec_path, study_id, data, repo_url="https://github.co
 
 
 def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
-    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir):
+    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran):
     # Add title and description
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
     readme_content += "## Analysis Overview\n"
@@ -102,8 +102,23 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     f"#### Voxelwise Variance (Standard Deviation)\n"
     f"The **standard deviation** (or variance) image provides insights into the variability of model performance."
     f"In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.\n"
-    f"![R Square]({f'./imgs/{study_id}_task-{task}_rsquare-std.png'})\n"
     )
+
+    if r2_quality_ran:
+        readme_content += (
+            f"/n#### Flagged Subjects\n"
+            f"The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.\n\n"
+            f"  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile \n"
+            f"  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile\n\n"
+            f"The subjects flagged for {task} are:\n"
+
+            f"{', '.join(sub_flag) if sub_flag else 'None Subjects Flagged'}\n\n"
+
+            f"The distribution for subjects and runs in {task} are below. \n\n"
+
+            f"![Dice](./imgs/{study_id}_task-{task}_hist-dicesimilarity.png)\n"
+            f"![Voxels Out](./imgs/{study_id}_task-{task}_hist-voxoutmask.png)\n"
+        )
 
  
     # Add contrast maps

@@ -43,7 +43,19 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
-![R Square](./imgs/ds000109_task-theoryofmindwithmanualresponse_rsquare-std.png)
+/n#### Flagged Subjects
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.
+
+  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile 
+  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile
+
+The subjects flagged for theoryofmindwithmanualresponse are:
+sub03_run1, sub03_run2, sub05_run1, sub05_run2, sub10_run1, sub10_run2, sub21_run2, sub30_run1, sub30_run2, sub40_run1, sub47_run1, sub47_run2, sub48_run1, sub48_run2
+
+The distribution for subjects and runs in theoryofmindwithmanualresponse are below. 
+
+![Dice](./imgs/ds000109_task-theoryofmindwithmanualresponse_hist-dicesimilarity.png)
+![Voxels Out](./imgs/ds000109_task-theoryofmindwithmanualresponse_hist-voxoutmask.png)
 
 ### Statistical Maps
 

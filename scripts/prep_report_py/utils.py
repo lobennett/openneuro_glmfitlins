@@ -1,4 +1,3 @@
-
 import os
 import nbformat
 import re
@@ -8,8 +7,11 @@ import numpy as np
 from IPython.display import display, Markdown
 from bids.modeling import BIDSStatsModelsGraph
 from bids.layout import BIDSLayout, BIDSLayoutIndexer
+from nilearn.interfaces.bids import parse_bids_filename
 from nilearn.image import index_img, load_img, new_img_like, mean_img
 from nilearn.glm import expression_to_contrast_vector
+from pyrelimri import similarity
+
 
 def get_numvolumes(nifti_path_4d):
     """
@@ -384,3 +386,84 @@ def calc_niftis_meanstd(path_imgs):
     std_nifti = new_img_like(reference_img, std_imgs)
 
     return mean_nifti, std_nifti
+
+
+def voxel_inout_ratio(img_path, mask_path):
+    """
+    Calculates the percentage of non-zero voxels inside and outside a brain mask 
+    for a given image
+
+    Parameters:
+    img_path (str): Path to the NIfTI image file.
+    mask_path (str): Path to the corresponding brain mask (same space).
+
+    Returns:
+    percent_inside: Percentage of non-zero voxels inside the brain mask.
+    percent_outside: Percentage of non-zero voxels outside the brain mask.
+    ratio_invout: ratio of inside versus outside 
+    """
+    img_nifit = load_img(img_path)
+    mask_nifti = load_img(mask_path)
+
+    # extract numpy arrays & get nonzeros
+    img_data = img_nifit.get_fdata()
+    mask_data = mask_nifti.get_fdata() > 0      
+    nonzero_inside = np.count_nonzero(img_data[mask_data])
+    nonzero_outside = np.count_nonzero(img_data[~mask_data])
+    total_nonzero = nonzero_inside + nonzero_outside
+
+    # percentages and ratio
+    percent_inside = (nonzero_inside / total_nonzero) * 100 if total_nonzero != 0 else 0
+    percent_outside = (nonzero_outside / total_nonzero) * 100 if total_nonzero != 0 else 0
+    ratio_invout = percent_inside / percent_outside if percent_outside != 0 else float('inf')
+
+    return percent_inside, percent_outside, ratio_invout
+
+
+def similarity_boldstand_metrics(img_path, brainmask_path):
+    # Parse filename to extract BIDS info
+    parsed_dat = parse_bids_filename(img_path)
+    sub_run_info = f"sub{parsed_dat.get('sub', 'Unknown')}_run{parsed_dat.get('run', 'Unknown')}"
+    
+    # dice similarity
+    dice_est = similarity.image_similarity(
+        imgfile1=img_path,
+        imgfile2=brainmask_path,
+        mask=None,
+        thresh=None,
+        similarity_type='dice'
+    )
+
+    perc_in, perc_out, inout_ratio =  voxel_inout_ratio(img_path=img_path, mask_path=brainmask_path)
+
+    # results as a dictionary
+    return {
+        "img1": sub_run_info,
+        "img2": "mni152",
+        "dice": dice_est,
+        "voxinmask": perc_in,
+        "voxoutmask": perc_out,
+        "ratio_inoutmask": inout_ratio,
+    }
+
+def get_low_quality_subs(ratio_df, percentile=10):
+    """
+    return a sorted list of low-quality image names based on computed bottom `percentile` threshold for 'voxoutmask' and 'dice' metrics.
+
+    Parameters:
+    ratio_df: DataFrame with 'voxoutmask', 'dice', and 'img1' columns.
+    percentile: Percentile threshold to determine low quality (default is 10).
+
+    Returns:
+    Sort list of bottom percentile
+    """
+    voxoutmask_thresh = np.percentile(ratio_df['voxoutmask'], percentile)
+    dice_thresh = np.percentile(ratio_df['dice'], percentile)
+
+    low_quality = ratio_df[
+        (ratio_df['voxoutmask'] <= voxoutmask_thresh) |
+        (ratio_df['dice'] <= dice_thresh)
+    ]
+    
+    low_quality_imgs = sorted(low_quality['img1'].tolist())
+    return low_quality_imgs

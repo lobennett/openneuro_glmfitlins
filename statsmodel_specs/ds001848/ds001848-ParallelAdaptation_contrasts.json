@@ -1,0 +1,100 @@
+{
+    "Contrasts": [
+        {
+            "Name": "devsym4vdevsym1",
+            "ConditionList": [
+                "trial_type.deviant_symbolic4",
+                "trial_type.deviant_symbolic1"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "devnonsym4vnondevsym1",
+            "ConditionList": [
+                "trial_type.deviant_nonsymbolic4",
+                "trial_type.deviant_nonsymbolic1"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "devphys4vdevphys1",
+            "ConditionList": [
+                "trial_type.deviant_physical_size4",
+                "trial_type.deviant_physical_size1"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "catchsym4vcatchsym1",
+            "ConditionList": [
+                "trial_type.catch_symbolic4",
+                "trial_type.catch_symbolic1"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "symnonsym4vphys4",
+            "ConditionList": [
+                "trial_type.deviant_symbolic4",
+                "trial_type.deviant_nonsymbolic4",
+                "trial_type.deviant_physical_size4"
+            ],
+            "Weights": [
+                1,
+                1,
+                -2
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "symnonsym4vcatch4",
+            "ConditionList": [
+                "trial_type.deviant_symbolic4",
+                "trial_type.deviant_nonsymbolic4",
+                "trial_type.catch_symbolic4"
+            ],
+            "Weights": [
+                1,
+                1,
+                -2
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "dist4v1",
+            "ConditionList": [
+                "trial_type.deviant_symbolic4",
+                "trial_type.deviant_nonsymbolic4",
+                "trial_type.deviant_physical_size4",
+                "trial_type.deviant_symbolic1",
+                "trial_type.deviant_nonsymbolic1",
+                "trial_type.deviant_physical_size1"
+            ],
+            "Weights": [
+                1,
+                1,
+                1,
+                -1,
+                -1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}

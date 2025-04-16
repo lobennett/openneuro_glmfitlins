@@ -9,9 +9,13 @@ import seaborn as sns
 from pathlib import Path
 from bids.layout import BIDSLayout
 from create_readme import generate_groupmodsummary
-from utils import get_numvolumes, extract_model_info, gen_vifdf, calc_niftis_meanstd
+from utils import get_numvolumes, extract_model_info, gen_vifdf, calc_niftis_meanstd, similarity_boldstand_metrics, get_low_quality_subs
 from nilearn.plotting import plot_stat_map
-from nilearn.image import load_img, concat_imgs, mean_img
+from nilearn.image import load_img, concat_imgs, mean_img, new_img_like
+from concurrent.futures import ProcessPoolExecutor
+from functools import partial
+from templateflow import api
+
 
 # Turn off back end display to create plots
 plt.switch_backend('Agg')
@@ -22,11 +26,14 @@ parser.add_argument("--openneuro_study", type=str, help="OpenNeuro study ID", re
 parser.add_argument("--taskname", type=str, help="Task name using in analyses", required=True)
 parser.add_argument("--spec_dir", type=str, help="Directory where model specs are", required=True)
 parser.add_argument("--analysis_dir", type=str, help="Root directory for fitlins output", required=True)
+parser.add_argument("--scratch_dir", type=str, help="Scratch directory for intermediate outputs", required=True)
+
 args = parser.parse_args()
 
 # Set variables
 study_id = args.openneuro_study
 analysis_dir = args.analysis_dir
+scratch_dir = args.scratch_dir
 spec_path = args.spec_dir
 task = args.taskname
 
@@ -189,6 +196,89 @@ if r2std:
         title=f"R2 stdev across {len(rquare_statmaps)} Subject/Run Imgs"
     )
 
+# Squeeze r-squared values to compute the 
+tmp_r2_dir = Path(f"{scratch_dir}/{study_id}_task-{task}/r2tmp")
+
+try: 
+    for file in rquare_statmaps:
+        img1 = load_img(file)
+        data1 = img1.get_fdata()
+
+        if data1.ndim == 4 and data1.shape[3] == 1:
+            # Squeeze the 4th dimension
+            squeezed_data = data1.squeeze()
+            img1_squeezed = new_img_like(img1, squeezed_data)
+
+            # Save to tmp directory
+            basename = os.path.basename(file)
+            Path(tmp_r2_dir).mkdir(parents=True, exist_ok=True)
+            squeezed_path = os.path.join(tmp_r2_dir, basename)
+            img1_squeezed.to_filename(squeezed_path)
+except:
+    print(f"Error during squeeze and save")
+
+# create msi img 
+# calc similarity values in parallel
+mni_tmp_img = f"{tmp_r2_dir}/mask/MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+
+if not os.path.exists(mni_tmp_img):
+    template_mni = api.get(
+        'MNI152NLin2009cAsym',
+        desc='brain',
+        resolution=2,
+        suffix='mask',
+        extension='nii.gz'
+    )
+    os.makedirs(os.path.dirname(mni_tmp_img), exist_ok=True)
+    shutil.copy(template_mni, mni_tmp_img)
+    print(f"MNI Brain mask saved to: {mni_tmp_img}")
+else:
+    print("MNI brain mask already exists")
+
+
+r2_success = False
+try:
+    tmp_r2_paths = list(Path(tmp_r2_dir).rglob(f"*_task-{task}*_stat-rSquare_statmap.nii.gz"))
+    num_cpus = os.cpu_count()
+    use_workers = max(1, num_cpus - 2)
+
+    partial_func = partial(similarity_boldstand_metrics, brainmask_path=mni_tmp_img)
+    with ProcessPoolExecutor(max_workers=use_workers) as executor:
+        ratio_results = list(executor.map(partial_func, tmp_r2_paths))
+
+    ratio_df = pd.DataFrame(ratio_results)
+    low_quality = get_low_quality_subs(ratio_df=ratio_df, percentile=10)
+
+    r2_success = True
+except Exception as e:
+    low_quality=None
+    r2_success = False
+    print(f"R-square fimilarity Error: {e}")
+
+if r2_success:
+    ratio_df.to_csv(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-dicesimilarity.tsv"), sep='\t', index=False)
+
+    # plot 1: Dice similarity
+    plt.hist(ratio_df['dice'], bins=20, edgecolor='black', alpha=0.7)
+    plt.title("Dice Similarity (R2 map ~ MNI)")
+    plt.xlabel("Dice Est")
+    plt.ylabel("Freq")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-dicesimilarity.png"))
+    plt.close()
+
+    # plot 2: Voxels Outside of MNI Mask
+    plt.hist(ratio_df['voxoutmask'], bins=20, edgecolor='black', alpha=0.7)
+    plt.title("Proportion of Voxels Outside of MNI Mask")
+    plt.xlabel("Percentage Out")
+    plt.ylabel("Freq")
+    plt.grid(True)
+    plt.tight_layout()
+    plt.savefig(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-voxoutmask.png"))
+    plt.close()
+
+
 # Plot group maps if they exist
 grp_map_path = f"{analysis_dir}/node-dataLevel"
 if os.path.exists(grp_map_path):
@@ -226,7 +316,9 @@ grp_readme = generate_groupmodsummary(
     contrast_dict=contrast_dict, 
     contrast_image=Path(con_matrix_copy).name if contrast_image else None, 
     design_image=Path(design_matrix_copy).name if design_images else None, 
-    spec_imgs_dir=spec_imgs_dir
+    spec_imgs_dir=spec_imgs_dir,
+    r2_quality_ran=r2_success,
+    sub_flag=low_quality
 )
 
 # Save the README.md file

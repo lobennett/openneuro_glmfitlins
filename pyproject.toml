@@ -20,7 +20,9 @@ dependencies = [
     "notebook>=7.0.0",
     "awscli",
     "scipy",
-    "argparse"
+    "argparse",
+    "pyrelimri",
+    "templateflow"
 ]
 
 [project.optional-dependencies]

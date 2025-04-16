@@ -43,7 +43,19 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
-![R Square](./imgs/ds000148_task-figure2backwith1backlures_rsquare-std.png)
+/n#### Flagged Subjects
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.
+
+  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile 
+  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile
+
+The subjects flagged for figure2backwith1backlures are:
+sub02_run01, sub02_run02, sub03_run02, sub04_run02, sub05_run02, sub07_run01, sub07_run02, sub07_run03, sub15_run01, sub15_run02, sub15_run03, sub22_run01, sub22_run02, sub25_run03, sub27_run01, sub29_run01, sub29_run03, sub33_run01, sub33_run02, sub33_run03, sub35_run01, sub35_run03, sub42_run03, sub43_run02, sub46_run03, sub48_run01, sub48_run02, sub48_run03, sub49_run02, sub49_run03
+
+The distribution for subjects and runs in figure2backwith1backlures are below. 
+
+![Dice](./imgs/ds000148_task-figure2backwith1backlures_hist-dicesimilarity.png)
+![Voxels Out](./imgs/ds000148_task-figure2backwith1backlures_hist-voxoutmask.png)
 
 ### Statistical Maps
 

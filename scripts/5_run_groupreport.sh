@@ -25,14 +25,18 @@ fi
 # Extract values using jq
 data=$(jq -r '.datasets_folder' "$config_file")
 repo_dir=$(jq -r '.openneuro_glmrepo' "$config_file")
+scratch_out=$(jq -r '.tmp_folder' "$config_file")
 specs_dir="${repo_dir}/statsmodel_specs"
 scripts_dir="${repo_dir}/scripts"
 analysis_dir="${data}/analyses/${openneuro_id}/task-${task_label}"
+scratch_data_dir="${scratch_out}/fitlins/task-${task_label}"
+
 
 uv --project ${repo_dir} \
     run ${scripts_dir}/prep_report_py/groupmap_report.py \
     --openneuro_study ${openneuro_id} \
     --taskname ${task_label} \
     --analysis_dir ${analysis_dir} \
-    --spec_dir ${specs_dir} 
+    --spec_dir ${specs_dir} \
+    --scratch_dir ${scratch_data_dir} 
 

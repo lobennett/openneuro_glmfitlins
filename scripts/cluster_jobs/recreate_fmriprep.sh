@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=1-13 # subjects to iterate over - can modify below to match names in BIDS dir
+#SBATCH --array=1-43%20# subjects to iterate over - can modify below to match names in BIDS dir
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=8GB

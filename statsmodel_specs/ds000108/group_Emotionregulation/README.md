@@ -48,7 +48,19 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
-![R Square](./imgs/ds000108_task-Emotionregulation_rsquare-std.png)
+/n#### Flagged Subjects
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.
+
+  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile 
+  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile
+
+The subjects flagged for Emotionregulation are:
+sub02_run6, sub03_run1, sub03_run2, sub03_run3, sub03_run6, sub04_run2, sub04_run4, sub04_run5, sub06_run1, sub06_run2, sub06_run3, sub06_run4, sub06_run5, sub06_run6, sub08_run1, sub08_run4, sub08_run5, sub10_run6, sub13_run1, sub21_run1, sub21_run2, sub21_run3, sub21_run4, sub21_run6, sub22_run1, sub22_run2, sub23_run3, sub23_run4, sub23_run5, sub23_run6, sub26_run1, sub26_run2, sub26_run3, sub26_run4, sub26_run5, sub26_run6
+
+The distribution for subjects and runs in Emotionregulation are below. 
+
+![Dice](./imgs/ds000108_task-Emotionregulation_hist-dicesimilarity.png)
+![Voxels Out](./imgs/ds000108_task-Emotionregulation_hist-voxoutmask.png)
 
 ### Statistical Maps
 

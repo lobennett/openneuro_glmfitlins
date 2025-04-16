@@ -40,7 +40,19 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
-![R Square](./imgs/ds000002_task-deterministicclassification_rsquare-std.png)
+/n#### Flagged Subjects
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.
+
+  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile 
+  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile
+
+The subjects flagged for deterministicclassification are:
+sub01_run01, sub01_run02, sub03_run01, sub07_run01, sub08_run01, sub08_run02, sub10_run02, sub13_run02
+
+The distribution for subjects and runs in deterministicclassification are below. 
+
+![Dice](./imgs/ds000002_task-deterministicclassification_hist-dicesimilarity.png)
+![Voxels Out](./imgs/ds000002_task-deterministicclassification_hist-voxoutmask.png)
 
 ### Statistical Maps
 

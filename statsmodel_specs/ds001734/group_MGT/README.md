@@ -44,7 +44,8 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
-/n#### Flagged Subjects
+
+#### Flagged Subjects
 The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: 
 
   - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 

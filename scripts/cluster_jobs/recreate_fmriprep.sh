@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=1-43%20# subjects to iterate over - can modify below to match names in BIDS dir
+#SBATCH --array=1-52%20 
 #SBATCH --time=02:00:00
 #SBATCH --cpus-per-task=6
 #SBATCH --mem-per-cpu=8GB
@@ -62,7 +62,10 @@ singularity run --cleanenv \
     --skip_bids_validation \
     --participant-label "${sub}" \
     --fs-license-file ${fs_license} \
+    --output-spaces MNI152NLin2009cAsym:res-2 \
     --fs-subjects-dir /freesurf_dir \
     --derivatives /minimal_dir \
+    --n_cpus 8 \
+    --mem_mb 48000 \
     -vv \
     -w /wd

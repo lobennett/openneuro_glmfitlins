@@ -12,10 +12,10 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 
 The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
-- **storybelief**: ['1 * `trial_type.falsebeliefstory`']
-- **storyphoto**: ['1 * `trial_type.falsephotostory`']
-- **questionbeliefvphoto**: ['1 * `trial_type.falsebeliefquestion` - 1 * `trial_type.falsephotoquestion`']
-- **storybeliefvphoto**: ['1 * `trial_type.falsebeliefstory` - 1 * `trial_type.falsephotostory`']
+- **storybelief**: 1*`trial_type.falsebeliefstory`
+- **storyphoto**: 1*`trial_type.falsephotostory`
+- **questionbeliefvphoto**: 1*`trial_type.falsebeliefquestion` - 1*`trial_type.falsephotoquestion`
+- **storybeliefvphoto**: 1*`trial_type.falsebeliefstory` - 1*`trial_type.falsephotostory`
 
 ## Figures
 
@@ -32,7 +32,7 @@ The example design matrix illustrates the model used in the statistical analyses
 ### Variance Inflation Factor (VIF)
 ![VIF Distribution](./imgs/ds000109_task-theoryofmindwithmanualresponse_vif-boxplot.png)
 
-The Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
+The above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
 
 ### Voxelwise Model Variance Explained (r-squared)
 Voxelwise R-squared values represent the proportion of variance explained by the model at each voxel in the brain. The R-squared images shown here are calculated across runs, subjects and/or sessions (dependent on data Fitlins nodes) for the study and task.
@@ -44,13 +44,13 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
 /n#### Flagged Subjects
-The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: 
 
-  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile 
-  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile
+  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 
+  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for theoryofmindwithmanualresponse are:
-sub03_run1, sub03_run2, sub05_run1, sub05_run2, sub10_run1, sub10_run2, sub21_run2, sub30_run1, sub30_run2, sub40_run1, sub47_run1, sub47_run2, sub48_run1, sub48_run2
+sub01_run1, sub01_run2, sub05_run1, sub05_run2, sub14_run2, sub15_run2, sub36_run1, sub36_run2, sub38_run1, sub38_run2, sub39_run1, sub39_run2, sub40_run1, sub40_run2, sub47_run1, sub47_run2, sub48_run1, sub48_run2
 
 The distribution for subjects and runs in theoryofmindwithmanualresponse are below. 
 

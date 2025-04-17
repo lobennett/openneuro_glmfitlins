@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --job-name=fitlins
 #SBATCH --time=20:00:00
-#SBATCH --cpus-per-task=10
-#SBATCH --mem-per-cpu=8GB
+#SBATCH --cpus-per-task=6
+#SBATCH --mem-per-cpu=12GB
 #SBATCH -p russpold,normal,owners
 
 # Output and notifications
@@ -11,6 +11,12 @@
 #SBATCH --mail-user=demidenm@stanford.edu
 #SBATCH --mail-type=ALL
 
+# Prevent SLURM jobs runaway errors, i.e instances where more threads are ran than requested
+# Per Chris Markewicz, 
+# "FitLins will set the environment variable for subprocesses that are tagged as able to use more threads, but if these are not 1, then nipype can't accurately track resource usage."
+MKL_NUM_THREADS=1
+OMP_NUM_THREADS=1
+OPENBLAS_NUM_THREADS=1
 # -------------------- Parameter Checking --------------------
 if [ -z "$1" ] || [ -z "$2" ]; then
   echo "Usage: sbatch $0 <OpenNeuro Study ID> <Task Label>"
@@ -75,7 +81,7 @@ uv --project "$repo_dir" \
       --drop-missing \
       --space MNI152NLin2009cAsym --desc-label preproc \
       --smoothing "${smoothing_type}" --estimator nilearn \
-      --n-cpus 8 \
-      --mem-gb 78 \
+      --n-cpus 6 \
+      --mem-gb 72 \
       -w "${scratch_data_dir}" \
-      -v 
+      -vv

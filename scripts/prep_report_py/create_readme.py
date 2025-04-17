@@ -87,7 +87,7 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     readme_content += f"\n### Design Matrix\n![Design Matrix]({f"./imgs/{design_image}"})\n"
     readme_content += f"\nThe example design matrix illustrates the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interest, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).\n"
     readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./imgs/{study_id}_task-{task}_vif-boxplot.png"})\n"
-    readme_content += f"\nThe Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.\n"
+    readme_content += f"\nThe above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.\n"
     readme_content += f"\n### Voxelwise Model Variance Explained (r-squared)\n"
     readme_content += (
     f"Voxelwise R-squared values represent the proportion of variance explained by the "
@@ -107,9 +107,9 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     if r2_quality_ran:
         readme_content += (
             f"/n#### Flagged Subjects\n"
-            f"The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using a 10 percentile threshold.\n\n"
-            f"  - Dice similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below the 10th percentile \n"
-            f"  - The percentage of voxels outside of the target brain mask is greater than the 10th percentile\n\n"
+            f"The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: \n\n"
+            f"  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 \n"
+            f"  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) \n\n"
             f"The subjects flagged for {task} are:\n"
 
             f"{', '.join(sub_flag) if sub_flag else 'None Subjects Flagged'}\n\n"

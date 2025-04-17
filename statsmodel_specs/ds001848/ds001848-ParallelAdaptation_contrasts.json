@@ -1,6 +1,42 @@
 {
     "Contrasts": [
         {
+            "Name": "devnonsym",
+            "ConditionList": [
+                "trial_type.deviant_nonsymbolic4",
+                "trial_type.deviant_nonsymbolic1"
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "devsym",
+            "ConditionList": [
+                "trial_type.deviant_symbolic4",
+                "trial_type.deviant_symbolic1"
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "devphys",
+            "ConditionList": [
+                "trial_type.deviant_physical_size4",
+                "trial_type.deviant_physical_size1"
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
             "Name": "devsym4vdevsym1",
             "ConditionList": [
                 "trial_type.deviant_symbolic4",
@@ -56,9 +92,9 @@
                 "trial_type.deviant_physical_size4"
             ],
             "Weights": [
-                1,
-                1,
-                -2
+                0.5,
+                0.5,
+                -1
             ],
             "Test": "t"
         },
@@ -70,9 +106,9 @@
                 "trial_type.catch_symbolic4"
             ],
             "Weights": [
-                1,
-                1,
-                -2
+                0.5,
+                0.5,
+                -1
             ],
             "Test": "t"
         },
@@ -87,12 +123,12 @@
                 "trial_type.deviant_physical_size1"
             ],
             "Weights": [
-                1,
-                1,
-                1,
-                -1,
-                -1,
-                -1
+                0.33,
+                0.33,
+                0.33,
+                -0.33,
+                -0.33,
+                -0.33
             ],
             "Test": "t"
         }

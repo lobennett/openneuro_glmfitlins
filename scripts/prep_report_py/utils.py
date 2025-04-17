@@ -228,7 +228,8 @@ def extract_model_info(model_spec):
                 for contrast in node.get("Contrasts", [])
             ],
             "convolve_model": "spm",  # Default value spm
-            "if_derivative_hrf": False    # Track if HRF derivative is used
+            "if_derivative_hrf": False,    # Track if HRF derivative is used
+            "if_dispersion_hrf": False    # Track if HRF dispersion is used
         }
 
         # Extract HRF convolution model type and derivative status
@@ -237,6 +238,7 @@ def extract_model_info(model_spec):
             if instruction.get("Name") == "Convolve":
                 node_info["convolve_model"] = instruction.get("Model", "Unknown")
                 node_info["if_derivative_hrf"] = instruction.get("Derivative", "False") == "True"
+                node_info["if_dispersion_hrf"] = instruction.get("Dispersion", "False") == "True"
                 break  # Stop searching after finding first Convolve transformation
 
         extracted_info["nodes"].append(node_info)
@@ -299,25 +301,36 @@ def est_contrast_vifs(desmat, contrasts):
 
 def gen_vifdf(designmat, contrastdict, nuisance_regressors):
     """
-    Create a Pandas DataFrame with VIF values for regressors.
+    Create a Pandas DataFrame with VIF values for contrasts and regressors.
 
-    Parameters:
+    Parameters
     designmat: The design matrix used in the analysis.
-    contrastdict (dict): dictionary containing contrast names and their corresponding expressions.
-    nuisance_regressors (list): A list containing nusiance regressors to exclude.
+    modconfig (dict): A dictionary containing model configuration, including:
+        - 'nuisance_regressors': A regex pattern to filter out nuisance regressors.
+           - 'contrasts': A dictionary of contrast definitions.
 
-    Returns:
-    Returns regressors vif dict & DataFrame of VIFs w/ columns ['type', 'name', 'value'].
+    Returns
+    Returns contrasts & regressors vif dict & DataFrame of combined VIFs w/ columns ['type', 'name', 'value'].
     """
-    # Filter columns by removing nuisance regressors & create dictionary that excludes intercept
     filtered_columns = designmat.columns[~designmat.columns.isin(nuisance_regressors)]
     regressor_dict = {item: item for item in filtered_columns if item != "intercept"}
+
+    
+    # est VIFs for contrasts and regressors
+    con_vifs = est_contrast_vifs(desmat=designmat, contrasts=contrastdict)
     reg_vifs = est_contrast_vifs(desmat=designmat, contrasts=regressor_dict)
 
+    # convert to do
+    df_con = pd.DataFrame(list(con_vifs.items()), columns=["name", "value"])
+    df_con["type"] = "contrast"
     df_reg = pd.DataFrame(list(reg_vifs.items()), columns=["name", "value"])
     df_reg["type"] = "regressor"
 
-    return reg_vifs, df_reg
+    # combine & rename cols
+    df = pd.concat([df_con, df_reg], ignore_index=True)
+    df = df[["type", "name", "value"]]
+
+    return con_vifs,reg_vifs,df
 
 
 # functions for subjects and contrasts generic files
@@ -446,23 +459,21 @@ def similarity_boldstand_metrics(img_path, brainmask_path):
         "ratio_inoutmask": inout_ratio,
     }
 
-def get_low_quality_subs(ratio_df, percentile=10):
+def get_low_quality_subs(ratio_df, dice_thresh=0.85, voxout_thresh=0.10):
     """
-    return a sorted list of low-quality image names based on computed bottom `percentile` threshold for 'voxoutmask' and 'dice' metrics.
+    Get sorted list of low-quality image names based on: 'dice' score < dice_thresh & 'voxoutmask' > voxout_thresh
 
     Parameters:
     ratio_df: DataFrame with 'voxoutmask', 'dice', and 'img1' columns.
-    percentile: Percentile threshold to determine low quality (default is 10).
+    dice_thresh: Threshold for the 'dice' metric.
+    voxout_thresh: Threshold for the 'voxoutmask' metric.
 
     Returns:
-    Sort list of bottom percentile
+    Sorted list of image names that fall below the quality thresholds.
     """
-    voxoutmask_thresh = np.percentile(ratio_df['voxoutmask'], percentile)
-    dice_thresh = np.percentile(ratio_df['dice'], percentile)
-
     low_quality = ratio_df[
-        (ratio_df['voxoutmask'] <= voxoutmask_thresh) |
-        (ratio_df['dice'] <= dice_thresh)
+        (ratio_df['dice'] < dice_thresh) &
+        (ratio_df['voxoutmask'] > voxout_thresh)
     ]
     
     low_quality_imgs = sorted(low_quality['img1'].tolist())

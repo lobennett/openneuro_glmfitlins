@@ -19,8 +19,7 @@
         "Name": "Convolve",
         "Model": "spm",
         "Derivative": "False", 
-        "Dispersion": "False", 
-        "FirDelays": "None",
+        "Dispersion": "False",
         "Input": [
           "trial_type.*"
         ]

@@ -12,8 +12,8 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 
 The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
-- **shkonvshkoff**: ['1 * `trial_type.1` - 1 * `trial_type.2`']
-- **shkon**: ['1 * `trial_type.1`']
+- **shkonvshkoff**: 1*`trial_type.1` - 1*`trial_type.2`
+- **shkon**: 1*`trial_type.1`
 
 ## Figures
 
@@ -30,7 +30,7 @@ The example design matrix illustrates the model used in the statistical analyses
 ### Variance Inflation Factor (VIF)
 ![VIF Distribution](./imgs/ds003425_task-training_vif-boxplot.png)
 
-The Variance Inflation Factor (VIF) boxplot quantifies multicollinearity between model regressors. Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
+The above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
 
 ### Voxelwise Model Variance Explained (r-squared)
 Voxelwise R-squared values represent the proportion of variance explained by the model at each voxel in the brain. The R-squared images shown here are calculated across runs, subjects and/or sessions (dependent on data Fitlins nodes) for the study and task.

@@ -30,22 +30,12 @@ parser.add_argument("--scratch_dir", type=str, help="Scratch directory for inter
 
 args = parser.parse_args()
 
-# Set variables
+# Set variables from arguments
 study_id = args.openneuro_study
 analysis_dir = args.analysis_dir
 scratch_dir = args.scratch_dir
 spec_path = args.spec_dir
 task = args.taskname
-
-# Get plotting coordinates
-study_details = f"{spec_path}/{study_id}/{study_id}_basic-details.json"
-with open(study_details, 'r') as file:
-    study_info = json.load(file)
-    plt_coords = tuple(study_info.get("Tasks", {}).get(task, {}).get("plot_coords"))
-
-# Create images directory
-spec_imgs_dir = Path(f"{spec_path}/{study_id}/group_{task}/imgs")
-spec_imgs_dir.mkdir(parents=True, exist_ok=True)
 
 # Define nuisance regressor patterns
 noise_reg = [
@@ -54,6 +44,16 @@ noise_reg = [
     "rot_", "trans_", "cosine", "drift_"
 ]
 
+# Create output directory for images
+spec_imgs_dir = Path(f"{spec_path}/{study_id}/group_{task}/imgs")
+spec_imgs_dir.mkdir(parents=True, exist_ok=True)
+
+# Get plotting coordinates from study details
+study_details = f"{spec_path}/{study_id}/{study_id}_basic-details.json"
+with open(study_details, 'r') as file:
+    study_info = json.load(file)
+    plt_coords = tuple(study_info.get("Tasks", {}).get(task, {}).get("plot_coords"))
+
 # Load model specifications & study details
 try:
     spec_file = f"{spec_path}/{study_id}/{study_id}-{task}_specs.json"
@@ -61,12 +61,12 @@ try:
         spec_data = json.load(file)
     
     spec_results = extract_model_info(model_spec=spec_data)
-
 except Exception as e:
     print(f"Failed to load or process spec file: {e}")
     exit(1)
 
-# Check whether run and subject nodes exist to determine if subject-level and fixed effect models are computed
+# Check whether run and subject nodes exist 
+# (determines if subject-level and fixed effect models are computed)
 has_run = False
 has_subject = False
 for node in spec_results['nodes']:
@@ -79,14 +79,21 @@ for node in spec_results['nodes']:
 num_subjects = len(spec_results['subjects'])
 hrf_model_type = spec_results['nodes'][0]['convolve_model']
 derivative_added = spec_results['nodes'][0]['if_derivative_hrf']
+dispersion_added = spec_results['nodes'][0]['if_dispersion_hrf']
 
+# HRF model description based on convolution, derivative and dispersion terms
+hrf_components = []
 if derivative_added:
-    hrf_model = f"{hrf_model_type} w/ derivatives"
+    hrf_components.append("derivatives")
+if dispersion_added:
+    hrf_components.append("dispersion")
+
+if hrf_components:
+    hrf_model = f"{hrf_model_type} w/ {' & '.join(hrf_components)}"
 else:
     hrf_model = hrf_model_type
-    
-run_node_regressors = spec_results['nodes'][0]['regressors']
 
+# COPY CONTRAST AND DESIGN 
 # Find and copy example contrast image & design matrix
 contrast_images = list(Path(analysis_dir).rglob(f"*_task-{task}_*contrasts.svg"))
 if contrast_images:
@@ -100,7 +107,6 @@ if design_images:
     design_matrix_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_design-matrix.svg"
     shutil.copy(design_images[0], design_matrix_copy)
 
-
 # Find design matrices
 design_matrices = list(Path(analysis_dir).rglob(f"*_task-{task}_*design.tsv"))
 if design_matrices:
@@ -108,7 +114,8 @@ if design_matrices:
     design_tsv_copy = Path(spec_imgs_dir) / f"{study_id}_task-{task}_design-matrix.tsv"
     shutil.copy(design_matrices[0], design_tsv_copy)
 
-# Extract contrast specifications
+# VIF ESTIMATION
+# Get contrast spec from notes for VIF est
 contrast_dict = {}
 for node in spec_results['nodes']:
     if 'contrasts' in node:
@@ -117,11 +124,12 @@ for node in spec_results['nodes']:
             conditions = contrast['conditions']
             weights = contrast['weights']
             
-            # Combine weights and conditions as a mathematical expression
-            weighted_conditions = [f"{weight} * `{condition}`" for weight, condition in zip(weights, conditions)]
+            # weights and conditions as expression
+            weighted_conditions = [f"{weight}*`{condition}`" for weight, condition in zip(weights, conditions)]
             contrast_expr = " + ".join(weighted_conditions).replace(" + -", " - ")
             
-            contrast_dict[name] = [contrast_expr]
+            # as a string, not in a list
+            contrast_dict[name] = contrast_expr
 
 # Calculate VIF for each design matrix
 all_vif_dfs = []
@@ -134,7 +142,7 @@ for design_mat_path in design_matrices:
         noise_regressors = [col for col in design_matrix.columns if any(noise in col for noise in noise_reg)]
         signal_regressors = [col for col in design_matrix.columns if not any(noise in col for noise in noise_reg)]
         
-        _, vif_df = gen_vifdf(
+        _,_, vif_df = gen_vifdf(
             designmat=design_matrix,
             contrastdict=contrast_dict,  
             nuisance_regressors=noise_regressors,
@@ -146,15 +154,15 @@ for design_mat_path in design_matrices:
     except Exception as e:
         print(f"Error processing {design_mat_path.name}: {e}")
 
-# Create visualization if data is available
+# Create VIF visualization if data is available
 if all_vif_dfs:
     combined_vif_df = pd.concat(all_vif_dfs, ignore_index=True)
     plt.figure(figsize=(10, 6))
-    sns.boxplot(x="name", y="value", data=combined_vif_df)
-    plt.title("VIF Across Regressors")
-    plt.xlabel("Regressor")
-    plt.ylabel("Variance Inflation Factor (VIF)")
-    plt.xticks(rotation=45, ha="right")
+    sns.boxplot(x="name", y="value", hue="type", data=combined_vif_df)
+    plt.title("VIF for Regressors & Contrasts")
+    plt.xlabel("Type")
+    plt.ylabel("VIF")
+    plt.xticks(rotation=90, ha="right")
     plt.tight_layout()
     
     # Save the figure
@@ -163,12 +171,12 @@ if all_vif_dfs:
 else:
     print("No VIF data available for visualization")
 
+# R-SQUARED MAPS
 # Estimate average and variance of r-square maps
 rquare_statmaps = list(Path(analysis_dir).rglob(f"*_task-{task}*_stat-rSquare_statmap.nii.gz"))
 r2mean, r2std = calc_niftis_meanstd(path_imgs=rquare_statmaps)
 
-        
-# Find and create the group map plot
+# Plot r-square mean and std maps if available
 if r2mean:
     r2mean_path = f"{spec_imgs_dir}/{study_id}_task-{task}_rsquare-mean.png"
     plot_stat_map(
@@ -196,9 +204,11 @@ if r2std:
         title=f"R2 stdev across {len(rquare_statmaps)} Subject/Run Imgs"
     )
 
-# Squeeze r-squared values to compute the 
+# Prepare r-squared maps for similarity analysis
 tmp_r2_dir = Path(f"{scratch_dir}/{study_id}_task-{task}/r2tmp")
+tmp_r2_dir.mkdir(parents=True, exist_ok=True)
 
+# Squeeze r-squared values to compute the similarity / vox out-in
 try: 
     for file in rquare_statmaps:
         img1 = load_img(file)
@@ -211,15 +221,15 @@ try:
 
             # Save to tmp directory
             basename = os.path.basename(file)
-            Path(tmp_r2_dir).mkdir(parents=True, exist_ok=True)
             squeezed_path = os.path.join(tmp_r2_dir, basename)
             img1_squeezed.to_filename(squeezed_path)
-except:
-    print(f"Error during squeeze and save")
+except Exception as e:
+    print(f"Error during squeeze and save: {e}")
 
-# create msi img 
-# calc similarity values in parallel
-mni_tmp_img = f"{tmp_r2_dir}/mask/MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
+# Get or create MNI template mask
+mni_mask_dir = Path(f"{tmp_r2_dir}/mask")
+mni_mask_dir.mkdir(parents=True, exist_ok=True)
+mni_tmp_img = f"{mni_mask_dir}/MNI152NLin2009cAsym_desc-brain_mask.nii.gz"
 
 if not os.path.exists(mni_tmp_img):
     template_mni = api.get(
@@ -229,36 +239,37 @@ if not os.path.exists(mni_tmp_img):
         suffix='mask',
         extension='nii.gz'
     )
-    os.makedirs(os.path.dirname(mni_tmp_img), exist_ok=True)
     shutil.copy(template_mni, mni_tmp_img)
     print(f"MNI Brain mask saved to: {mni_tmp_img}")
 else:
     print("MNI brain mask already exists")
 
-
+# Calculate similarity metrics
 r2_success = False
+low_quality = None
 try:
     tmp_r2_paths = list(Path(tmp_r2_dir).rglob(f"*_task-{task}*_stat-rSquare_statmap.nii.gz"))
     num_cpus = os.cpu_count()
-    use_workers = max(1, num_cpus - 2)
+    use_workers = max(1, num_cpus - 2)  # Use all but 2 cores
 
     partial_func = partial(similarity_boldstand_metrics, brainmask_path=mni_tmp_img)
     with ProcessPoolExecutor(max_workers=use_workers) as executor:
         ratio_results = list(executor.map(partial_func, tmp_r2_paths))
 
     ratio_df = pd.DataFrame(ratio_results)
-    low_quality = get_low_quality_subs(ratio_df=ratio_df, percentile=10)
-
+    low_quality = get_low_quality_subs(ratio_df=ratio_df, dice_thresh=0.85, voxout_thresh=0.10)
     r2_success = True
-except Exception as e:
-    low_quality=None
-    r2_success = False
-    print(f"R-square fimilarity Error: {e}")
 
+except Exception as e:
+    print(f"R-square similarity calculation error: {e}")
+
+# Generate similarity plots if successful
 if r2_success:
+    # Save similarity results
     ratio_df.to_csv(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-dicesimilarity.tsv"), sep='\t', index=False)
 
-    # plot 1: Dice similarity
+    # Plot 1: Dice similarity
+    plt.figure(figsize=(8, 5))
     plt.hist(ratio_df['dice'], bins=20, edgecolor='black', alpha=0.7)
     plt.title("Dice Similarity (R2 map ~ MNI)")
     plt.xlabel("Dice Est")
@@ -268,7 +279,8 @@ if r2_success:
     plt.savefig(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-dicesimilarity.png"))
     plt.close()
 
-    # plot 2: Voxels Outside of MNI Mask
+    # Plot 2: Voxels Outside of MNI Mask
+    plt.figure(figsize=(8, 5))
     plt.hist(ratio_df['voxoutmask'], bins=20, edgecolor='black', alpha=0.7)
     plt.title("Proportion of Voxels Outside of MNI Mask")
     plt.xlabel("Percentage Out")
@@ -278,7 +290,7 @@ if r2_success:
     plt.savefig(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_hist-voxoutmask.png"))
     plt.close()
 
-
+# GROUP MAP PLOTS
 # Plot group maps if they exist
 grp_map_path = f"{analysis_dir}/node-dataLevel"
 if os.path.exists(grp_map_path):
@@ -302,7 +314,7 @@ if os.path.exists(grp_map_path):
 else:
     print("Group map path not found.")
 
-# Generate and save README
+# GENERATE AND SAVE README
 contrast_image = contrast_images[0] if contrast_images else None
 grp_readme = generate_groupmodsummary(
     study_id=study_id, 
@@ -321,7 +333,6 @@ grp_readme = generate_groupmodsummary(
     sub_flag=low_quality
 )
 
-# Save the README.md file
 readme_path = os.path.join(f"{spec_path}/{study_id}/group_{task}", "README.md")
 with open(readme_path, "w") as f:
     f.write(grp_readme)

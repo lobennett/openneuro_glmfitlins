@@ -349,3 +349,52 @@ def ds002033(eventspath: str, task: str):
         else:
             print("'trial_type' already exists or is partially filled. Skipping modification.")
             return None
+
+
+def ds003789(eventspath: str, task: str):
+    """
+    Process event data for ds003789 by modifying trial types if applicable. 
+    Modifying to not use the repeating and space values
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+    eventsdat = pd.read_csv(eventspath, sep='\t')
+
+    if task in ["retrieval"]:
+        # if trial_type contains updated values
+        if not eventsdat['trial_type'].isin(['foil_new', 'lure_new', 'target_old', 'lure_old']).any():
+            print("Modifying 'trial_type' with remapped values & dropping na")
+            eventsdat['trial_type'] = eventsdat['trial_type'].replace({
+                'foil new': 'foil_new',
+                'lure new': 'lure_new',
+                'target old': 'target_old',
+                'lure old': 'lure_old'
+            })
+            eventsdatcpy = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
+            print("Unique trial types:", eventsdatcpy['trial_type'].unique())
+            return eventsdatcpy
+
+        else:
+            print("Modified 'trial_type' already exists . Skipping modification.")
+            return None
+        
+    if task in ["encoding"]:
+        # if trial_type contains updated values
+        if not eventsdat['trial_type'].isin(['fixation', 'word_list1', 'word_list2', 'word_list3']).any():
+            print("Modifying 'trial_type' with remapped values")
+            eventsdat['trial_type'] = eventsdat['trial_type'].replace({
+                '0.0': 'fixation',
+                'rep1': 'word_list1',
+                'rep2': 'word_list2',
+                'rep3': 'word_list3'
+            })
+            print("Unique trial types:", eventsdat['trial_type'].unique())
+            return eventsdat
+
+        else:
+            print("Modified 'trial_type' already exists . Skipping modification.")
+            return None

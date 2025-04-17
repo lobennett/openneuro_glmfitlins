@@ -43,27 +43,36 @@ if os.path.exists(bids_input_dir):
 else:
     if minimal_fp is True:
         try:
-            # clone & get entire BIDS dataset except derivatives and .git
+            # Clone & download entire dataset
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
-            subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
+
+            try:
+                subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
+            except subprocess.CalledProcessError:
+                print("        Warning: 's3-PRIVATE' sibling not found or could not be enabled. Continuing...")
+
             os.chdir(bids_input_dir)
-            subprocess.run(['datalad', 'get', '-J', '4', 
-                           '.'], check=True)
-            print(f"    {openneuro_study}. Dataset files (.nii.gz) downloaded successfully (excluding derivatives and .git).")
+            subprocess.run(['datalad', 'get', '-J', '4', '.'], check=True)
+            print(f"    {openneuro_study}. Dataset files downloaded successfully.")
         except subprocess.CalledProcessError as e:
             print(f"        An error occurred while getting the files: {e}")
     else:
         try:
-            # Run the datalad clone command with exclusions
+            # Clone only, no data download
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
-            # Enable remote siblings after cloning
-            subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
-            print(f"    {openneuro_study}. Dataset cloned successfully (excluding derivatives and .git).")
+
+            try:
+                subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
+            except subprocess.CalledProcessError:
+                print("        Warning: 's3-PRIVATE' sibling not found or could not be enabled. Continuing...")
+
+            print(f"    {openneuro_study}. Dataset cloned successfully (no files downloaded).")
         except subprocess.CalledProcessError as e:
-            # Check if the error is related to an outdated Git version
             if 'error: unknown option `show-origin`' in str(e):
                 print("     Error: Your Git version may be outdated. Please confirm and update Git.")
                 print("     Use 'git --version' to check your version.")
+            else:
+                print(f"        An error occurred while cloning the dataset: {e}")
 
 
 

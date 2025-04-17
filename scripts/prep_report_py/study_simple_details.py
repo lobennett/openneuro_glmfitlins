@@ -99,10 +99,10 @@ for task_name in Tasks:
         print()
         print(f"\033[91mNo event files found for task: {task_name}\033[0m")
     else:
-        # Concatenate event files from all sessions
+        # Concatenate ALL event files from ALL runs & sessions
         group_df = pd.concat([pd.read_csv(file, sep='\t') for file in task_event_files], ignore_index=True)
 
-        # Obtain column names and data types, get unique values for trial_type
+        # Obtain column names and data types, get unique values for trial_type (not important across all runs, as some tasks have behavioral diff modify trial_type)
         column_names = list(group_df.columns)
         column_data_types = {col: str(dtype) for col, dtype in zip(group_df.columns, group_df.dtypes)}
         trial_type_values = group_df['trial_type'].unique().tolist() if 'trial_type' in group_df.columns else []

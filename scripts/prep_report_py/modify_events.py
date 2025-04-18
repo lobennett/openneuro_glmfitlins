@@ -375,7 +375,10 @@ def ds003789(eventspath: str, task: str):
                 'lure old': 'lure_old'
             })
             eventsdatcpy = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
-            print("Unique trial types:", eventsdatcpy['trial_type'].unique())
+            na_count = eventsdatcpy["response_time"].isna().sum()
+            eventsdatcpy["response_time"] = eventsdatcpy["response_time"].fillna(0)
+
+            print("Unique trial types:", eventsdatcpy['trial_type'].unique(), "Replace response NA rows:", na_count)
             return eventsdatcpy
 
         else:
@@ -383,8 +386,8 @@ def ds003789(eventspath: str, task: str):
             return None
         
     if task in ["encoding"]:
-        # if trial_type contains updated values
-        if not eventsdat['trial_type'].isin(['fixation', 'word_list1', 'word_list2', 'word_list3']).any():
+        #if trial_type contains updated values
+        if not eventsdat['trial_type'].isin(['fixation', 'word_list1', 'word_list2', 'word_list3', 'rt_reg']).any():
             print("Modifying 'trial_type' with remapped values")
             eventsdat['trial_type'] = eventsdat['trial_type'].replace({
                 '0.0': 'fixation',
@@ -392,8 +395,12 @@ def ds003789(eventspath: str, task: str):
                 'rep2': 'word_list2',
                 'rep3': 'word_list3'
             })
-            print("Unique trial types:", eventsdat['trial_type'].unique())
-            return eventsdat
+            eventsdatcpy = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
+            na_count = eventsdatcpy["response_time"].isna().sum()
+            eventsdatcpy["response_time"] = eventsdatcpy["response_time"].fillna(0)
+            
+            print("Unique trial types:", eventsdatcpy['trial_type'].unique(), "Replace response NA rows:", na_count)
+            return eventsdatcpy
 
         else:
             print("Modified 'trial_type' already exists . Skipping modification.")

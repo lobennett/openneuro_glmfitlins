@@ -12,6 +12,19 @@
 1. Facilitate efficient and reproducible neuroimaging data analysis
 2. Provide minimal barriers to entry for researchers at all levels
 
+## Community Contributions
+
+Contributions can be made in different multipl ways.
+
+First, users can review the design matrices and models specs for the different studies in [./statsmodel_specs](./statsmodel_specs/) and recommend fixes to 1) Model specifications, such as the resulting design matrices, and/or 2) Contrast lists. Models can be modified via regressors that are/are not included and what convolution is used. Contrast can be either removing or adding a specific contrast to capture a `specific` cognitive process in the estimated BOLD response.
+
+Second, users can review the [modify_events.py](./scripts/prep_report_py/modify_events.py) and make recommendations on how events files may be alternatively modified. This can be either to 1) make the modifications more efficient or 2) create additional regressors that we overlooked.
+
+Third, users can run datasets on their own machines, create model specs and generate group-level reports and generate pull requests to add the results as contributions to the `statsmodel_specs` folder.
+
+For items related to the issues, the `Issues` tab has separate templates for `Events Modification`, `Contrasts`, `Model Specification`.
+
+
 ## Features
 
 - **Automatic Environment Setup**: Uses [setup_uv.sh](setup_uv.sh) to install [uv](https://docs.astral.sh/uv/guides/install-python/) Python package manager, verify dependencies (GitHub, DataLad, git-annex), and create an environment with required packages (for more details on uv and packaging notes, see [Dr. Mumford's repo](https://github.com/jmumford/packaging-notes?tab=readme-ov-file#uv)

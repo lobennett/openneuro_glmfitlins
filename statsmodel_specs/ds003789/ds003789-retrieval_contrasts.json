@@ -1,0 +1,130 @@
+{
+    "Contrasts": [
+        {
+            "Name": "targetoldvfoilnew",
+            "ConditionList": [
+                "trial_type.target_old",
+                "trial_type.foil_new"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "targetoldvlureold",
+            "ConditionList": [
+                "trial_type.target_old",
+                "trial_type.lure_old"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "foilnewvlurenew",
+            "ConditionList": [
+                "trial_type.foil_new",
+                "trial_type.lure_new"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "lureoldvslurenew",
+            "ConditionList": [
+                "trial_type.lure_old",
+                "trial_type.lure_new"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "oldvsnew",
+            "ConditionList": [
+                "trial_type.target_old",
+                "trial_type.lure_old",
+                "trial_type.foil_new",
+                "trial_type.lure_new"
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -0.5,
+                -0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "targetold",
+            "ConditionList": [
+                "trial_type.target_old"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "lureold",
+            "ConditionList": [
+                "trial_type.lure_old"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "foilnew",
+            "ConditionList": [
+                "trial_type.foil_new"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "lurenew",
+            "ConditionList": [
+                "trial_type.lure_new"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "alllure",
+            "ConditionList": [
+                "trial_type.lure_old",
+                "trial_type.lure_new"
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "rt",
+            "ConditionList": [
+                "rt_reg.rt"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

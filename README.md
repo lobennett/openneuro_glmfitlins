@@ -12,17 +12,34 @@
 1. Facilitate efficient and reproducible neuroimaging data analysis
 2. Provide minimal barriers to entry for researchers at all levels
 
-## Community Contributions
+# Community Contributions
 
-Contributions can be made in different multipl ways.
+Contributions can be made in several ways:
 
-First, users can review the design matrices and models specs for the different studies in [./statsmodel_specs](./statsmodel_specs/) and recommend fixes to 1) Model specifications, such as the resulting design matrices, and/or 2) Contrast lists. Models can be modified via regressors that are/are not included and what convolution is used. Contrast can be either removing or adding a specific contrast to capture a `specific` cognitive process in the estimated BOLD response.
+1.  **Review Design Matrices and Model Specifications:**
+    * Examine the design matrices and model specifications for various studies located in the [`./statsmodel_specs/`](./statsmodel_specs/) directory.
+    * Recommend fixes related to:
+        * **Model Specifications:** This includes the resulting design matrices. Models can be adjusted by including or excluding regressors and modifying the convolution used.
+        * **Contrast Lists:** Suggest removing or adding specific contrasts to better capture a `specific` cognitive process reflected in the estimated BOLD response.
 
-Second, users can review the [modify_events.py](./scripts/prep_report_py/modify_events.py) and make recommendations on how events files may be alternatively modified. This can be either to 1) make the modifications more efficient or 2) create additional regressors that we overlooked.
+2.  **Review Event File Modifications:**
+    * Examine the [`./scripts/prep_report_py/modify_events.py`](./scripts/prep_report_py/modify_events.py) script.
+    * Make recommendations for alternative ways to modify the events files, focusing on:
+        * Improving the efficiency of the modifications.
+        * Creating additional regressors that may have been overlooked.
 
-Third, users can run datasets on their own machines, create model specs and generate group-level reports and generate pull requests to add the results as contributions to the `statsmodel_specs` folder.
+3.  **Run Datasets and Contribute Results:**
+    * Run datasets on your own machine.
+    * Create model specifications and generate group-level reports.
+    * Submit pull requests to add your results as contributions to the `statsmodel_specs` folder.
 
-For items related to the issues, the `Issues` tab has separate templates for `Events Modification`, `Contrasts`, `Model Specification`.
+**Using the Issues Tab:**
+
+For items related to specific issues, please use the `Issues` tab. There are separate templates available for:
+* `Events Modification`: Revisions to current modifications to events files
+* `Contrasts`: Recommendations to changes to current contrasts lists.
+* `Model Specification`: Recommendations to changed to current model specifications.
+* `Running Fitlins Models`: Requests to run OpenNeuro Datasets that have Task BOLD, Events files & fMRIPrep'd derivatives 
 
 
 ## Features

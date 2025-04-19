@@ -1,0 +1,56 @@
+{
+    "Contrasts": [
+        {
+            "Name": "FirstvLast",
+            "ConditionList": [
+                "trial_type.word_list1",
+                "trial_type.word_list2"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "WordList1",
+            "ConditionList": [
+                "trial_type.word_list1"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "WordList2",
+            "ConditionList": [
+                "trial_type.word_list2"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "WordList3",
+            "ConditionList": [
+                "trial_type.word_list3"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "rt",
+            "ConditionList": [
+                "rt_reg.rt"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

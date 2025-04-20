@@ -1,0 +1,78 @@
+{
+    "Contrasts": [
+        {
+            "Name": "motionaligneffect",
+            "ConditionList": [
+                "signedmotion_cohright"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "coloraligneffect",
+            "ConditionList": [
+                "signedcolor_cohright"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "alignmotionvcolor",
+            "ConditionList": [
+                "signedmotion_cohright",
+                "signedcolor_cohright"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "absmotioneffect",
+            "ConditionList": [
+                "signedcolor_abs"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "abscolorneffect",
+            "ConditionList": [
+                "signedcolor_abs"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "absmotionvcolor",
+            "ConditionList": [
+                "signedcolor_abs",
+                "signedcolor_abs"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "rt",
+            "ConditionList": [
+                "rt_reg.1"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

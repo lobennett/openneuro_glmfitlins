@@ -405,3 +405,44 @@ def ds003789(eventspath: str, task: str):
         else:
             print("Modified 'trial_type' already exists . Skipping modification.")
             return None
+
+
+def ds001715(eventspath: str, task: str):
+    """
+    Process event data for ds001715 by modifying trial types if applicable. 
+    Modifying to not use the repeating and space values
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task == "dts":
+        orig_to_new = {
+            "SignedMotionCohRight": "signedmotion_cohright",
+            "SignedColorCohRight": "signedcolor_cohright",
+            "RT": "response_time",
+            "isMissedTrial": "missed_trial"
+        }
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+
+        # if all new columns already exist
+        if not all(col in eventsdat.columns for col in orig_to_new.values()):
+            print("Creating new columns in snake_case and filling RT NAs with zero.")
+
+            for orig_col, new_col in orig_to_new.items():
+                if orig_col in eventsdat.columns:
+                    eventsdat[new_col] = eventsdat[orig_col]
+            
+            eventsdat["response_time"] = eventsdat["response_time"].fillna(0)
+            eventsdat["signedmotion_abs"] = abs(eventsdat["signedmotion_cohright"])
+            eventsdat["signedcolor_abs"] = abs(eventsdat["signedcolor_cohright"])
+
+            return eventsdat
+
+        else:
+            print("New columns already exist. Skipping creation.")
+            return None

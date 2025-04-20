@@ -1,0 +1,78 @@
+{
+    "Subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "dts": {
+            "plot_coords": [
+                0,
+                0,
+                0
+            ],
+            "bold_volumes": 160,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "column_names": [
+                "onset",
+                "duration",
+                "BlockNum",
+                "BlockTrialNum",
+                "MotionReward",
+                "ColorReward",
+                "SignedMotionCohRight",
+                "SignedColorCohRight",
+                "Choice_isRight",
+                "RT",
+                "isMissedTrial"
+            ],
+            "column_data_types": {
+                "onset": "float64",
+                "duration": "int64",
+                "BlockNum": "int64",
+                "BlockTrialNum": "int64",
+                "MotionReward": "float64",
+                "ColorReward": "float64",
+                "SignedMotionCohRight": "int64",
+                "SignedColorCohRight": "int64",
+                "Choice_isRight": "int64",
+                "RT": "float64",
+                "isMissedTrial": "int64"
+            },
+            "trial_type_values": []
+        }
+    }
+}

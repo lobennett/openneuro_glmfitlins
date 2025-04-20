@@ -1,0 +1,223 @@
+{
+  "Name": "ds001715",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27",
+      "28",
+      "29",
+      "30",
+      "31",
+      "32",
+      "33",
+      "34"
+    ],
+    "task": [
+      "dts"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Threshold",
+            "Input": ["signedmotion_abs"],
+            "Binarize": true,
+            "Signed": true,
+            "Output": ["rt_reg"]
+          },
+          {
+            "Name": "Replace",
+            "Input": ["rt_reg"],
+            "Replace": {
+                "1": "rt"
+                },
+            "Attribute": "value"
+          },
+          {
+            "Name": "Factor",
+            "Input": [
+              "rt_reg"
+            ]
+          },
+          {
+            "Name": "Assign",
+            "Input": ["response_time"],
+            "Target": ["rt_reg.1"],
+            "TargetAttr": "duration"
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "signedmotion_cohright",
+              "signedmotion_abs",
+              "signedcolor_cohright",
+              "missed_trial",
+              "signedcolor_abs",
+              "rt_reg.1"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "signedmotion_cohright",
+          "signedmotion_abs",
+          "signedcolor_cohright",
+          "missed_trial",
+          "signedcolor_abs",
+          "rt_reg.1",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "motionaligneffect",
+          "ConditionList": [
+            "signedmotion_cohright"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "coloraligneffect",
+          "ConditionList": [
+            "signedcolor_cohright"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "alignmotionvcolor",
+          "ConditionList": [
+            "signedmotion_cohright",
+            "signedcolor_cohright"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "absmotioneffect",
+          "ConditionList": [
+            "signedcolor_abs"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "abscolorneffect",
+          "ConditionList": [
+            "signedcolor_abs"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "absmotionvcolor",
+          "ConditionList": [
+            "signedcolor_abs",
+            "signedcolor_abs"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "rt",
+          "ConditionList": [
+            "rt_reg.1"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

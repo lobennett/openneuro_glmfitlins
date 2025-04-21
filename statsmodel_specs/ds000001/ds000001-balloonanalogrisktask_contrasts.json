@@ -79,7 +79,7 @@
             "Test": "t"
         },
         {
-            "Name": "pumpsdemean",
+            "Name": "pumps",
             "ConditionList": [
                 "trial_type.pumps_demean"
             ],

@@ -18,11 +18,12 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 - **pumpscashvcontrol**: 0.5*`trial_type.pumps_demean` + 0.5*`trial_type.cash_demean` - 1*`trial_type.control_pumps_demean`
 - **pumpsexplodevcontrol**: 0.5*`trial_type.pumps_demean` + 0.5*`trial_type.explode_demean` - 1*`trial_type.control_pumps_demean`
 - **allpumps**: 0.33*`trial_type.pumps_demean` + 0.33*`trial_type.cash_demean` + 0.33*`trial_type.explode_demean`
-- **pumpsdemean**: 1*`trial_type.pumps_demean`
+- **pumps**: 1*`trial_type.pumps_demean`
 - **pumpspara**: 1*`pumps_demean`
 - **cashpara**: 1*`cash_demean`
 - **explodepara**: 1*`explode_demean`
 - **controlpara**: 1*`control_pumps_demean`
+- **parapumpsvcontrol**: 1*`pumps_demean` - 1*`control_pumps_demean`
 - **rt**: 1*`rt_reg.rt`
 
 ## Figures
@@ -59,7 +60,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for balloonanalogrisktask are:
-sub09_run1, sub09_run2, sub09_run3, sub14_run1
+sub09_run01, sub09_run02, sub09_run03, sub09_run1, sub09_run2, sub09_run3, sub14_run01, sub14_run1
 
 The distribution for subjects and runs in balloonanalogrisktask are below. 
 
@@ -86,8 +87,8 @@ The distribution for subjects and runs in balloonanalogrisktask are below.
 #### allpumps
 ![allpumps Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-allpumps_map.png)
 
-#### pumpsdemean
-![pumpsdemean Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-pumpsdemean_map.png)
+#### pumps
+![pumps Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-pumps_map.png)
 
 #### pumpspara
 ![pumpspara Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-pumpspara_map.png)
@@ -100,6 +101,9 @@ The distribution for subjects and runs in balloonanalogrisktask are below.
 
 #### controlpara
 ![controlpara Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-controlpara_map.png)
+
+#### parapumpsvcontrol
+![parapumpsvcontrol Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-parapumpsvcontrol_map.png)
 
 #### rt
 ![rt Map](./imgs/ds000001_task-balloonanalogrisktask_contrast-rt_map.png)

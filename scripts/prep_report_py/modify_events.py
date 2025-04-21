@@ -446,3 +446,30 @@ def ds001715(eventspath: str, task: str):
         else:
             print("New columns already exist. Skipping creation.")
             return None
+
+
+def ds000001(eventspath: str, task: str):
+    """
+    Process event data for ds000001 by modifying NA values to 0. With N/As fitlins model spec issues -- convolution doesnt work
+    Modifying to not use the repeating and space values
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task == "balloonanalogrisktask":
+        check_col_nans = ['cash_demean', 'control_pumps_demean', 'explode_demean', 'pumps_demean','response_time']
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        if eventsdat[check_col_nans].isna().any().any():
+            print("Modify events to replace NaN with zero for Fitlins Models")
+            eventsdat[check_col_nans] = eventsdat[check_col_nans].fillna(0)
+
+            return eventsdat
+
+        else:
+            print("Columns dont contain NaN. Skipping creation.")
+            return None

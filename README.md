@@ -5,9 +5,9 @@
 
 *This repository is in active development. `Last updated: 2025-04-21`*
 
-N OpenNeuro Studies Specs: 15
+N OpenNeuro Studies: 15
 
-N OpenNeuro Task fMRI Specs: 18
+N OpenNeuro Task fMRI Group Summaries: 18
 
 ## Overview
 

@@ -3,11 +3,11 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-04-20`*
+*This repository is in active development. `Last updated: 2025-04-21`*
 
-N OpenNeuro Studies Results: 15
+N OpenNeuro Studies Specs: 15
 
-N OpenNeuro Task fMRI Results: 18
+N OpenNeuro Task fMRI Specs: 18
 
 ## Overview
 
@@ -15,6 +15,8 @@ N OpenNeuro Task fMRI Results: 18
 
 1. Facilitate efficient and reproducible neuroimaging data analysis
 2. Provide minimal barriers to entry for researchers at all levels
+
+The FitLins workflow estimates statistical maps (e.g., z-stat, t-stat) across several levels, including `runLevel` (subject-level run contrast maps), `subjectLevel` (fixed-effect averages across runs), and `dataLevel` (group-level average maps). Group results summarize the models and activation maps for each study and task. The provided specification files are sufficient to download and reproduce all outputs. If you are unable to run the workflow but are interested in outputs for any of the datasets listed in `statsmodel_specs`, please feel free to reach out.
 
 # Community Contributions
 

@@ -7,7 +7,7 @@
 
 N OpenNeuro Studies: 18
 
-N OpenNeuro Task fMRI Group Summaries: 21
+N OpenNeuro Task fMRI Group Summaries: 22
 
 ## Overview
 

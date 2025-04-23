@@ -1,0 +1,76 @@
+{
+    "Contrasts": [
+      {
+        "Name": "failstopcritvnoncrit",
+        "ConditionList": [
+          "trial_type.failedstopcritical",
+          "trial_type.failedstopnoncritical"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "successstopcritvgocrit",
+        "ConditionList": [
+          "trial_type.successfulstopcritical",
+          "trial_type.gocritical"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "failstopcritvgocrit",
+        "ConditionList": [
+          "trial_type.failedstopcritical",
+          "trial_type.gocritical"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "successstopcritvfailstopcrit",
+        "ConditionList": [
+          "trial_type.successfulstopcritical",
+          "trial_type.failedstopcritical"
+        ],
+        "Weights": [
+          1,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "allstopcritvgocrit",
+        "ConditionList": [
+          "trial_type.successfulstopcritical",
+          "trial_type.failedstopcritical",
+          "trial_type.gocritical"
+        ],
+        "Weights": [
+          0.5,
+          0.5,
+          -1
+        ],
+        "Test": "t"
+      },
+      {
+        "Name": "rt",
+        "ConditionList": [
+          "rt_reg.rt"
+        ],
+        "Weights": [
+          1
+        ],
+        "Test": "t"
+      }
+    ]
+  }

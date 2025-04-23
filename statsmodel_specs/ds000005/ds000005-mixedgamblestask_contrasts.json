@@ -1,0 +1,56 @@
+{
+    "Contrasts": [
+        {
+          "Name": "paragain",
+          "ConditionList": [
+            "parametric gain"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "paragainvloss",
+          "ConditionList": [
+            "parametric gain",
+            "parametric loss"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "paraloss",
+          "ConditionList": [
+            "parametric loss"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "distindiff",
+          "ConditionList": [
+            "distance from indifference"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "rt",
+          "ConditionList": [
+            "rt_reg.1"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        }
+    ]
+}

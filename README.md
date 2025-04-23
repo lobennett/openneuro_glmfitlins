@@ -3,11 +3,11 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-04-21`*
+*This repository is in active development. `Last updated: 2025-04-22`*
 
-N OpenNeuro Studies: 16
+N OpenNeuro Studies: 18
 
-N OpenNeuro Task fMRI Group Summaries: 19
+N OpenNeuro Task fMRI Group Summaries: 21
 
 ## Overview
 

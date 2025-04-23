@@ -1,0 +1,203 @@
+{
+  "Name": "ds000008",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "task": [
+      "stopsignal"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Copy",
+            "Input": ["trial_type"],
+            "Output": ["rt_reg"]
+          },
+          {
+            "Name": "Replace",
+            "Input": ["rt_reg"],
+            "Replace": {
+                "go": "rt",
+                "successfulstop": "rt",
+                "failedstop": "rt",
+                "junk": "rt"
+                },
+            "Attribute": "value"
+          },
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type",
+              "rt_reg"
+            ]
+          },
+          {
+            "Name": "Assign",
+            "Input": ["response_time"],
+            "Target": ["rt_reg.rt"],
+            "TargetAttr": "duration"
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*",
+              "rt_reg.rt"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "rt_reg.rt",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "successstop",
+          "ConditionList": [
+            "trial_type.successfulstop"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "go",
+          "ConditionList": [
+            "trial_type.go"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "successstopvgo",
+          "ConditionList": [
+            "trial_type.successfulstop",
+            "trial_type.go"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "failstopvgo",
+          "ConditionList": [
+            "trial_type.failedstop",
+            "trial_type.go"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "successstopvfailstop",
+          "ConditionList": [
+            "trial_type.successfulstop",
+            "trial_type.failedstop"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "allstopvGo",
+          "ConditionList": [
+            "trial_type.successfulstop",
+            "trial_type.failedstop",
+            "trial_type.go"
+          ],
+          "Weights": [
+            0.5,
+            0.5,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "rt",
+          "ConditionList": [
+            "rt_reg.rt"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

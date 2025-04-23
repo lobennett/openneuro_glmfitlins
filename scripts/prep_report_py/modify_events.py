@@ -473,3 +473,33 @@ def ds000001(eventspath: str, task: str):
         else:
             print("Columns dont contain NaN. Skipping creation.")
             return None
+
+
+def ds000008(eventspath: str, task: str):
+    """
+    Process event data for ds000008 by modifying spaces/dashes in trialtype which are not compatible with PyBIDS transformations
+    Modifying to not use the repeating and space values
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["conditionalstopsignal", "stopsignal"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        # if trial_type column contains whitespace
+        if eventsdat['trial_type'].astype(str).str.contains(r'\s', na=False).any():
+            print("Modifying events to remove spaces in condition names and dropping rows with NA in onset/duration/trial_type")
+
+            # removing spaces and dashes & drop onset/duration/trial_type that contain N/A
+            eventsdat['trial_type'] = eventsdat['trial_type'].str.replace(r'[-\s]', '', regex=True)
+            eventsdat = eventsdat.dropna(subset=['onset', 'duration', 'trial_type'])
+            print("Unique trial types:",  eventsdat['trial_type'].unique())
+            
+            return eventsdat
+        else:
+            print("No whitespace found in trial_type. Skipping modification.")
+            return None

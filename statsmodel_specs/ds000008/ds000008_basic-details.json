@@ -1,0 +1,104 @@
+{
+    "Subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "conditionalstopsignal": {
+            "plot_coords": [
+                2,
+                8,
+                54
+            ],
+            "bold_volumes": 176,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "column_names": [
+                "onset",
+                "duration",
+                "trial_type",
+                "TrialType",
+                "Stimulus",
+                "SSD",
+                "Response",
+                "response_time",
+                "CorrectGo",
+                "SuccStop"
+            ],
+            "column_data_types": {
+                "onset": "float64",
+                "duration": "float64",
+                "trial_type": "object",
+                "TrialType": "int64",
+                "Stimulus": "int64",
+                "SSD": "float64",
+                "Response": "int64",
+                "response_time": "float64",
+                "CorrectGo": "int64",
+                "SuccStop": "int64"
+            },
+            "trial_type_values": [
+                "failed stop-critical",
+                "go-noncritical",
+                "go-critical",
+                "successful stop-critical",
+                "junk",
+                "failed stop-noncritical"
+            ]
+        },
+        "stopsignal": {
+            "plot_coords": [
+                2,
+                8,
+                54
+            ],
+            "bold_volumes": 182,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "column_names": [
+                "onset",
+                "duration",
+                "trial_type",
+                "TrialType",
+                "Stimulus",
+                "SSD",
+                "Response",
+                "response_time",
+                "CorrectGo",
+                "SuccStop"
+            ],
+            "column_data_types": {
+                "onset": "float64",
+                "duration": "float64",
+                "trial_type": "object",
+                "TrialType": "float64",
+                "Stimulus": "float64",
+                "SSD": "float64",
+                "Response": "float64",
+                "response_time": "float64",
+                "CorrectGo": "float64",
+                "SuccStop": "float64"
+            },
+            "trial_type_values": [
+                NaN,
+                "go",
+                "failed stop",
+                "successful stop",
+                "junk"
+            ]
+        }
+    }
+}

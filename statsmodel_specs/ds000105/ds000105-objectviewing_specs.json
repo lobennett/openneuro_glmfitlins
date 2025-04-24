@@ -1,0 +1,506 @@
+{
+  "Name": "ds000105",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6"
+    ],
+    "task": [
+      "objectviewing"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "shoe",
+          "ConditionList": [
+            "trial_type.shoe"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "house",
+          "ConditionList": [
+            "trial_type.house"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chair",
+          "ConditionList": [
+            "trial_type.chair"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "cat",
+          "ConditionList": [
+            "trial_type.cat"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "face",
+          "ConditionList": [
+            "trial_type.face"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "scrambledpix",
+          "ConditionList": [
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "bottle",
+          "ConditionList": [
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "scissors",
+          "ConditionList": [
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevscrambpix",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevscrambpix",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chairvscrambdpix",
+          "ConditionList": [
+            "trial_type.chair",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "catvscrambpix",
+          "ConditionList": [
+            "trial_type.cat",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "facevscrambpix",
+          "ConditionList": [
+            "trial_type.face",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "bottlevscrambpix",
+          "ConditionList": [
+            "trial_type.bottle",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "scissorsvscrambpix",
+          "ConditionList": [
+            "trial_type.scissors",
+            "trial_type.scrambledpix"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevhouse",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.house"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevchair",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.chair"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevcat",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.cat"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevface",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.face"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevbottle",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "shoevsscissors",
+          "ConditionList": [
+            "trial_type.shoe",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevchair",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.chair"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevcat",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.cat"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevface",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.face"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevbottle",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "housevsscissors",
+          "ConditionList": [
+            "trial_type.house",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chairvcat",
+          "ConditionList": [
+            "trial_type.chair",
+            "trial_type.cat"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chairvface",
+          "ConditionList": [
+            "trial_type.chair",
+            "trial_type.face"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chairvbottle",
+          "ConditionList": [
+            "trial_type.chair",
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "chairvsscissors",
+          "ConditionList": [
+            "trial_type.chair",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "catvface",
+          "ConditionList": [
+            "trial_type.cat",
+            "trial_type.face"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "catvbottle",
+          "ConditionList": [
+            "trial_type.cat",
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "catvsscissors",
+          "ConditionList": [
+            "trial_type.cat",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "facevbottle",
+          "ConditionList": [
+            "trial_type.face",
+            "trial_type.bottle"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "facevsscissors",
+          "ConditionList": [
+            "trial_type.face",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "bottlevsscissors",
+          "ConditionList": [
+            "trial_type.bottle",
+            "trial_type.scissors"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

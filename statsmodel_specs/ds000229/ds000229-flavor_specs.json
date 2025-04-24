@@ -1,0 +1,319 @@
+{
+  "Name": "ds000229",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15"
+    ],
+    "task": [
+      "flavor"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Copy",
+            "Input": ["stimulus"],
+            "Output": ["trial_type"]
+          },
+          {
+            "Name": "Replace",
+            "Input": ["trial_type"],
+            "Replace": {
+                "150cal": "onefifty",
+                "112.5cal": "onetwelve",
+                "150cal": "onefifty",
+                "75cal": "seventyfive",
+                "37.5cal": "thirtyseven",
+                "0cal": "zero"
+                },
+            "Attribute": "value"
+            },
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+            "Name": "rinse",
+            "ConditionList": [
+                "trial_type.rinse"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "tasteless",
+            "ConditionList": [
+                "trial_type.tless"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "tastelessvrinse",
+            "ConditionList": [
+                "trial_type.tless",
+                "trial_type.rinse"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "cs150",
+            "ConditionList": [
+                "trial_type.onefifty"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "cs112",
+            "ConditionList": [
+                "trial_type.onetwelve"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "cs75",
+            "ConditionList": [
+                "trial_type.seventyfive"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "csabovevbelow100",
+            "ConditionList": [
+                "trial_type.onefifty",
+                "trial_type.onetwelve",
+                "trial_type.seventyfive",
+                "trial_type.thirtyseven",
+                "trial_type.zero"
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -0.333,
+                -0.333,
+                -0.333
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "csthirtyseven",
+            "ConditionList": [
+                "trial_type.thirtyseven"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "cszero",
+            "ConditionList": [
+                "trial_type.zero"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "csbelow100v0",
+            "ConditionList": [
+                "trial_type.seventyfive",
+                "trial_type.thirtyseven",
+                "trial_type.zero"
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "csabove100v0",
+            "ConditionList": [
+                "trial_type.onefifty",
+                "trial_type.onetwelve",
+                "trial_type.zero"
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "allcsvrinse",
+            "ConditionList": [
+                "trial_type.onefifty",
+                "trial_type.onetwelve",
+                "trial_type.seventyfive",
+                "trial_type.thirtyseven",
+                "trial_type.rinse"
+
+            ],
+            "Weights": [
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "allcsvtasteless",
+            "ConditionList": [
+                "trial_type.onefifty",
+                "trial_type.onetwelve",
+                "trial_type.seventyfive",
+                "trial_type.thirtyseven",
+                "trial_type.tless"
+
+            ],
+            "Weights": [
+                0.25,
+                0.25,
+                0.25,
+                0.25,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "paperfig3a",
+            "ConditionList": [
+                "trial_type.seventyfive",
+                "trial_type.onetwelve",
+                "trial_type.onefifty",
+                "trial_type.thirtyseven"
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -0.5,
+                -0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "paperfig3a",
+            "ConditionList": [
+                "trial_type.seventyfive",
+                "trial_type.zero",
+                "trial_type.onetwelve",
+                "trial_type.onefifty",
+                "trial_type.thirtyseven"
+            ],
+            "Weights": [
+                1,
+                -0.333,
+                -0.333,
+                -0.333
+            ],
+            "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

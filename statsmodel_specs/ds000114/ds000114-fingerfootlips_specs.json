@@ -1,0 +1,149 @@
+{
+  "Name": "ds000114",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10"
+    ],
+    "task": [
+      "fingerfootlips"
+    ],
+    "session": [
+      "test",
+      "retest"
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject",
+        "session"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "finger",
+          "ConditionList": [
+            "trial_type.Finger"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "foot",
+          "ConditionList": [
+            "trial_type.Foot"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "lips",
+          "ConditionList": [
+            "trial_type.Lips"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "fingervfoot",
+          "ConditionList": [
+            "trial_type.Finger",
+            "trial_type.Foot"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "fingervlips",
+          "ConditionList": [
+            "trial_type.Finger",
+            "trial_type.Lips"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "footvlips",
+          "ConditionList": [
+            "trial_type.Foot",
+            "trial_type.Lips"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast",
+        "session"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

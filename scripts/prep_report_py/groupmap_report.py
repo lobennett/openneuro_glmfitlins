@@ -293,17 +293,19 @@ if r2_success:
 # GROUP MAP PLOTS
 # Plot group maps if they exist
 grp_map_path = f"{analysis_dir}/node-dataLevel"
+sessionlabs = None
 if os.path.exists(grp_map_path):
 
     # Create group maps and save them for each contrast
     for con_name in contrast_dict.keys():
-        output_img_path = f"{spec_imgs_dir}/{study_id}_task-{task}_contrast-{con_name}_map.png"
+        # First, try to find maps directly in the node-dataLevel folder
+        direct_zstat_paths = list(Path(grp_map_path).glob(f"*contrast-{con_name}_stat-z_statmap.nii.gz"))
         
-        # Find and create the group map plot
-        grp_zstat_paths = list(Path(grp_map_path).rglob(f"*contrast-{con_name}_stat-z_statmap.nii.gz"))
-        if grp_zstat_paths:
+        if direct_zstat_paths:
+            # Handle maps found directly in node-dataLevel
+            output_img_path = f"{spec_imgs_dir}/{study_id}_task-{task}_contrast-{con_name}_map.png"
             plot_stat_map(
-                stat_map_img=grp_zstat_paths[0],
+                stat_map_img=direct_zstat_paths[0],
                 cut_coords=plt_coords, 
                 display_mode='ortho', 
                 colorbar=True, 
@@ -311,6 +313,34 @@ if os.path.exists(grp_map_path):
                 output_file=output_img_path,
                 title=f"{con_name}: z-stat map"
             )
+        else:
+            # Look for session folders (ses-*)
+            session_folders = [f for f in os.listdir(grp_map_path) if f.startswith('ses-') and os.path.isdir(os.path.join(grp_map_path, f))]
+            sessionlabs = [session for session in session_folders]
+
+            # For each session folder, find and plot maps
+            for session in session_folders:
+                
+                session_path = os.path.join(grp_map_path, session)
+                # Search for contrast maps in each session folder
+                session_maps = list(Path(session_path).glob(f"*contrast-{con_name}_stat-z_statmap.nii.gz"))
+                
+                if session_maps:
+                    # Include session in filename and title
+                    output_img_path = f"{spec_imgs_dir}/{study_id}_task-{task}_{session}_contrast-{con_name}_map.png"
+                    plot_stat_map(
+                        stat_map_img=session_maps[0],
+                        cut_coords=plt_coords, 
+                        display_mode='ortho', 
+                        colorbar=True, 
+                        threshold=1.5, 
+                        output_file=output_img_path,
+                        title=f"{session}, {con_name}: z-stat map"
+                    )
+            
+            # if no maps found
+            if not direct_zstat_paths and not any(list(Path(os.path.join(grp_map_path, s)).glob(f"*contrast-{con_name}_stat-z_statmap.nii.gz")) for s in session_folders):
+                print(f"No z-stat map found for contrast: {con_name}")
 else:
     print("Group map path not found.")
 
@@ -330,7 +360,8 @@ grp_readme = generate_groupmodsummary(
     design_image=Path(design_matrix_copy).name if design_images else None, 
     spec_imgs_dir=spec_imgs_dir,
     r2_quality_ran=r2_success,
-    sub_flag=low_quality
+    sub_flag=low_quality,
+    sessions=sessionlabs
 )
 
 readme_path = os.path.join(f"{spec_path}/{study_id}/group_{task}", "README.md")

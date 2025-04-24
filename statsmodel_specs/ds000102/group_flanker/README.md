@@ -50,7 +50,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for flanker are:
-sub16_run1, sub16_run2
+sub-16_run-1, sub-16_run-2
 
 The distribution for subjects and runs in flanker are below. 
 

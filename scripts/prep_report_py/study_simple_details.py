@@ -87,6 +87,12 @@ for task_name in Tasks:
             # pull bold files that match the task and session
             session_bold_files = bids_layout.get(task=task_name, session=session, suffix="bold", extension=".nii.gz")
             task_bold_files.extend(session_bold_files)
+
+        # If no event files found in session-specific locations, look at the root
+        if not task_event_files:
+            root_event_files = bids_layout.get(task=task_name, suffix="events", extension=".tsv", session=None)
+            task_event_files.extend(root_event_files)
+            
     else:
         # If no sessions or only one session
         task_event_files = bids_layout.get(task=task_name, suffix="events", extension=".tsv")
@@ -98,6 +104,7 @@ for task_name in Tasks:
     if not task_event_files:
         print()
         print(f"\033[91mNo event files found for task: {task_name}\033[0m")
+
     else:
         # Concatenate ALL event files from ALL runs & sessions
         group_df = pd.concat([pd.read_csv(file, sep='\t') for file in task_event_files], ignore_index=True)

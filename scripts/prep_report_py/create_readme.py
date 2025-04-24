@@ -57,7 +57,7 @@ def generate_studysummary(spec_path, study_id, data, repo_url="https://github.co
 
 
 def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
-    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran):
+    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran, sessions=None):
     # Add title and description
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
     readme_content += "## Analysis Overview\n"
@@ -124,7 +124,28 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     # Add contrast maps
     readme_content += "\n### Statistical Maps\n"
     for con_name in contrast_dict.keys():
-        map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
-        readme_content += f"\n#### {con_name}\n![{con_name} Map]({map_path})\n"
+        if sessions is None:
+            # no sessions specified, look for the non-session contrast map
+            map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
+            if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_contrast-{con_name}_map.png")):
+                readme_content += f"\n#### {con_name}\n![{con_name} Map]({map_path})\n"
+        else:
+            # for each session, add its contrast map if it exists
+            readme_content += f"\n#### {con_name}\n"
+            session_maps_found = False
+            
+            for session in sessions:
+                session_map_path = f"./imgs/{study_id}_task-{task}_{session}_contrast-{con_name}_map.png"
+                if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_{session}_contrast-{con_name}_map.png")):
+                    readme_content += f"\n##### {session}\n![{con_name} {session} Map]({session_map_path})\n"
+                    session_maps_found = True
+            
+            # If no session maps were found, check if there's a non-session map available
+            if not session_maps_found:
+                map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
+                if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_contrast-{con_name}_map.png")):
+                    readme_content += f"![{con_name} Map]({map_path})\n"
+                else:
+                    readme_content += f"*No statistical maps available for contrast {con_name} and session {session}*\n"
     
     return readme_content

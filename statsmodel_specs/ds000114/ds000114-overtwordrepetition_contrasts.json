@@ -1,0 +1,14 @@
+{
+    "Contrasts": [
+        {
+            "Name": "task",
+            "ConditionList": [
+                "trial_type.Task"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

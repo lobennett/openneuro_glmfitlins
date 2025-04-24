@@ -1,0 +1,43 @@
+{
+    "Subjects": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "objectviewing": {
+            "plot_coords": [
+                -52,
+                -52,
+                -2
+            ],
+            "bold_volumes": 121,
+            "dummy_volumes": null,
+            "preproc_events": false,
+            "column_names": [
+                "onset",
+                "duration",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "float64",
+                "duration": "float64",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                "scissors",
+                "face",
+                "cat",
+                "shoe",
+                "house",
+                "scrambledpix",
+                "bottle",
+                "chair"
+            ]
+        }
+    }
+}

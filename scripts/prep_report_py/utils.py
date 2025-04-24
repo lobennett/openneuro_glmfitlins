@@ -436,7 +436,15 @@ def voxel_inout_ratio(img_path, mask_path):
 def similarity_boldstand_metrics(img_path, brainmask_path):
     # Parse filename to extract BIDS info
     parsed_dat = parse_bids_filename(img_path)
-    sub_run_info = f"sub{parsed_dat.get('sub', 'Unknown')}_run{parsed_dat.get('run', 'Unknown')}"
+    parts = []
+    if 'sub' in parsed_dat:
+        parts.append(f"sub-{parsed_dat['sub']}")
+    if 'ses' in parsed_dat:
+        parts.append(f"ses-{parsed_dat['ses']}")
+    if 'run' in parsed_dat:
+        parts.append(f"run-{parsed_dat['run']}")
+
+    sub_run_info = '_'.join(parts)
     
     # dice similarity
     dice_est = similarity.image_similarity(

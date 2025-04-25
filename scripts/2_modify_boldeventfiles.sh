@@ -36,7 +36,7 @@ fmriprep_data_dir="${data}/fmriprep/${openneuro_id}/derivatives"
 fmriprep_data_dir_alt="${data}/fmriprep/${openneuro_id}/derivatives_alt"
 
 # -------------------- Run Fitlins --------------------
-echo "#### Running Fitlins models to generate statistical maps ####"
+echo "#### Preparing data for Fitlins Models ####"
 echo -e "\tStudy ID: ${openneuro_id}"
 echo -e "\tTask Label: ${task_label}"
 echo -e "\tInput Data: ${bids_dir_data_dir}"

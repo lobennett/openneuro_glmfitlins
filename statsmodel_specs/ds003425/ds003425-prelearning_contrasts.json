@@ -1,16 +1,28 @@
 {
     "Contrasts": [
-      {
-        "Name": "VCSPvVCSN",
-        "ConditionList": ["trial_type.2", "trial_type.4"],
-        "Weights": [1, -1],
-        "Test": "t"
-      },
-      {
-        "Name": "ICSPvICSN",
-        "ConditionList": ["trial_type.3","trial_type.5"],
-        "Weights": [1, -1],
-        "Test": "t"
-      }
+        {
+          "Name": "VCSPvVCSN",
+          "ConditionList": [
+            "trial_type.2",
+            "trial_type.4"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "ICSPvICSN",
+          "ConditionList": [
+            "trial_type.3",
+            "trial_type.5"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
     ]
-  }
+}

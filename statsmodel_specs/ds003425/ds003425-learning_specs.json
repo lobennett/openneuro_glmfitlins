@@ -19,6 +19,17 @@
     ],
     "task": [
       "learning"
+    ],
+    "run": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "session": [
+      "01"
     ]
   },
   "Nodes": [
@@ -27,7 +38,8 @@
       "Name": "run_level",
       "GroupBy": [
         "run",
-        "subject"
+        "subject",
+        "session"
       ],
       "Transformations": {
         "Transformer": "pybids-transforms-v1",
@@ -41,7 +53,7 @@
           {
             "Name": "Convolve",
             "Model": "spm",
-            "Derivative": "True",
+            "Derivative": "False",
             "Input": [
               "trial_type.*"
             ]
@@ -53,7 +65,7 @@
           1,
           "trial_type.*",
           "trans_*",
-          "rot*",
+          "rot_*",
           "cosine*"
         ],
         "Type": "glm"
@@ -85,8 +97,12 @@
         },
         {
           "Name": "VCSPshck",
-          "ConditionList": ["trial_type.1"],
-          "Weights": [1],
+          "ConditionList": [
+            "trial_type.1"
+          ],
+          "Weights": [
+            1
+          ],
           "Test": "t"
         }
       ]
@@ -96,7 +112,8 @@
       "Name": "subject_level",
       "GroupBy": [
         "subject",
-        "contrast"
+        "contrast",
+        "session"
       ],
       "Model": {
         "X": [
@@ -112,7 +129,8 @@
       "Level": "Dataset",
       "Name": "data_level",
       "GroupBy": [
-        "contrast"
+        "contrast",
+        "session"
       ],
       "Model": {
         "X": [

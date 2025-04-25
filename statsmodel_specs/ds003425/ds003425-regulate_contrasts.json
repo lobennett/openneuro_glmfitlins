@@ -1,16 +1,28 @@
 {
     "Contrasts": [
-      {
-        "Name": "dwnreg",
-        "ConditionList": ["trial_type.5", "trial_type.2"],
-        "Weights": [1, -1],
-        "Test": "t"
-      },
-      {
-        "Name": "upreg",
-        "ConditionList": ["trial_type.3","trial_type.4"],
-        "Weights": [1, -1],
-        "Test": "t"
-      }
+        {
+          "Name": "dwnreg",
+          "ConditionList": [
+            "trial_type.5",
+            "trial_type.2"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "upreg",
+          "ConditionList": [
+            "trial_type.3",
+            "trial_type.4"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
     ]
-  }
+}

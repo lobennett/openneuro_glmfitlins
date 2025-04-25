@@ -35,16 +35,16 @@ dummyvolumes = taskspecs.get('dummy_volumes')
 dummyvolumes = int(dummyvolumes) if dummyvolumes is not None else 0  # Default to 0 if None
 preproc_events = taskspecs.get('preproc_events')
 
-print(f"\tGenerating Layout of Derivatives {fmriprep_path}/../")
-preproc_layout = BIDSLayout(f"{fmriprep_path}/..", derivatives=True)
-task_bold_files = preproc_layout.get(task=taskname, suffix="bold", extension=".nii.gz")
-task_conf_files = preproc_layout.get(task=taskname, suffix="timeseries", extension=".tsv")
-
-if not task_bold_files or not task_conf_files:
-    ValueError(f"No files found for task: {taskname}")
-
-# check and trim bold files if needed
 if dummyvolumes > 0:
+    print(f"\tGenerating Layout of Derivatives {fmriprep_path}/../")
+    preproc_layout = BIDSLayout(f"{fmriprep_path}/..", derivatives=True)
+    task_bold_files = preproc_layout.get(task=taskname, suffix="bold", extension=".nii.gz")
+    task_conf_files = preproc_layout.get(task=taskname, suffix="timeseries", extension=".tsv")
+
+    if not task_bold_files or not task_conf_files:
+        ValueError(f"No files found for task: {taskname}")
+
+    # iterate over bold files
     for bold_file in task_bold_files:
         bold_volcheck = get_numvolumes(bold_file.path)
         
@@ -74,7 +74,7 @@ if dummyvolumes > 0:
 
             print(f"Error processing BOLD file {bold_file.filename}: {e}")
 
-    # trim confounds .tsv files to match BOLD length
+    # iterate over confound files -- trim confounds .tsv files to match BOLD length
     for conf_file in task_conf_files:
         conf_df = pd.read_csv(conf_file.path, sep='\t')
         conf_volcheck = len(conf_df) 

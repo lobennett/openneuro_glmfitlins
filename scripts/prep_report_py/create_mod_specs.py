@@ -27,6 +27,16 @@ else:
     print("Error: The model JSON file does not exist.", sample_specs)
     exit(1)
 
+# Load the basic details JSON
+basics_json = os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}_basic-details.json")
+if os.path.exists(basics_json):
+    print("working on file", basics_json)    
+    with open(basics_json, "r") as file:
+        basics_data = json.load(file)
+else:
+    print("Error: The basic details JSON file does not exist.", basics_json)
+    exit(1)
+
 # Load the subjects JSON
 subjects_json = os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}-{task}_subjects.json")
 if os.path.exists(subjects_json):
@@ -60,11 +70,33 @@ if "Input" in model_data:
 if "Input" in model_data:
     model_data["Input"]["subject"] = subjects_data["Subjects"]
 
+# task runs and sessions
+taskrun_lst = basics_data["Tasks"][task]["task_runs"]
+tasksess_lst = basics_data["Tasks"][task]["task_sessions"]
+
+# add runs and sessions if greater than 1
+if len(taskrun_lst) > 1:
+    model_data["Input"]["run"] = taskrun_lst
+
+if len(tasksess_lst) > 0:
+    model_data["Input"]["session"] = tasksess_lst
+
 # Update the contrasts in the model (for the "Run" level node)
 for node in model_data["Nodes"]:
     if node["Level"] == "Run":
         node["Contrasts"] = contrast_data["Contrasts"]
         break  # Exit loop after updating
+
+# Append session to GroupBy array instead of replacing it
+if len(tasksess_lst) > 0:
+    for node in model_data["Nodes"]:
+        if "GroupBy" in node:
+            if isinstance(node["GroupBy"], list):
+                if "session" not in node["GroupBy"]:
+                    node["GroupBy"].append("session")
+            else:
+                print("Session already in node {node}")
+
 
 # Save the updated model JSON
 with open(os.path.join(scripts, "..", "statsmodel_specs", study_id, f"{study_id}-{task}_specs.json"), "w") as file:

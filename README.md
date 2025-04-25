@@ -3,7 +3,7 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-04-24`*
+*This repository is in active development. `Last updated: 2025-04-25`*
 
 N OpenNeuro Studies: 21
 
@@ -17,6 +17,8 @@ N OpenNeuro Task fMRI Group Summaries: 29
 2. Provide minimal barriers to entry for researchers at all levels
 
 The FitLins workflow estimates statistical maps (e.g., z-stat, t-stat) across several levels, including `runLevel` (subject-level run contrast maps), `subjectLevel` (fixed-effect averages across runs), and `dataLevel` (group-level average maps). Group results summarize the models and activation maps for each study and task. The provided specification files are sufficient to download and reproduce all outputs. If you are unable to run the workflow but are interested in outputs for any of the datasets listed in `statsmodel_specs`, please feel free to reach out.
+
+*Note: If you're simply interested in looking at the task-specific group reports, all of that information is in the subfolders `statsmodel_specs/<studyID>/group_<taskname>`.*
 
 # Community Contributions
 
@@ -43,8 +45,8 @@ Contributions can be made in several ways:
 
 For items related to specific issues, please use the `Issues` tab. There are separate templates available for:
 * `Events Modification`: Revisions to current modifications to events files
-* `Contrasts`: Recommendations to changes to current contrasts lists.
-* `Model Specification`: Recommendations to changed to current model specifications.
+* `Contrasts`: Recommendations to make changes to current contrasts lists.
+* `Model Specification`: Recommendations to make changes to current model specifications.
 * `Running Fitlins Models`: Requests to run OpenNeuro Datasets that have Task BOLD, Events files & fMRIPrep'd derivatives 
 
 
@@ -55,7 +57,7 @@ For items related to specific issues, please use the `Issues` tab. There are sep
 - **Flexible Analysis Configuration**: Generates summaries of relevant subject, run, and task fMRI data to facilitate statistical model creation
 - **Reproducible Environments**: Ensures computational reproducibility through `uv` environment and exported specification files
 - **HPC Integration**: Simplifies recomputation of minimally preprocessed MRI data and FitLins modeling on high-performance computing clusters
-- **Comprehensive Reporting**: Generates detailed summary reports at both individual and group levels, including event details, model specifications, contrasts, regressors, Variable Inflation Factors, and group-statistical z-score maps
+- **Comprehensive Reporting**: Generates detailed summary reports at both individual and group levels, including event details, model specifications, contrasts, regressors, variance inflation factors and group-statistical z-scored statistical maps
 
 ## Repository Structure
 
@@ -130,11 +132,11 @@ This step:
   - A details JSON file with metadata (subjects, sessions, tasks, BOLD volumes, event columns, trial types)
   - Subject and contrast list files for each task
 
-### 2. Regenerate preprocessed fMRIPrep derivatives 
+### 2. Minimally Preprocessed --> Fully Preprocessed fMRIPrep derivatives 
 
 ***ONLY if fMRIPrep derivatives == minimal***
 
-Within the `cluster_jobs` subfolder, submit the job with the OpenNeuro IDNote: Update your SBATCH specific information (e.g. `-p`, `--mail-user` and `--time` for larger datasets and `--array` that matches your subject array (particularly if subject IDs are not numeric))
+Within the `cluster_jobs` subfolder, submit the job with the OpenNeuro ID: Update your SBATCH specific information (e.g. `-p`, `--mail-user` and `--time` for larger datasets and `--array` that matches your subject array (particularly if subject IDs are not numeric))
 
 ```bash
 sbatch recreate_fmriprep.sh ds003425
@@ -147,8 +149,8 @@ bash 2_modify_boldeventfiles.sh ds003425 learning
 ```
 
 This step:
-- Trims initial volumes from preprocessed BOLD data and confound files if calibration/dummy volumes exist
-- Modifies events files if needed based on the `preproc_events` flag in the details JSON
+- Trims initial volumes from preprocessed BOLD data and confound files, if needed, if calibration/dummy volumes `dummy_volumes` flag in the details JSON `> 0` (writes out files to `derivatives_alt` subfolder)
+- Modifies events files (currently in place), if needed, based on the `preproc_events` flag in the details JSON
 - The modified BOLD and/confounds files are saved to `derivatives_alt` fMRIPrep subfolder. Associated `.json` files are moved, too, that provided important metadata for FitLins.
 
 **Important**: For event preprocessing, you must create a study-specific function in `modify_events.py`. Example:

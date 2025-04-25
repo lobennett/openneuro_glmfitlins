@@ -74,7 +74,9 @@ data = {
 
 # get column names, data types, and trial_type values for each task
 for task_name in Tasks:
-    # Handle sessions if present
+    task_runs = bids_layout.get_runs(task=task_name)
+    task_sessions = bids_layout.get_sessions(task=task_name)
+    # Handle sessions if present    
     if Sessions and len(Sessions) > 1:
         task_event_files = []
         task_bold_files = []
@@ -120,6 +122,8 @@ for task_name in Tasks:
             "bold_volumes": num_volumes,
             "dummy_volumes": None,
             "preproc_events": False,
+            "task_runs": task_runs,
+            "task_sessions": task_sessions,
             "column_names": column_names,
             "column_data_types": column_data_types,
             "trial_type_values": trial_type_values
@@ -134,9 +138,20 @@ for task_name in Tasks:
         print(f"Unique 'trial_type' values: {trial_type_values}")
         print()
 
-        # Save subjects and contrasts files
-        create_subjects_json(subj_list=Subjects, studyid=study_id, taskname=task_name, specpath=spec_path)
-        create_gencontrast_json(studyid=study_id, taskname=task_name, specpath=spec_path)
+        subjects_file = os.path.join(spec_path, f'{study_id}-{task_name}_subjects.json')
+        contrasts_file = os.path.join(spec_path, f'{study_id}-{task_name}_contrasts.json')
+        
+        if not os.path.exists(subjects_file):
+            create_subjects_json(subj_list=Subjects, studyid=study_id, taskname=task_name, specpath=spec_path)
+        else:
+            print(f"Subjects file already exist: {subjects_file}. Delete and rerun to recreate.")
+
+        # Create contrasts file if it doesn't exist
+        if not os.path.exists(contrasts_file):
+            create_gencontrast_json(studyid=study_id, taskname=task_name, specpath=spec_path)
+        else:
+            print(f"Contrasts file already exist: {contrasts_file}. Delete and rerun to recreate.")
+
 
 # save study and task details to json
 with open(os.path.join(spec_path, f'{study_id}_basic-details.json'), 'w') as f:

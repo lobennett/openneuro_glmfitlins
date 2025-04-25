@@ -15,16 +15,18 @@ The run-wise contrast estimates for each subject are averaged using a fixed-effe
 - **rinse**: 1*`trial_type.rinse`
 - **tasteless**: 1*`trial_type.tless`
 - **tastelessvrinse**: 1*`trial_type.tless` - 1*`trial_type.rinse`
-- **cal150**: 1*`trial_type.onefifty`
-- **cal112**: 1*`trial_type.onetwelve`
-- **cal75**: 1*`trial_type.seventyfive`
-- **calabovevbelow100**: 0.5*`trial_type.onefifty` + 0.5*`trial_type.onetwelve` - 0.333*`trial_type.seventyfive` - 0.333*`trial_type.thirtyseven` - 0.333*`trial_type.zero`
-- **calthirtyseven**: 1*`trial_type.thirtyseven`
-- **calzero**: 1*`trial_type.zero`
-- **calbelow100v0**: 0.5*`trial_type.seventyfive` + 0.5*`trial_type.thirtyseven` - 1*`trial_type.zero`
-- **calabove100v0**: 0.5*`trial_type.onefifty` + 0.5*`trial_type.onetwelve` - 1*`trial_type.zero`
-- **allcalvrinse**: 0.25*`trial_type.onefifty` + 0.25*`trial_type.onetwelve` + 0.25*`trial_type.seventyfive` + 0.25*`trial_type.thirtyseven` - 1*`trial_type.rinse`
-- **allcalvtasteless**: 0.25*`trial_type.onefifty` + 0.25*`trial_type.onetwelve` + 0.25*`trial_type.seventyfive` + 0.25*`trial_type.thirtyseven` - 1*`trial_type.tless`
+- **cs150**: 1*`trial_type.onefifty`
+- **cs112**: 1*`trial_type.onetwelve`
+- **cs75**: 1*`trial_type.seventyfive`
+- **csabovevbelow100**: 0.5*`trial_type.onefifty` + 0.5*`trial_type.onetwelve` - 0.333*`trial_type.seventyfive` - 0.333*`trial_type.thirtyseven` - 0.333*`trial_type.zero`
+- **csthirtyseven**: 1*`trial_type.thirtyseven`
+- **cszero**: 1*`trial_type.zero`
+- **csbelow100v0**: 0.5*`trial_type.seventyfive` + 0.5*`trial_type.thirtyseven` - 1*`trial_type.zero`
+- **csabove100v0**: 0.5*`trial_type.onefifty` + 0.5*`trial_type.onetwelve` - 1*`trial_type.zero`
+- **allcsvrinse**: 0.25*`trial_type.onefifty` + 0.25*`trial_type.onetwelve` + 0.25*`trial_type.seventyfive` + 0.25*`trial_type.thirtyseven` - 1*`trial_type.rinse`
+- **allcsvtasteless**: 0.25*`trial_type.onefifty` + 0.25*`trial_type.onetwelve` + 0.25*`trial_type.seventyfive` + 0.25*`trial_type.thirtyseven` - 1*`trial_type.tless`
+- **paperfig3a**: 0.5*`trial_type.seventyfive` + 0.5*`trial_type.onetwelve` - 0.5*`trial_type.onefifty` - 0.5*`trial_type.thirtyseven`
+- **paperfig3b**: 1*`trial_type.seventyfive` - 0.25*`trial_type.zero` - 0.25*`trial_type.onetwelve` - 0.25*`trial_type.onefifty` - 0.25*`trial_type.thirtyseven`
 
 ## Figures
 
@@ -78,32 +80,38 @@ The distribution for subjects and runs in flavor are below.
 #### tastelessvrinse
 ![tastelessvrinse Map](./imgs/ds000229_task-flavor_contrast-tastelessvrinse_map.png)
 
-#### cal150
-![cal150 Map](./imgs/ds000229_task-flavor_contrast-cal150_map.png)
+#### cs150
+![cs150 Map](./imgs/ds000229_task-flavor_contrast-cs150_map.png)
 
-#### cal112
-![cal112 Map](./imgs/ds000229_task-flavor_contrast-cal112_map.png)
+#### cs112
+![cs112 Map](./imgs/ds000229_task-flavor_contrast-cs112_map.png)
 
-#### cal75
-![cal75 Map](./imgs/ds000229_task-flavor_contrast-cal75_map.png)
+#### cs75
+![cs75 Map](./imgs/ds000229_task-flavor_contrast-cs75_map.png)
 
-#### calabovevbelow100
-![calabovevbelow100 Map](./imgs/ds000229_task-flavor_contrast-calabovevbelow100_map.png)
+#### csabovevbelow100
+![csabovevbelow100 Map](./imgs/ds000229_task-flavor_contrast-csabovevbelow100_map.png)
 
-#### calthirtyseven
-![calthirtyseven Map](./imgs/ds000229_task-flavor_contrast-calthirtyseven_map.png)
+#### csthirtyseven
+![csthirtyseven Map](./imgs/ds000229_task-flavor_contrast-csthirtyseven_map.png)
 
-#### calzero
-![calzero Map](./imgs/ds000229_task-flavor_contrast-calzero_map.png)
+#### cszero
+![cszero Map](./imgs/ds000229_task-flavor_contrast-cszero_map.png)
 
-#### calbelow100v0
-![calbelow100v0 Map](./imgs/ds000229_task-flavor_contrast-calbelow100v0_map.png)
+#### csbelow100v0
+![csbelow100v0 Map](./imgs/ds000229_task-flavor_contrast-csbelow100v0_map.png)
 
-#### calabove100v0
-![calabove100v0 Map](./imgs/ds000229_task-flavor_contrast-calabove100v0_map.png)
+#### csabove100v0
+![csabove100v0 Map](./imgs/ds000229_task-flavor_contrast-csabove100v0_map.png)
 
-#### allcalvrinse
-![allcalvrinse Map](./imgs/ds000229_task-flavor_contrast-allcalvrinse_map.png)
+#### allcsvrinse
+![allcsvrinse Map](./imgs/ds000229_task-flavor_contrast-allcsvrinse_map.png)
 
-#### allcalvtasteless
-![allcalvtasteless Map](./imgs/ds000229_task-flavor_contrast-allcalvtasteless_map.png)
+#### allcsvtasteless
+![allcsvtasteless Map](./imgs/ds000229_task-flavor_contrast-allcsvtasteless_map.png)
+
+#### paperfig3a
+![paperfig3a Map](./imgs/ds000229_task-flavor_contrast-paperfig3a_map.png)
+
+#### paperfig3b
+![paperfig3b Map](./imgs/ds000229_task-flavor_contrast-paperfig3b_map.png)

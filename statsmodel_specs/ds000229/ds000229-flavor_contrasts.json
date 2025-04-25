@@ -186,7 +186,7 @@
             "Test": "t"
         },
         {
-            "Name": "paperfig3a",
+            "Name": "paperfig3b",
             "ConditionList": [
                 "trial_type.seventyfive",
                 "trial_type.zero",
@@ -196,9 +196,10 @@
             ],
             "Weights": [
                 1,
-                -0.333,
-                -0.333,
-                -0.333
+                -0.25,
+                -0.25,
+                -0.25,
+                -0.25
             ],
             "Test": "t"
         }

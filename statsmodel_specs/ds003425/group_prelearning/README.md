@@ -1,7 +1,7 @@
 # ds003425: prelearning Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 11 subjects performing the prelearning task.
-HRF model type: spm w/ derivatives. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.2, trial_type.2_derivative, trial_type.3, trial_type.3_derivative, trial_type.4, trial_type.4_derivative, trial_type.5, trial_type.5_derivative, trial_type.6, trial_type.6_derivative, intercept
 ### Nuisance Regressors
@@ -42,10 +42,28 @@ The **mean** R-squared image reflect the average of the R-squared values across 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
 
+#### Flagged Subjects
+The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: 
+
+  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 
+  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
+
+The subjects flagged for prelearning are:
+sub-02_ses-01_run-01, sub-02_ses-01_run-02, sub-02_ses-01_run-03, sub-03_ses-01_run-03, sub-04_ses-01_run-01, sub-04_ses-01_run-02, sub-04_ses-01_run-03, sub-06_ses-01_run-01, sub-06_ses-01_run-02, sub-06_ses-01_run-03, sub-08_ses-01_run-01, sub-08_ses-01_run-02, sub-08_ses-01_run-03, sub-09_ses-01_run-01, sub-09_ses-01_run-02, sub-09_ses-01_run-03, sub-10_ses-01_run-01, sub-10_ses-01_run-02, sub-10_ses-01_run-03, sub-11_ses-01_run-01, sub-11_ses-01_run-02, sub-11_ses-01_run-03, sub-13_ses-01_run-01, sub-13_ses-01_run-03
+
+The distribution for subjects and runs in prelearning are below. 
+
+![Dice](./imgs/ds003425_task-prelearning_hist-dicesimilarity.png)
+![Voxels Out](./imgs/ds003425_task-prelearning_hist-voxoutmask.png)
+
 ### Statistical Maps
 
 #### VCSPvVCSN
-![VCSPvVCSN Map](./imgs/ds003425_task-prelearning_contrast-VCSPvVCSN_map.png)
+
+##### ses-01
+![VCSPvVCSN ses-01 Map](./imgs/ds003425_task-prelearning_ses-01_contrast-VCSPvVCSN_map.png)
 
 #### ICSPvICSN
-![ICSPvICSN Map](./imgs/ds003425_task-prelearning_contrast-ICSPvICSN_map.png)
+
+##### ses-01
+![ICSPvICSN ses-01 Map](./imgs/ds003425_task-prelearning_ses-01_contrast-ICSPvICSN_map.png)

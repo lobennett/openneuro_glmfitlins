@@ -21,13 +21,24 @@
     "Tasks": {
         "learning": {
             "plot_coords": [
-                38,
-                12,
-                6
+                0,
+                0,
+                0
             ],
             "bold_volumes": 125,
             "dummy_volumes": 4,
             "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "task_sessions": [
+                "01"
+            ],
             "column_names": [
                 "onset",
                 "duration",
@@ -48,13 +59,21 @@
         },
         "prelearning": {
             "plot_coords": [
-                38,
-                12,
-                6
+                0,
+                0,
+                0
             ],
             "bold_volumes": 85,
             "dummy_volumes": 4,
             "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3
+            ],
+            "task_sessions": [
+                "01"
+            ],
             "column_names": [
                 "onset",
                 "duration",
@@ -74,13 +93,26 @@
         },
         "regulate": {
             "plot_coords": [
-                38,
-                12,
-                6
+                0,
+                0,
+                0
             ],
             "bold_volumes": 125,
             "dummy_volumes": 4,
             "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8
+            ],
+            "task_sessions": [
+                "02"
+            ],
             "column_names": [
                 "onset",
                 "duration",
@@ -101,13 +133,24 @@
         },
         "training": {
             "plot_coords": [
-                38,
-                12,
-                6
+                0,
+                0,
+                0
             ],
             "bold_volumes": 98,
             "dummy_volumes": 4,
-            "preproc_events": false,
+            "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "task_sessions": [
+                "01"
+            ],
             "column_names": [
                 "onset",
                 "duration",

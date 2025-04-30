@@ -1,0 +1,96 @@
+{
+    "Subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33",
+        "34",
+        "35",
+        "36",
+        "37",
+        "38",
+        "39",
+        "41"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "illusion": {
+            "plot_coords": [
+                -28,
+                10,
+                -3
+            ],
+            "bold_volumes": null,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "trial_type",
+                "expected_response",
+                "given_response",
+                "response_time"
+            ],
+            "column_data_types": {
+                "onset": "object",
+                "duration": "object",
+                "trial_type": "object",
+                "expected_response": "float64",
+                "given_response": "float64",
+                "response_time": "float64"
+            },
+            "trial_type_values": [
+                "T2",
+                "P1",
+                "T1",
+                "P2",
+                "END",
+                "START",
+                "JITTER3",
+                "ISI3",
+                "JITTER1",
+                "ISI1",
+                "JITTER4",
+                "ISI4",
+                "ISI2",
+                "JITTER2"
+            ]
+        }
+    }
+}

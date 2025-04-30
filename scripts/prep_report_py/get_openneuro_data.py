@@ -43,22 +43,38 @@ if os.path.exists(bids_input_dir):
 else:
     if minimal_fp is True:
         try:
-            # Clone & download entire dataset
-            subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
+            # Clone dataset
+            subprocess.run(['datalad', 'install', '-s', git_repo_url, bids_input_dir], check=True)
+            
+            # del derivatives if it exists
+            derivatives_dir = os.path.join(bids_input_dir, 'derivatives')
+            sourcedat_dir = os.path.join(bids_input_dir, 'sourcedata')
+            if os.path.exists(derivatives_dir):
+                print(f"        ** Removing derivatives directory from {openneuro_study} to save space & improve download speed")
+                subprocess.run(['rm', '-rf', derivatives_dir], check=True)
+            if os.path.exists(sourcedat_dir):
+                print(f"        **Removing sourcedata directory from {openneuro_study} to save space & improve download speed")
+                subprocess.run(['rm', '-rf', sourcedat_dir], check=True)
 
             try:
                 subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PRIVATE'], check=True)
             except subprocess.CalledProcessError:
-                print("        Warning: 's3-PRIVATE' sibling not found or could not be enabled. Continuing...")
+                print("        Warning: 's3-PRIVATE' sibling not found or could not be enabled. Trying s3-PUBLIC...")
+
+                try:
+                    subprocess.run(['datalad', 'siblings', '-d', bids_input_dir, 'enable', '-s', 's3-PUBLIC'], check=True)
+                except subprocess.CalledProcessError:
+                    print("        Error: Could not enable s3-PUBLIC either. No remote to get data from.")
 
             os.chdir(bids_input_dir)
             subprocess.run(['datalad', 'get', '-J', '4', '.'], check=True)
+
             print(f"    {openneuro_study}. Dataset files downloaded successfully.")
         except subprocess.CalledProcessError as e:
             print(f"        An error occurred while getting the files: {e}")
     else:
         try:
-            # Clone only, no data download
+            # Clone & download entire dataset; delete derivatives directory if present
             subprocess.run(['datalad', 'clone', git_repo_url, bids_input_dir], check=True)
 
             try:

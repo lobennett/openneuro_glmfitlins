@@ -237,8 +237,8 @@ def extract_model_info(model_spec):
         for instruction in transformations:
             if instruction.get("Name") == "Convolve":
                 node_info["convolve_model"] = instruction.get("Model", "Unknown")
-                node_info["if_derivative_hrf"] = instruction.get("Derivative", "False") == "True"
-                node_info["if_dispersion_hrf"] = instruction.get("Dispersion", "False") == "True"
+                node_info["if_derivative_hrf"] = instruction.get("Derivative", False) == True
+                node_info["if_dispersion_hrf"] = instruction.get("Dispersion", False) == True
                 break  # Stop searching after finding first Convolve transformation
 
         extracted_info["nodes"].append(node_info)

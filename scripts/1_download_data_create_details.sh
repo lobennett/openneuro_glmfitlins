@@ -59,7 +59,12 @@ echo -e "\nDataset Information for ${openneuro_id}:"
 echo "   - Size: ${gb_rnd} GB"
 echo "   - Files: ${n_files}"
 echo "   - Destination: ${data}/fmriprep/${openneuro_id}/derivatives"
-echo -e "   - Note: Size can be reduced by adding filters to './scripts/prep_report_py/file_exclusions.json'"
+if [[ "$minimal_derivatives" == "yes" ]]; then
+        echo "   - fMRIPrep Derivatives on s3: Minimal, will ⚠️  require running recreate_fmriprep.sh script. "
+    else
+        echo "   - fMRIPrep Derivatives on s3: Full, will not require running recreate_fmriprep.sh script."
+fi
+echo -e "   - Note: If minimal, fmriprep derivatives size can be reduced by adding filters to './scripts/prep_report_py/file_exclusions.json'"
 
 # Confirm download with user
 echo
@@ -75,8 +80,6 @@ if [[ "$user_input" == "yes" ]]; then
     else
         echo "   Downloading minimal BIDS dataset and complete fMRIPrep derivatives..."
         uv run python "${scripts_dir}/prep_report_py/get_openneuro_data.py" "${openneuro_id}" "${data}" "${spec_dir}" "False"
-        echo "   Copying dataset_description.json to fmriprep root directory..."
-        cp "${data}/fmriprep/${openneuro_id}/derivatives/dataset_description.json" "${data}/fmriprep/${openneuro_id}/dataset_description.json"
     fi
     
     echo -e "\nDownload completed successfully."
@@ -121,3 +124,6 @@ uv run python "${scripts_dir}/prep_report_py/study_simple_details.py" \
     --spec_dir "${spec_dir}"
 
 echo -e "\nProcess completed for ${openneuro_id}"
+
+# add write rights to input to simplify deletion
+chmod +w -R "${data}/input/${openneuro_id}"

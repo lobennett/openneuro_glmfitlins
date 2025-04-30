@@ -1,0 +1,94 @@
+{
+    "Contrasts": [
+        {
+            "Name": "vibration",
+            "ConditionList": [
+                "trial_type.p_hi",
+                "trial_type.p_low"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "texture",
+            "ConditionList": [
+                "trial_type.t_hi",
+                "trial_type.t_low"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "highvlow",
+            "ConditionList": [
+                "trial_type.t_hi",
+                "trial_type.p_hi",
+                "trial_type.p_low",
+                "trial_type.t_low"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -0.5,
+                -0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "texturevpnevib",
+            "ConditionList": [
+                "trial_type.t_hi",
+                "trial_type.t_low",
+                "trial_type.p_hi",
+                "trial_type.p_low"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -0.5,
+                -0.5
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "vibrationhighvlow",
+            "ConditionList": [
+                "trial_type.p_hi",
+                "trial_type.p_low"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "texturehighvlow",
+            "ConditionList": [
+                "trial_type.t_hi",
+                "trial_type.t_low"
+
+
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}

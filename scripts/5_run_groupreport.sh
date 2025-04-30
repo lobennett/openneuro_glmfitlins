@@ -42,3 +42,4 @@ uv --project ${repo_dir} \
     --scratch_dir ${scratch_data_dir}
 
 echo "SUCCESS: Group map report completed"
+echo

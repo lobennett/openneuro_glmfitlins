@@ -95,7 +95,7 @@ if dummyvolumes > 0:
             print(f"Error processing confounds file {conf_file.filename}: {e}")
 
 else:
-    print(f"Dummy volumes of {dummyvolumes}. Not modifying BOLD or confounds.tsv files")
+    print(f"Dummy volumes of {dummyvolumes}. Not modifying BOLD or confounds.tsv files.\n")
 
 
 if preproc_events:
@@ -132,4 +132,7 @@ if preproc_events:
 
         except Exception as e:
             print(f"Error processing events file {eventtsv_path.filename}: {e}")
+else:
+    print(f"Preprocessing events files is {preproc_events}. Not modifying *_events.tsv files.\n")
+
 

@@ -1,7 +1,7 @@
 # ds003425: training Task Analysis Report
 ## Analysis Overview
 Subject-level models were fit for 13 subjects performing the training task.
-HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+HRF model type: spm w/ derivatives. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
 ### Regressors of Interest
 trial_type.1, trial_type.1_derivative, trial_type.2, trial_type.2_derivative, intercept
 ### Nuisance Regressors

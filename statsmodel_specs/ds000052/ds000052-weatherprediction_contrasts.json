@@ -1,0 +1,36 @@
+{
+    "Contrasts": [
+        {
+            "Name": "neg",
+            "ConditionList": [
+                "trial_type.negative"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "pos",
+            "ConditionList": [
+                "trial_type.positive"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "negvpos",
+            "ConditionList": [
+                "trial_type.negative",
+                "trial_type.positive"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}

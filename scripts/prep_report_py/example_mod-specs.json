@@ -18,8 +18,8 @@
       {
         "Name": "Convolve",
         "Model": "spm",
-        "Derivative": "False", 
-        "Dispersion": "False",
+        "Derivative": false, 
+        "Dispersion": false,
         "Input": [
           "trial_type.*"
         ]

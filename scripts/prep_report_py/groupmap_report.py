@@ -81,6 +81,7 @@ hrf_model_type = spec_results['nodes'][0]['convolve_model']
 derivative_added = spec_results['nodes'][0]['if_derivative_hrf']
 dispersion_added = spec_results['nodes'][0]['if_dispersion_hrf']
 
+
 # HRF model description based on convolution, derivative and dispersion terms
 hrf_components = []
 if derivative_added:

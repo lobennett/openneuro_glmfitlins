@@ -53,7 +53,7 @@
           {
             "Name": "Convolve",
             "Model": "spm",
-            "Derivative": "False",
+            "Derivative": true,
             "Input": [
               "trial_type.*"
             ]

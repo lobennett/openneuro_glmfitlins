@@ -74,6 +74,10 @@ data = {
 
 # get column names, data types, and trial_type values for each task
 for task_name in Tasks:
+    if task_name in ['rest', 'resting', 'REST', 'RESTING']:
+        print(f"* Task name {task_name} is resting state sequence, not true task. Skipping. *")
+        continue
+
     task_runs = bids_layout.get_runs(task=task_name)
     task_sessions = bids_layout.get_sessions(task=task_name)
     # Handle sessions if present    
@@ -150,12 +154,17 @@ for task_name in Tasks:
         if not os.path.exists(contrasts_file):
             create_gencontrast_json(studyid=study_id, taskname=task_name, specpath=spec_path)
         else:
-            print(f"Contrasts file already exist: {contrasts_file}. Delete and rerun to recreate.")
+            print(f"Contrasts file already exist: {contrasts_file}. Delete and rerun to recreate./n")
 
 
 # save study and task details to json
-with open(os.path.join(spec_path, f'{study_id}_basic-details.json'), 'w') as f:
-    json.dump(data, f, indent=4)
+detail_json = os.path.join(spec_path, f'{study_id}_basic-details.json')
+if not os.path.exists(detail_json):
+    with open(detail_json, 'w') as f:
+        json.dump(data, f, indent=4)
+else:
+    print(f"Basic details file already exist: {contrasts_file}. Delete and rerun to recreate./n")
+
 
 # generate README.md file
 generate_studysummary(spec_path, study_id, data)

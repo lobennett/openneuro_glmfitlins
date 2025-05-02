@@ -1,7 +1,24 @@
 # ds003425: prelearning Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 11 subjects performing the prelearning task.
-HRF model type: spm w/ derivatives. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds003425 prelearning is 858M with 740 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the prelearning task for 11 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 11 regressors of interest (see list below) were convolved with a spm w/ derivatives hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 25 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 2 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.2, trial_type.2_derivative, trial_type.3, trial_type.3_derivative, trial_type.4, trial_type.4_derivative, trial_type.5, trial_type.5_derivative, trial_type.6, trial_type.6_derivative, intercept
 ### Nuisance Regressors
@@ -10,7 +27,6 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 - Run-level models: Yes
 - Subject-level models: Yes
 
-The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
 - **VCSPvVCSN**: 1*`trial_type.2` - 1*`trial_type.4`
 - **ICSPvICSN**: 1*`trial_type.3` - 1*`trial_type.5`

@@ -1,7 +1,24 @@
 # ds000109: theoryofmindwithmanualresponse Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 33 subjects performing the theoryofmindwithmanualresponse task.
-HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds000109 theoryofmindwithmanualresponse is 4.0G with 2798 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the theoryofmindwithmanualresponse task for 33 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 5 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 28 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 4 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.falsebeliefquestion, trial_type.falsebeliefstory, trial_type.falsephotoquestion, trial_type.falsephotostory, intercept
 ### Nuisance Regressors
@@ -10,7 +27,6 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 - Run-level models: Yes
 - Subject-level models: Yes
 
-The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
 - **storybelief**: 1*`trial_type.falsebeliefstory`
 - **storyphoto**: 1*`trial_type.falsephotostory`
@@ -51,7 +67,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for theoryofmindwithmanualresponse are:
-sub01_run1, sub01_run2, sub05_run1, sub05_run2, sub14_run2, sub15_run2, sub36_run1, sub36_run2, sub38_run1, sub38_run2, sub39_run1, sub39_run2, sub40_run1, sub40_run2, sub47_run1, sub47_run2, sub48_run1, sub48_run2
+sub-01_run-1, sub-01_run-2, sub-05_run-1, sub-05_run-2, sub-14_run-2, sub-15_run-2, sub-36_run-1, sub-36_run-2, sub-38_run-1, sub-38_run-2, sub-39_run-1, sub-39_run-2, sub-40_run-1, sub-40_run-2, sub-47_run-1, sub-47_run-2, sub-48_run-1, sub-48_run-2
 
 The distribution for subjects and runs in theoryofmindwithmanualresponse are below. 
 

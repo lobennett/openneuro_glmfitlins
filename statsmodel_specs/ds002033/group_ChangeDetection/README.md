@@ -1,7 +1,24 @@
 # ds002033: ChangeDetection Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 40 subjects performing the ChangeDetection task.
-HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds002033 ChangeDetection is 9.1G with 5786 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the ChangeDetection task for 40 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 8 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 28 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 4 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.digits, trial_type.hash__red, trial_type.letters, trial_type.mirrored_digits, trial_type.mirrored_letters, trial_type.scrambled_digits, trial_type.scrambled_letters, intercept
 ### Nuisance Regressors
@@ -10,7 +27,6 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 - Run-level models: Yes
 - Subject-level models: Yes
 
-The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
 - **digitsvletter**: 1*`trial_type.digits` - 1*`trial_type.letters`
 - **srmdigitsvsrmletters**: 1*`trial_type.scrambled_digits` - 1*`trial_type.scrambled_letters`
@@ -51,7 +67,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for ChangeDetection are:
-sub01_run01, sub01_run02, sub01_run03, sub01_run04, sub02_run01, sub02_run02, sub02_run04, sub03_run01, sub03_run02, sub03_run03, sub03_run04, sub04_run01, sub04_run02, sub04_run03, sub04_run04, sub07_run01, sub07_run02, sub07_run03, sub07_run04, sub08_run01, sub08_run02, sub08_run03, sub08_run04, sub09_run01, sub09_run02, sub09_run03, sub09_run04, sub10_run01, sub10_run02, sub10_run03, sub10_run04, sub11_run01, sub11_run02, sub11_run03, sub11_run04, sub13_run01, sub13_run02, sub13_run03, sub13_run04, sub14_run01, sub14_run02, sub14_run03, sub14_run04, sub15_run01, sub15_run02, sub15_run03, sub15_run04, sub16_run01, sub16_run02, sub16_run03, sub16_run04, sub17_run01, sub17_run02, sub17_run03, sub17_run04, sub20_run01, sub20_run02, sub20_run03, sub20_run04, sub22_run01, sub22_run02, sub22_run03, sub22_run04, sub23_run01, sub23_run02, sub23_run03, sub23_run04, sub24_run01, sub24_run02, sub24_run03, sub24_run04, sub26_run01, sub26_run02, sub26_run03, sub26_run04, sub27_run01, sub27_run02, sub27_run03, sub27_run04, sub28_run01, sub28_run02, sub28_run03, sub28_run04, sub29_run01, sub29_run02, sub29_run03, sub29_run04, sub32_run01, sub32_run02, sub32_run03, sub32_run04, sub33_run01, sub33_run02, sub33_run03, sub33_run04, sub34_run01, sub34_run02, sub34_run03, sub34_run04, sub35_run01, sub35_run02, sub35_run03, sub35_run04, sub36_run01, sub36_run02, sub36_run03, sub36_run04, sub38_run01, sub38_run02, sub38_run03, sub38_run04, sub39_run01, sub39_run02, sub40_run01, sub40_run02, sub40_run03, sub40_run04, sub42_run01, sub42_run02, sub42_run03, sub42_run04
+sub-01_run-01, sub-01_run-02, sub-01_run-03, sub-01_run-04, sub-02_run-01, sub-02_run-02, sub-02_run-04, sub-03_run-01, sub-03_run-02, sub-03_run-03, sub-03_run-04, sub-04_run-01, sub-04_run-02, sub-04_run-03, sub-04_run-04, sub-07_run-01, sub-07_run-02, sub-07_run-03, sub-07_run-04, sub-08_run-01, sub-08_run-02, sub-08_run-03, sub-08_run-04, sub-09_run-01, sub-09_run-02, sub-09_run-03, sub-09_run-04, sub-10_run-01, sub-10_run-02, sub-10_run-03, sub-10_run-04, sub-11_run-01, sub-11_run-02, sub-11_run-03, sub-11_run-04, sub-13_run-01, sub-13_run-02, sub-13_run-03, sub-13_run-04, sub-14_run-01, sub-14_run-02, sub-14_run-03, sub-14_run-04, sub-15_run-01, sub-15_run-02, sub-15_run-03, sub-15_run-04, sub-16_run-01, sub-16_run-02, sub-16_run-03, sub-16_run-04, sub-17_run-01, sub-17_run-02, sub-17_run-03, sub-17_run-04, sub-20_run-01, sub-20_run-02, sub-20_run-03, sub-20_run-04, sub-22_run-01, sub-22_run-02, sub-22_run-03, sub-22_run-04, sub-23_run-01, sub-23_run-02, sub-23_run-03, sub-23_run-04, sub-24_run-01, sub-24_run-02, sub-24_run-03, sub-24_run-04, sub-26_run-01, sub-26_run-02, sub-26_run-03, sub-26_run-04, sub-27_run-01, sub-27_run-02, sub-27_run-03, sub-27_run-04, sub-28_run-01, sub-28_run-02, sub-28_run-03, sub-28_run-04, sub-29_run-01, sub-29_run-02, sub-29_run-03, sub-29_run-04, sub-32_run-01, sub-32_run-02, sub-32_run-03, sub-32_run-04, sub-33_run-01, sub-33_run-02, sub-33_run-03, sub-33_run-04, sub-34_run-01, sub-34_run-02, sub-34_run-03, sub-34_run-04, sub-35_run-01, sub-35_run-02, sub-35_run-03, sub-35_run-04, sub-36_run-01, sub-36_run-02, sub-36_run-03, sub-36_run-04, sub-38_run-01, sub-38_run-02, sub-38_run-03, sub-38_run-04, sub-39_run-01, sub-39_run-02, sub-40_run-01, sub-40_run-02, sub-40_run-03, sub-40_run-04, sub-42_run-01, sub-42_run-02, sub-42_run-03, sub-42_run-04
 
 The distribution for subjects and runs in ChangeDetection are below. 
 

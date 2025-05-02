@@ -1,7 +1,24 @@
 # ds000002: probabilisticclassification Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 17 subjects performing the probabilisticclassification task.
-HRF model type: spm w/ derivatives. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds000002 probabilisticclassification is 646M with 518 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the probabilisticclassification task for 17 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 3 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 28 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 1 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.feedback, trial_type.feedback_derivative, intercept
 ### Nuisance Regressors
@@ -10,7 +27,6 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 - Run-level models: Yes
 - Subject-level models: Yes
 
-The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
 - **feedback**: 1*`trial_type.feedback`
 
@@ -48,7 +64,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for probabilisticclassification are:
-sub01_run1, sub01_run2, sub16_run1, sub17_run1
+sub-01_run-1, sub-01_run-2, sub-16_run-1, sub-17_run-1
 
 The distribution for subjects and runs in probabilisticclassification are below. 
 

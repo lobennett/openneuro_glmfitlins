@@ -1,7 +1,24 @@
 # ds000114: overtverbgeneration Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 10 subjects performing the overtverbgeneration task.
-HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds000114 overtverbgeneration is 290M with 254 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the overtverbgeneration task for 10 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 2 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 29 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 1 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Subject-level statistical maps were entered directly into a group-level analysis using a two-sided one-sample t-test to to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.Task, intercept
 ### Nuisance Regressors

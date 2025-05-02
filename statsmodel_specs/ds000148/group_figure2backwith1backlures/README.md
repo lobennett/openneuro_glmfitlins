@@ -1,7 +1,24 @@
 # ds000148: figure2backwith1backlures Task Analysis Report
-## Analysis Overview
-Subject-level models were fit for 49 subjects performing the figure2backwith1backlures task.
-HRF model type: spm. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)
+
+The size of the Fitlins Derivatives for ds000148 figure2backwith1backlures is 7.8G with 5612 files.
+
+## Statistical Analysis Boilerplate
+
+### First-level Analysis
+FitLins was employed to estimate task-related BOLD activity in the figure2backwith1backlures task for 49 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 6 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 9 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 4 distinct contrast estimates were computed (see list below).
+
+### Model Outputs
+For each participant's run, outputs include but are not limited to:
+- A complete design matrix visualization
+- Model fit statistics (R-squared and log-likelihood maps)
+- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps
+
+An example design matrix and contrast weight specifications are provided below.
+
+### Group-level Analysis
+Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.
+
+## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.distractorcorrectrejection, trial_type.distractorfalsealarm, trial_type.lurecorrectrejection, trial_type.targethit, trial_type.targetmiss, intercept
 ### Nuisance Regressors
@@ -10,7 +27,6 @@ drift_1, drift_2, drift_3, drift_4, drift_5, drift_6, drift_7, drift_8, drift_9
 - Run-level models: Yes
 - Subject-level models: Yes
 
-The run-wise contrast estimates for each subject are averaged using a fixed-effects model.
 ## Contrasts of Interest
 - **distractcorr**: 1*`trial_type.distractorcorrectrejection`
 - **lurecorr**: 1*`trial_type.lurecorrectrejection`
@@ -51,7 +67,7 @@ The quality assessment pipeline evaluates volumetric data across multiple dimens
   - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
 
 The subjects flagged for figure2backwith1backlures are:
-sub01_run01, sub01_run02, sub04_run02, sub05_run01, sub05_run02, sub06_run02, sub10_run01, sub13_run01, sub14_run02, sub14_run03, sub15_run02, sub16_run01, sub16_run02, sub16_run03, sub17_run01, sub17_run02, sub18_run01, sub18_run02, sub18_run03, sub19_run01, sub21_run01, sub21_run02, sub21_run03, sub22_run01, sub22_run02, sub23_run01, sub24_run02, sub25_run01, sub25_run02, sub25_run03, sub29_run03, sub31_run01, sub31_run03, sub32_run01, sub32_run03, sub33_run01, sub33_run02, sub33_run03, sub34_run01, sub34_run02, sub34_run03, sub35_run03, sub36_run02, sub38_run02, sub39_run01, sub39_run02, sub39_run03, sub41_run01, sub41_run02, sub41_run03, sub42_run03, sub43_run01, sub43_run02, sub44_run02, sub45_run01, sub45_run02, sub46_run02, sub46_run03, sub47_run01, sub47_run03, sub48_run01
+sub-01_run-01, sub-01_run-02, sub-04_run-02, sub-05_run-01, sub-05_run-02, sub-06_run-02, sub-10_run-01, sub-13_run-01, sub-14_run-02, sub-14_run-03, sub-15_run-02, sub-16_run-01, sub-16_run-02, sub-16_run-03, sub-17_run-01, sub-17_run-02, sub-18_run-01, sub-18_run-02, sub-18_run-03, sub-19_run-01, sub-21_run-01, sub-21_run-02, sub-21_run-03, sub-22_run-01, sub-22_run-02, sub-23_run-01, sub-24_run-02, sub-25_run-01, sub-25_run-02, sub-25_run-03, sub-29_run-03, sub-31_run-01, sub-31_run-03, sub-32_run-01, sub-32_run-03, sub-33_run-01, sub-33_run-02, sub-33_run-03, sub-34_run-01, sub-34_run-02, sub-34_run-03, sub-35_run-03, sub-36_run-02, sub-38_run-02, sub-39_run-01, sub-39_run-02, sub-39_run-03, sub-41_run-01, sub-41_run-02, sub-41_run-03, sub-42_run-03, sub-43_run-01, sub-43_run-02, sub-44_run-02, sub-45_run-01, sub-45_run-02, sub-46_run-02, sub-46_run-03, sub-47_run-01, sub-47_run-03, sub-48_run-01
 
 The distribution for subjects and runs in figure2backwith1backlures are below. 
 

@@ -57,13 +57,38 @@ def generate_studysummary(spec_path, study_id, data, repo_url="https://github.co
 
 
 def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
-    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran, sessions=None):
+    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran, sessions=None, 
+    deriv_size=None):
     # Add title and description
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
-    readme_content += "## Analysis Overview\n"
-    readme_content += f"Subject-level models were fit for {num_subjects} subjects performing the {task} task.\n"
-    readme_content += f"HRF model type: {hrf_model_type}. Data were smoothed at each run using a 5mm FWHM (default: isotropic additive smoothing)\n"
+    if deriv_size:
+        readme_content += f"\n{deriv_size}\n\n"
     
+    readme_content += "## Statistical Analysis Boilerplate\n\n"
+    readme_content += f"### First-level Analysis\n"
+    readme_content += f"FitLins was employed to estimate task-related BOLD activity in the {task} task for {num_subjects} subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. "
+    readme_content += f"For each participant, {len(signal_regressors)} regressors of interest (see list below) were convolved with a {hrf_model_type} hemodynamic response function in Nilearn. "
+    readme_content += f"The design matrix incorporated both regressors of interest and {len(noise_regressors)} additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. "
+    readme_content += f"Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. "
+    readme_content += f"Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). "
+    readme_content += f"From the resulting model, {len(contrast_dict)} distinct contrast estimates were computed (see list below).\n\n"
+    
+    readme_content += f"### Model Outputs\n"
+    readme_content += f"For each participant's run, outputs include but are not limited to:\n"
+    readme_content += f"- A complete design matrix visualization\n"
+    readme_content += f"- Model fit statistics (R-squared and log-likelihood maps)\n"
+    readme_content += f"- For each contrast: effect size maps (beta values), t-statistic maps, z-statistic maps and variance maps\n\n"
+    
+    readme_content += f"An example design matrix and contrast weight specifications are provided below.\n\n"
+    
+    readme_content += f"### Group-level Analysis\n"
+    if has_subject:
+        readme_content += f"Within-subject runs were combined using Nilearn's *compute_fixed_effects* function (without precision weighting; `precision_weighted=False`). "
+        readme_content += f"These subject-level average statistical maps were then entered into a group-level analysis using a two-sided one-sample t-test to estimate average univariate activation patterns.\n\n"
+    else:
+        readme_content += f"Subject-level statistical maps were entered directly into a group-level analysis using a two-sided one-sample t-test to to estimate average univariate activation patterns.\n\n"
+
+    readme_content += "## Additional Analysis Details \n"
     readme_content += "### Regressors of Interest\n"
     readme_content += ", ".join(signal_regressors) if signal_regressors else "None identified"
     
@@ -73,9 +98,6 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     readme_content += "\n## Model Structure\n"
     readme_content += f"- Run-level models: {'Yes' if has_run else 'No'}\n"
     readme_content += f"- Subject-level models: {'Yes' if has_subject else 'No'}\n"
-    
-    if has_run and has_subject:
-        readme_content += "\nThe run-wise contrast estimates for each subject are averaged using a fixed-effects model."
     
     readme_content += "\n## Contrasts of Interest\n"
     for name, expr in contrast_dict.items():

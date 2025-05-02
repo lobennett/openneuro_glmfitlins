@@ -2,6 +2,7 @@ import json
 import os
 import shutil
 import argparse
+import subprocess
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -345,11 +346,19 @@ if os.path.exists(grp_map_path):
 else:
     print("Group map path not found.")
 
+# Get file count and folder size
+gb_size = subprocess.check_output(['du', '-sh', analysis_dir]).split()[0].decode()
+file_count = subprocess.check_output(f"find {analysis_dir} -type f | wc -l", shell=True).strip().decode()
+
+fold_info = f"The size of the Fitlins Derivatives for {study_id} {task} is {gb_size} with {file_count} files."
+
+
 # GENERATE AND SAVE README
 contrast_image = contrast_images[0] if contrast_images else None
 grp_readme = generate_groupmodsummary(
     study_id=study_id, 
     task=task, 
+    deriv_size=fold_info,
     num_subjects=num_subjects, 
     hrf_model_type=hrf_model, 
     signal_regressors=signal_regressors, 

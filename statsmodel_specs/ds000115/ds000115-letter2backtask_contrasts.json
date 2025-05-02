@@ -1,0 +1,14 @@
+{
+    "Contrasts": [
+        {
+            "Name": "twoback",
+            "ConditionList": [
+                "trial_type.nbacknontarget"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

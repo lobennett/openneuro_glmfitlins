@@ -1,0 +1,102 @@
+{
+    "Contrasts": [
+        {
+            "Name": "index",
+            "ConditionList": [
+                "trial_type.index"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "middle",
+            "ConditionList": [
+                "trial_type.middle"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "ring",
+            "ConditionList": [
+                "trial_type.ring"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "pinky",
+            "ConditionList": [
+                "trial_type.pinky"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "indexvring",
+            "ConditionList": [
+                "trial_type.index",
+                "trial_type.ring"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "indexvmiddle",
+            "ConditionList": [
+                "trial_type.index",
+                "trial_type.middle"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "indexvpinkg",
+            "ConditionList": [
+                "trial_type.index",
+                "trial_type.pinky"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "middlevpinky",
+            "ConditionList": [
+                "trial_type.middle",
+                "trial_type.pinky"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "correct",
+            "ConditionList": [
+                "accuracy.correct"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

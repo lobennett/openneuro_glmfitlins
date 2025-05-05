@@ -1,0 +1,65 @@
+{
+    "Subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18"
+    ],
+    "Sessions": [
+        "post",
+        "pre"
+    ],
+    "Tasks": {
+        "cuedSFM": {
+            "plot_coords": [
+                0,
+                -4,
+                52
+            ],
+            "bold_volumes": 241,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6
+            ],
+            "task_sessions": [
+                "post",
+                "pre"
+            ],
+            "column_names": [
+                "onset",
+                "duration",
+                "trialType",
+                "correct",
+                "stim_file"
+            ],
+            "column_data_types": {
+                "onset": "int64",
+                "duration": "float64",
+                "trialType": "float64",
+                "correct": "int64",
+                "stim_file": "object"
+            },
+            "trial_type_values": []
+        }
+    }
+}

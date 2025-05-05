@@ -1,0 +1,201 @@
+{
+  "Name": "ds001229",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "01",
+      "02",
+      "03",
+      "04",
+      "05",
+      "06",
+      "07",
+      "08",
+      "09",
+      "10",
+      "11",
+      "12",
+      "13",
+      "14",
+      "15",
+      "16",
+      "17",
+      "18",
+      "19",
+      "20",
+      "21",
+      "22",
+      "23",
+      "24",
+      "25",
+      "26",
+      "27"
+    ],
+    "task": [
+      "wm"
+    ],
+    "run": [
+      1,
+      2,
+      3
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.*",
+              "nprobes"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.*",
+          "nprobes",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+          {
+              "Name": "facescenevlexdec",
+              "ConditionList": [
+                  "trial_type.face_real",            
+                  "trial_type.scene_real",           
+                  "trial_type.lexdec_real"           
+              ],
+              "Weights": [
+                  0.5,
+                  0.5,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "oglexreal",
+              "ConditionList": [
+                  "trial_type.lexdec_real"            
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "pmfacesreal",
+              "ConditionList": [
+                  "trial_type.face_real"            
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "pmscenereal",
+              "ConditionList": [
+                  "trial_type.scene_real"            
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "scenerealvcatch",
+              "ConditionList": [
+                  "trial_type.scene_real",
+                  "trial_type.scene_catch"
+              
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "facerealvcatch",
+              "ConditionList": [
+                  "trial_type.face_real",
+                  "trial_type.face_catch"
+              
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "lexrealvcatch",
+              "ConditionList": [
+                  "trial_type.lexdec_real",
+                  "trial_type.lexdec_catch"
+              
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

@@ -3,13 +3,13 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-05-02`*
+*This repository is in active development. `Last updated: 2025-05-05`*
 
-N OpenNeuro Studies: 21
+N OpenNeuro Studies: 22
 
-N OpenNeuro Task fMRI Group Summaries: 31
+N OpenNeuro Task fMRI Group Summaries: 33
 
-Completed fMRI Task Names: ParallelAdaptation, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, balloonanalogrisktask, objectviewing, dts, retrieval, encoding, flavor, flanker
+Completed fMRI Task Names: ParallelAdaptation, wm, em, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, balloonanalogrisktask, objectviewing, dts, retrieval, encoding, flavor, flanker
 
 ## Overview
 

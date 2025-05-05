@@ -1,9 +1,5 @@
 {
     "exclusions": [
-        ".reproman*",
-        "*dtseries*",
-        "*.gii",
-        "*AROMA*",
-        "*MELODIC*"
+        "*filenametoexclude*"
     ]
 }

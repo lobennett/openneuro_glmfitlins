@@ -1,0 +1,87 @@
+{
+    "Contrasts": [
+        {
+            "Name": "facescenevlexdec",
+            "ConditionList": [
+                "trial_type.face_real",            
+                "trial_type.scene_real",           
+                "trial_type.lexdec_real"           
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "oglexreal",
+            "ConditionList": [
+                "trial_type.lexdec_real"            
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "pmfacesreal",
+            "ConditionList": [
+                "trial_type.face_real"            
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "pmscenereal",
+            "ConditionList": [
+                "trial_type.scene_real"            
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "scenerealvcatch",
+            "ConditionList": [
+                "trial_type.scene_real",
+                "trial_type.scene_catch"
+            
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "facerealvcatch",
+            "ConditionList": [
+                "trial_type.face_real",
+                "trial_type.face_catch"
+            
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "lexrealvcatch",
+            "ConditionList": [
+                "trial_type.lexdec_real",
+                "trial_type.lexdec_catch"
+            
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}

@@ -545,3 +545,80 @@ def ds002872(eventspath: str, task: str):
         else:
             print("No old trial_types found. Skipping modification.")
             return None
+
+
+def ds001233(eventspath: str, task: str):
+    """
+    Process event data for ds001233 by modifying trial types if applicable. 
+    Modify onset and duration, Modifying numeric finger events to labels and make "trial_type". Remap 0 to incorr and 1 to corr for accuracy
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["cuedSFM"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        orig_to_new = {
+            2: "index",
+            3: "middle",
+            4: "ring",
+            5: "pinky"
+        }
+        acc = {
+            0: "incorrect",
+            1: "correct"
+        }
+
+        #  if there trial_type values in current matrix
+        if 'trial_type' not in eventsdat.columns or not eventsdat['trialType'].isin(['index', 'middle', 'ring', 'pinky']).any():
+            print("Cleaning 'trial_type' values by remapping and update correct/incc")            
+            # remap cols
+            eventsdat['trial_type'] = eventsdat['trialType'].replace(orig_to_new)
+            eventsdat['accuracy'] = eventsdat['correct'].replace(acc)
+
+            print("Unique trial types:",  eventsdat['trial_type'].unique())
+            return eventsdat
+
+        else:
+            print("No old trial_types found. Skipping modification.")
+            return None
+
+
+def ds001229(eventspath: str, task: str):
+    """
+    Process event data for ds001229 by modifying trial types if applicable. 
+    trial_type doesnt exist, create by combining category + type. Note, typo categor, categ, category in some task events
+    Parameters:
+    eventspath (str): path to the events .tsv file
+    task (str): task name for dataset (regulate, learning, training, prelearning)
+    
+    Returns:
+    modified events files
+    """
+
+    if task in ["em","wm"]:
+        eventsdat = pd.read_csv(eventspath, sep='\t')
+
+        #  if there trial_type values in current matrix
+        if 'trial_type' not in eventsdat.columns:
+            print("Creating 'trial_type' values by combining categ / category / categor + type")            
+            # create trial_type col
+            if 'categor' in eventsdat.columns:
+                eventsdat['trial_type'] = eventsdat['categor'] + '_' + eventsdat['type']
+            elif 'categ' in eventsdat.columns:
+                eventsdat['trial_type'] = eventsdat['categ'] + '_' + eventsdat['type']
+            elif 'category' in eventsdat.columns:
+                eventsdat['trial_type'] = eventsdat['category'] + '_' + eventsdat['type']
+            else:
+                raise KeyError("Neither 'categor' nor 'category' column found in events file.")
+            
+            print("Unique trial types:",  eventsdat['trial_type'].unique())
+            return eventsdat
+
+        else:
+            print("No old trial_types found. Skipping modification.")
+            return None

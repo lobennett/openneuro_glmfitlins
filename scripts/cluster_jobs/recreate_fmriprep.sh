@@ -9,7 +9,7 @@
 # Outputs ----------------------------------
 #SBATCH --output=./logs/regen_fmriprep.%A_%a.out
 #SBATCH --error=./logs/regen_fmriprep.%A_%a.err
-#SBATCH --mail-user=demidenm@stanford.edu
+#SBATCH --mail-user=logben@stanford.edu
 #SBATCH --mail-type=ALL
 # ------------------------------------------
 
@@ -50,7 +50,7 @@ echo "scratch_out: ${scratch_out}"
 echo "fmriprep_dir: ${data_dir}/fmriprep/${study_id}"
 
 
-# --- Run FMRIPrep ---- 
+# --- Run FMRIPrep ----
 singularity run --cleanenv \
     -B "${data_dir}/input/${study_id}:/bids_dir" \
     -B "${data_dir}/fmriprep/${study_id}:/minimal_dir" \

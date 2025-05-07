@@ -8,11 +8,11 @@
 # Output and notifications
 #SBATCH --output=./logs/fitlins.%A_%a.out
 #SBATCH --error=./logs/fitlins.%A_%a.err
-#SBATCH --mail-user=demidenm@stanford.edu
+#SBATCH --mail-user=logben@stanford.edu
 #SBATCH --mail-type=ALL
 
 # Prevent SLURM jobs runaway errors, i.e instances where more threads are ran than requested
-# Per Chris Markewicz, 
+# Per Chris Markewicz,
 # "FitLins will set the environment variable for subprocesses that are tagged as able to use more threads, but if these are not 1, then nipype can't accurately track resource usage."
 MKL_NUM_THREADS=1
 OMP_NUM_THREADS=1

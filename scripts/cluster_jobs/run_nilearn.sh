@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 #SBATCH --job-name=rn_nilearn
-#SBATCH --array=1-13%20 # 
+#SBATCH --array=1-13%20 #
 #SBATCH --time=05:00:00
 #SBATCH --cpus-per-task=8
 #SBATCH --mem-per-cpu=6GB
@@ -9,7 +9,7 @@
 # Outputs ----------------------------------
 #SBATCH --output=./logs/nilearn.%A_%a.out
 #SBATCH --error=./logs/nilearn.%A_%a.err
-#SBATCH --mail-user=demidenm@stanford.edu
+#SBATCH --mail-user=logben@stanford.edu
 #SBATCH --mail-type=ALL
 # ------------------------------------------
 
@@ -60,5 +60,3 @@ else
     rsync -av "${tmp}/${study_id}/" "${data_dir}/nilearn/${study_id}/"
 
 fi
-
- 

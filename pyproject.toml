@@ -43,3 +43,6 @@ build-backend = "hatchling.build"
 dev = [
     "ipykernel>=6.29.5",
 ]
+
+[tool.uv]
+cache-dir = "/scratch/users/logben/.uv_cache"

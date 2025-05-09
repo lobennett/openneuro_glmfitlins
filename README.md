@@ -1,11 +1,17 @@
 # OpenNeuro GLM Fitlins
+[![DOI](https://zenodo.org/badge/923273141.svg)](https://doi.org/10.5281/zenodo.15376890)
 
-**Maintainer**: Michael Demidenko  
+**Curator & Maintainer**: Michael Demidenko  
+
+<small>*While I created this repo, it is only made possible by those who made their data publicly available, the awesome people who have worked on and continue to work on OpenNeuro, BIDS Stats Models and Fitlins.*</small>
+
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
 *This repository is in active development. `Last updated: 2025-05-09`*
 
-N OpenNeuro Studies: 22
+
+
+N OpenNeuro Studies: 23
 
 N OpenNeuro Task fMRI Group Summaries: 35
 

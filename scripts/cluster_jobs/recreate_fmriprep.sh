@@ -1,10 +1,10 @@
 #!/bin/bash
 #
 #SBATCH --job-name=on_minfmriprep
-#SBATCH --array=1-41%25 #ds0023825 #1-41%30 # ds004006
-#SBATCH --time=02:00:00
+#SBATCH --array=1-17%25 #1-18%25 #ds0023825 #1-41%30 # ds004006
+#SBATCH --time=02:30:00
 #SBATCH --cpus-per-task=6
-#SBATCH --mem-per-cpu=8GB
+#SBATCH --mem-per-cpu=10GB
 #SBATCH -p russpold,normal,owners
 # Outputs ----------------------------------
 #SBATCH --output=./logs/regen_fmriprep.%A_%a.out
@@ -64,8 +64,9 @@ singularity run --cleanenv \
     --fs-license-file ${fs_license} \
     --output-spaces MNI152NLin2009cAsym:res-2 \
     --fs-subjects-dir /freesurf_dir \
+    --skull-strip-t1w skip \
     --derivatives /minimal_dir \
-    --n_cpus 8 \
-    --mem_mb 48000 \
+    --n_cpus 6 \
+    --mem_mb 60000 \
     -vv \
     -w /wd

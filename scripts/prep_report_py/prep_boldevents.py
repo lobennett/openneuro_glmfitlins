@@ -7,7 +7,7 @@ import modify_events
 import pandas as pd
 import numpy as np
 from pathlib import Path
-from utils import get_numvolumes, trim_derivatives, trim_calibration_volumes, trim_confounds
+from utils import get_numvolumes, trim_derivatives, trim_calibration_volumes, trim_confounds, eval_missing_events
 from bids.layout import BIDSLayout
 
 
@@ -136,3 +136,10 @@ else:
     print(f"Preprocessing events files is {preproc_events}. Not modifying *_events.tsv files.\n")
 
 
+
+# check subjects events files
+print("Checking missing events files across subjects, runs and/or sessions. This will take a moment.")
+inpdir_layout = BIDSLayout(eventspath, derivatives=False)
+
+_ = eval_missing_events(dir_layout=inpdir_layout, taskname=taskname)
+print()

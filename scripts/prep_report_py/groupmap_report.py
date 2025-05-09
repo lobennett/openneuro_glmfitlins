@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import fnmatch 
 import argparse
 import subprocess
 import pandas as pd
@@ -46,7 +47,7 @@ noise_reg = [
 ]
 
 # Create output directory for images
-spec_imgs_dir = Path(f"{spec_path}/{study_id}/group_{task}/imgs")
+spec_imgs_dir = Path(f"{spec_path}/{study_id}/group_{task}/files")
 spec_imgs_dir.mkdir(parents=True, exist_ok=True)
 
 # Get plotting coordinates from study details
@@ -81,7 +82,7 @@ num_subjects = len(spec_results['subjects'])
 hrf_model_type = spec_results['nodes'][0]['convolve_model']
 derivative_added = spec_results['nodes'][0]['if_derivative_hrf']
 dispersion_added = spec_results['nodes'][0]['if_dispersion_hrf']
-
+convolved_inputs = spec_results['nodes'][0]['convolve_inputs']
 
 # HRF model description based on convolution, derivative and dispersion terms
 hrf_components = []
@@ -155,6 +156,13 @@ for design_mat_path in design_matrices:
         all_vif_dfs.append(vif_df)
     except Exception as e:
         print(f"Error processing {design_mat_path.name}: {e}")
+
+# subset signal_regressors with those used in convolve as inputs
+convolved_names = []
+
+for pattern in convolved_inputs:
+    matches = fnmatch.filter(signal_regressors, pattern)
+    convolved_names.extend(matches)
 
 # Create VIF visualization if data is available
 if all_vif_dfs:
@@ -259,7 +267,7 @@ try:
         ratio_results = list(executor.map(partial_func, tmp_r2_paths))
 
     ratio_df = pd.DataFrame(ratio_results)
-    low_quality = get_low_quality_subs(ratio_df=ratio_df, dice_thresh=0.85, voxout_thresh=0.10)
+    low_quality = get_low_quality_subs(ratio_df=ratio_df, dice_thresh=0.80, voxout_thresh=0.10)
     r2_success = True
 
 except Exception as e:
@@ -363,6 +371,7 @@ grp_readme = generate_groupmodsummary(
     hrf_model_type=hrf_model, 
     signal_regressors=signal_regressors, 
     noise_regressors=noise_regressors, 
+    convolved_regressors=convolved_names,
     has_run=has_run, 
     has_subject=has_subject, 
     contrast_dict=contrast_dict, 

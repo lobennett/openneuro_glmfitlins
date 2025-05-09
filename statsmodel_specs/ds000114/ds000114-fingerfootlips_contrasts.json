@@ -68,6 +68,38 @@
                 -1
             ],
             "Test": "t"
+        },
+        {
+            "Name": "footlipsvfinger",
+            "ConditionList": [
+                "trial_type.Foot",
+                "trial_type.Lips",
+                "trial_type.Finger"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "fingerlipsvfoot",
+            "ConditionList": [
+                "trial_type.Finger",
+                "trial_type.Lips",
+                "trial_type.Foot"
+
+
+            ],
+            "Weights": [
+                0.5,
+                0.5,
+                -1
+            ],
+            "Test": "t"
         }
     ]
 }

@@ -56,8 +56,8 @@ def generate_studysummary(spec_path, study_id, data, repo_url="https://github.co
     print("\tReview output and update calibration and events preproc values, as needed\n")
 
 
-def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors,  
-    noise_regressors, has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran, sessions=None, 
+def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signal_regressors, noise_regressors, convolved_regressors,
+    has_run, has_subject, contrast_dict, contrast_image, design_image, spec_imgs_dir, sub_flag, r2_quality_ran, sessions=None, 
     deriv_size=None):
     # Add title and description
     readme_content = f"# {study_id}: {task} Task Analysis Report\n"
@@ -67,9 +67,9 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     readme_content += "## Statistical Analysis Boilerplate\n\n"
     readme_content += f"### First-level Analysis\n"
     readme_content += f"FitLins was employed to estimate task-related BOLD activity in the {task} task for {num_subjects} subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. "
-    readme_content += f"For each participant, {len(signal_regressors)} regressors of interest (see list below) were convolved with a {hrf_model_type} hemodynamic response function in Nilearn. "
+    readme_content += f"For each participant, {len(convolved_regressors)} regressors of interest (out of total {len(signal_regressors)} regressors; see list below) were convolved with a {hrf_model_type} hemodynamic response function in Nilearn. "
     readme_content += f"The design matrix incorporated both regressors of interest and {len(noise_regressors)} additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. "
-    readme_content += f"Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. "
+    readme_content += f"Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean of the timeseries. "
     readme_content += f"Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). "
     readme_content += f"From the resulting model, {len(contrast_dict)} distinct contrast estimates were computed (see list below).\n\n"
     
@@ -90,7 +90,9 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
 
     readme_content += "## Additional Analysis Details \n"
     readme_content += "### Regressors of Interest\n"
-    readme_content += ", ".join(signal_regressors) if signal_regressors else "None identified"
+    readme_content += ", ".join(signal_regressors) if signal_regressors else "None identified\n"
+    readme_content += "\n#### Convolved Regressors\n"
+    readme_content += ", ".join(convolved_regressors) if convolved_regressors else "None identified\n"
     
     readme_content += "\n### Nuisance Regressors\n"
     readme_content += ", ".join(noise_regressors) if noise_regressors else "None identified"
@@ -104,11 +106,11 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
         readme_content += f"- **{name}**: {expr}\n"
     
     readme_content += "\n## Figures\n"
-    readme_content += f"\n### Contrast Weights\n![Contrast Weight]({f"./imgs/{contrast_image}"})\n"
+    readme_content += f"\n### Contrast Weights\n![Contrast Weight]({f"./files/{contrast_image}"})\n"
     readme_content += f"\nThe contrast maps represents the weights used to model brain activity.\n"
-    readme_content += f"\n### Design Matrix\n![Design Matrix]({f"./imgs/{design_image}"})\n"
+    readme_content += f"\n### Design Matrix\n![Design Matrix]({f"./files/{design_image}"})\n"
     readme_content += f"\nThe example design matrix illustrates the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interest, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).\n"
-    readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./imgs/{study_id}_task-{task}_vif-boxplot.png"})\n"
+    readme_content += f"\n### Variance Inflation Factor (VIF)\n![VIF Distribution]({f"./files/{study_id}_task-{task}_vif-boxplot.png"})\n"
     readme_content += f"\nThe above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.\n"
     readme_content += f"\n### Voxelwise Model Variance Explained (r-squared)\n"
     readme_content += (
@@ -119,7 +121,7 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     f"The **mean** R-squared image reflect the average of the R-squared values across all subjects and runs."
     f"In other words, the fluctuation in how much variability in the BOLD signal the model explains at a given voxel.\n"
 
-    f"![R Square]({f'./imgs/{study_id}_task-{task}_rsquare-mean.png'})\n\n"
+    f"![R Square]({f'./files/{study_id}_task-{task}_rsquare-mean.png'})\n\n"
     
     f"#### Voxelwise Variance (Standard Deviation)\n"
     f"The **standard deviation** (or variance) image provides insights into the variability of model performance."
@@ -130,16 +132,16 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
         readme_content += (
             f"\n#### Flagged Subjects\n"
             f"The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: \n\n"
-            f"  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 \n"
-            f"  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) \n\n"
+            f"  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .80 (captures dropout and excess non-brain voxels) \n"
+            f"  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD, captures mostly non-brain voxels) \n\n"
             f"The subjects flagged for {task} are:\n"
 
             f"{', '.join(sub_flag) if sub_flag else 'None Subjects Flagged'}\n\n"
 
             f"The distribution for subjects and runs in {task} are below. \n\n"
 
-            f"![Dice](./imgs/{study_id}_task-{task}_hist-dicesimilarity.png)\n"
-            f"![Voxels Out](./imgs/{study_id}_task-{task}_hist-voxoutmask.png)\n"
+            f"![Dice](./files/{study_id}_task-{task}_hist-dicesimilarity.png)\n"
+            f"![Voxels Out](./files/{study_id}_task-{task}_hist-voxoutmask.png)\n"
         )
 
  
@@ -148,7 +150,7 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
     for con_name in contrast_dict.keys():
         if sessions is None:
             # no sessions specified, look for the non-session contrast map
-            map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
+            map_path = f"./files/{study_id}_task-{task}_contrast-{con_name}_map.png"
             if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_contrast-{con_name}_map.png")):
                 readme_content += f"\n#### {con_name}\n![{con_name} Map]({map_path})\n"
         else:
@@ -157,14 +159,14 @@ def generate_groupmodsummary(study_id, task, num_subjects, hrf_model_type, signa
             session_maps_found = False
             
             for session in sessions:
-                session_map_path = f"./imgs/{study_id}_task-{task}_{session}_contrast-{con_name}_map.png"
+                session_map_path = f"./files/{study_id}_task-{task}_{session}_contrast-{con_name}_map.png"
                 if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_{session}_contrast-{con_name}_map.png")):
                     readme_content += f"\n##### {session}\n![{con_name} {session} Map]({session_map_path})\n"
                     session_maps_found = True
             
             # If no session maps were found, check if there's a non-session map available
             if not session_maps_found:
-                map_path = f"./imgs/{study_id}_task-{task}_contrast-{con_name}_map.png"
+                map_path = f"./files/{study_id}_task-{task}_contrast-{con_name}_map.png"
                 if os.path.exists(os.path.join(spec_imgs_dir, f"{study_id}_task-{task}_contrast-{con_name}_map.png")):
                     readme_content += f"![{con_name} Map]({map_path})\n"
                 else:

@@ -5,7 +5,7 @@ The size of the Fitlins Derivatives for ds000108 Emotionregulation is 17G with 1
 ## Statistical Analysis Boilerplate
 
 ### First-level Analysis
-FitLins was employed to estimate task-related BOLD activity in the Emotionregulation task for 30 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 13 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 28 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 9 distinct contrast estimates were computed (see list below).
+FitLins was employed to estimate task-related BOLD activity in the Emotionregulation task for 30 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 12 regressors of interest (out of total 13 regressors; see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 28 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean of the timeseries. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 9 distinct contrast estimates were computed (see list below).
 
 ### Model Outputs
 For each participant's run, outputs include but are not limited to:
@@ -21,6 +21,8 @@ Within-subject runs were combined using Nilearn's *compute_fixed_effects* functi
 ## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.Look_Neg_Ant, trial_type.Look_Neg_Cue, trial_type.Look_Neg_Rating, trial_type.Look_Neg_Stim, trial_type.Look_Neutral_Ant, trial_type.Look_Neutral_Cue, trial_type.Look_Neutral_Rating, trial_type.Look_Neutral_Stim, trial_type.Reapp_Neg_Ant, trial_type.Reapp_Neg_Cue, trial_type.Reapp_Neg_Rating, trial_type.Reapp_Neg_Stim, intercept
+#### Convolved Regressors
+trial_type.Look_Neg_Ant, trial_type.Look_Neg_Cue, trial_type.Look_Neg_Rating, trial_type.Look_Neg_Stim, trial_type.Look_Neutral_Ant, trial_type.Look_Neutral_Cue, trial_type.Look_Neutral_Rating, trial_type.Look_Neutral_Stim, trial_type.Reapp_Neg_Ant, trial_type.Reapp_Neg_Cue, trial_type.Reapp_Neg_Rating, trial_type.Reapp_Neg_Stim
 ### Nuisance Regressors
 trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_y, trans_y_derivative1, trans_y_derivative1_power2, trans_y_power2, trans_z, trans_z_derivative1, trans_z_derivative1_power2, trans_z_power2, rot_x, rot_x_derivative1, rot_x_derivative1_power2, rot_x_power2, rot_y, rot_y_derivative1, rot_y_derivative1_power2, rot_y_power2, rot_z, rot_z_derivative1, rot_z_derivative1_power2, rot_z_power2, cosine00, cosine01, cosine02, cosine03
 ## Model Structure
@@ -41,17 +43,17 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 ## Figures
 
 ### Contrast Weights
-![Contrast Weight](./imgs/ds000108_task-Emotionregulation_contrast-matrix.svg)
+![Contrast Weight](./files/ds000108_task-Emotionregulation_contrast-matrix.svg)
 
 The contrast maps represents the weights used to model brain activity.
 
 ### Design Matrix
-![Design Matrix](./imgs/ds000108_task-Emotionregulation_design-matrix.svg)
+![Design Matrix](./files/ds000108_task-Emotionregulation_design-matrix.svg)
 
 The example design matrix illustrates the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interest, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).
 
 ### Variance Inflation Factor (VIF)
-![VIF Distribution](./imgs/ds000108_task-Emotionregulation_vif-boxplot.png)
+![VIF Distribution](./files/ds000108_task-Emotionregulation_vif-boxplot.png)
 
 The above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
 
@@ -60,7 +62,7 @@ Voxelwise R-squared values represent the proportion of variance explained by the
 
 #### Voxelwise Average (Mean)
 The **mean** R-squared image reflect the average of the R-squared values across all subjects and runs.In other words, the fluctuation in how much variability in the BOLD signal the model explains at a given voxel.
-![R Square](./imgs/ds000108_task-Emotionregulation_rsquare-mean.png)
+![R Square](./files/ds000108_task-Emotionregulation_rsquare-mean.png)
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
@@ -68,42 +70,42 @@ The **standard deviation** (or variance) image provides insights into the variab
 #### Flagged Subjects
 The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: 
 
-  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 
-  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
+  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .80 (captures dropout and excess non-brain voxels) 
+  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD, captures mostly non-brain voxels) 
 
 The subjects flagged for Emotionregulation are:
-sub-01_run-1, sub-01_run-2, sub-01_run-3, sub-01_run-4, sub-01_run-5, sub-01_run-6, sub-02_run-1, sub-02_run-2, sub-02_run-3, sub-02_run-4, sub-02_run-5, sub-02_run-6, sub-03_run-1, sub-03_run-2, sub-03_run-3, sub-03_run-4, sub-03_run-5, sub-03_run-6, sub-04_run-1, sub-04_run-3, sub-04_run-5, sub-04_run-6, sub-05_run-1, sub-05_run-2, sub-05_run-3, sub-05_run-4, sub-05_run-5, sub-05_run-6, sub-06_run-1, sub-06_run-2, sub-06_run-3, sub-06_run-4, sub-06_run-5, sub-06_run-6, sub-07_run-1, sub-07_run-2, sub-07_run-3, sub-07_run-4, sub-07_run-5, sub-07_run-6, sub-08_run-1, sub-08_run-2, sub-08_run-3, sub-08_run-4, sub-08_run-5, sub-08_run-6, sub-09_run-1, sub-09_run-2, sub-09_run-3, sub-09_run-4, sub-09_run-5, sub-09_run-6, sub-10_run-1, sub-10_run-2, sub-10_run-3, sub-10_run-4, sub-10_run-5, sub-10_run-6, sub-11_run-1, sub-11_run-2, sub-11_run-3, sub-11_run-4, sub-11_run-5, sub-11_run-6, sub-12_run-1, sub-12_run-2, sub-12_run-3, sub-12_run-4, sub-12_run-5, sub-12_run-6, sub-13_run-1, sub-13_run-2, sub-13_run-3, sub-13_run-4, sub-13_run-5, sub-13_run-6, sub-14_run-1, sub-14_run-2, sub-14_run-3, sub-14_run-4, sub-14_run-5, sub-14_run-6, sub-15_run-1, sub-15_run-2, sub-15_run-3, sub-15_run-4, sub-15_run-5, sub-15_run-6, sub-16_run-1, sub-16_run-2, sub-16_run-3, sub-16_run-4, sub-16_run-5, sub-16_run-6, sub-17_run-1, sub-17_run-2, sub-17_run-3, sub-17_run-4, sub-17_run-5, sub-17_run-6, sub-18_run-1, sub-18_run-2, sub-18_run-3, sub-18_run-4, sub-18_run-5, sub-18_run-6, sub-19_run-1, sub-19_run-2, sub-19_run-3, sub-19_run-4, sub-19_run-5, sub-19_run-6, sub-20_run-1, sub-20_run-2, sub-20_run-3, sub-20_run-4, sub-20_run-5, sub-20_run-6, sub-21_run-1, sub-21_run-4, sub-21_run-5, sub-21_run-6, sub-22_run-1, sub-22_run-2, sub-22_run-3, sub-22_run-4, sub-22_run-5, sub-22_run-6, sub-23_run-1, sub-23_run-2, sub-23_run-3, sub-23_run-5, sub-23_run-6, sub-25_run-1, sub-25_run-2, sub-25_run-3, sub-25_run-4, sub-25_run-5, sub-25_run-6, sub-26_run-1, sub-26_run-2, sub-26_run-3, sub-26_run-4, sub-26_run-5, sub-27_run-1, sub-27_run-2, sub-27_run-3, sub-27_run-4, sub-27_run-5, sub-27_run-6, sub-30_run-1, sub-30_run-2, sub-30_run-3, sub-30_run-4, sub-30_run-5, sub-30_run-6, sub-31_run-1, sub-31_run-2, sub-31_run-3, sub-31_run-4, sub-31_run-5, sub-31_run-6, sub-32_run-1, sub-32_run-2, sub-32_run-3, sub-32_run-4, sub-32_run-5, sub-32_run-6, sub-33_run-1, sub-33_run-2, sub-33_run-3, sub-33_run-4, sub-33_run-5, sub-33_run-6
+sub-01_run-1, sub-02_run-2, sub-02_run-4, sub-02_run-5, sub-02_run-6, sub-03_run-1, sub-03_run-2, sub-03_run-3, sub-03_run-4, sub-03_run-6, sub-06_run-4, sub-06_run-5, sub-06_run-6, sub-07_run-5, sub-08_run-1, sub-08_run-2, sub-08_run-3, sub-08_run-4, sub-08_run-5, sub-08_run-6, sub-10_run-6, sub-11_run-1, sub-11_run-2, sub-11_run-5, sub-11_run-6, sub-12_run-1, sub-12_run-2, sub-12_run-3, sub-12_run-4, sub-12_run-5, sub-12_run-6, sub-13_run-1, sub-13_run-4, sub-13_run-5, sub-13_run-6, sub-15_run-2, sub-15_run-3, sub-16_run-1, sub-16_run-2, sub-16_run-3, sub-16_run-4, sub-16_run-5, sub-16_run-6, sub-17_run-2, sub-17_run-3, sub-17_run-4, sub-17_run-5, sub-19_run-1, sub-19_run-4, sub-19_run-5, sub-20_run-1, sub-20_run-2, sub-20_run-3, sub-20_run-4, sub-20_run-5, sub-20_run-6, sub-21_run-5, sub-22_run-1, sub-22_run-2, sub-22_run-3, sub-22_run-4, sub-22_run-5, sub-22_run-6, sub-23_run-1, sub-23_run-2, sub-23_run-3, sub-23_run-5, sub-25_run-3, sub-25_run-4, sub-25_run-5, sub-25_run-6, sub-26_run-2, sub-31_run-1, sub-31_run-2, sub-31_run-3, sub-31_run-4, sub-31_run-5, sub-31_run-6
 
 The distribution for subjects and runs in Emotionregulation are below. 
 
-![Dice](./imgs/ds000108_task-Emotionregulation_hist-dicesimilarity.png)
-![Voxels Out](./imgs/ds000108_task-Emotionregulation_hist-voxoutmask.png)
+![Dice](./files/ds000108_task-Emotionregulation_hist-dicesimilarity.png)
+![Voxels Out](./files/ds000108_task-Emotionregulation_hist-voxoutmask.png)
 
 ### Statistical Maps
 
 #### StimReappNegvLookNeg
-![StimReappNegvLookNeg Map](./imgs/ds000108_task-Emotionregulation_contrast-StimReappNegvLookNeg_map.png)
+![StimReappNegvLookNeg Map](./files/ds000108_task-Emotionregulation_contrast-StimReappNegvLookNeg_map.png)
 
 #### StimLookNegvNeutral
-![StimLookNegvNeutral Map](./imgs/ds000108_task-Emotionregulation_contrast-StimLookNegvNeutral_map.png)
+![StimLookNegvNeutral Map](./files/ds000108_task-Emotionregulation_contrast-StimLookNegvNeutral_map.png)
 
 #### StimReappvLookNegNeut
-![StimReappvLookNegNeut Map](./imgs/ds000108_task-Emotionregulation_contrast-StimReappvLookNegNeut_map.png)
+![StimReappvLookNegNeut Map](./files/ds000108_task-Emotionregulation_contrast-StimReappvLookNegNeut_map.png)
 
 #### StimReappNeg
-![StimReappNeg Map](./imgs/ds000108_task-Emotionregulation_contrast-StimReappNeg_map.png)
+![StimReappNeg Map](./files/ds000108_task-Emotionregulation_contrast-StimReappNeg_map.png)
 
 #### StimLookNeg
-![StimLookNeg Map](./imgs/ds000108_task-Emotionregulation_contrast-StimLookNeg_map.png)
+![StimLookNeg Map](./files/ds000108_task-Emotionregulation_contrast-StimLookNeg_map.png)
 
 #### StimLookNeutral
-![StimLookNeutral Map](./imgs/ds000108_task-Emotionregulation_contrast-StimLookNeutral_map.png)
+![StimLookNeutral Map](./files/ds000108_task-Emotionregulation_contrast-StimLookNeutral_map.png)
 
 #### StimPhase
-![StimPhase Map](./imgs/ds000108_task-Emotionregulation_contrast-StimPhase_map.png)
+![StimPhase Map](./files/ds000108_task-Emotionregulation_contrast-StimPhase_map.png)
 
 #### AntPhase
-![AntPhase Map](./imgs/ds000108_task-Emotionregulation_contrast-AntPhase_map.png)
+![AntPhase Map](./files/ds000108_task-Emotionregulation_contrast-AntPhase_map.png)
 
 #### RatePhase
-![RatePhase Map](./imgs/ds000108_task-Emotionregulation_contrast-RatePhase_map.png)
+![RatePhase Map](./files/ds000108_task-Emotionregulation_contrast-RatePhase_map.png)

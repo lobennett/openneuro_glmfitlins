@@ -3,13 +3,13 @@
 **Maintainer**: Michael Demidenko  
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-05-05`*
+*This repository is in active development. `Last updated: 2025-05-09`*
 
 N OpenNeuro Studies: 22
 
-N OpenNeuro Task fMRI Group Summaries: 33
+N OpenNeuro Task fMRI Group Summaries: 35
 
-Completed fMRI Task Names: ParallelAdaptation, wm, em, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, balloonanalogrisktask, objectviewing, dts, retrieval, encoding, flavor, flanker
+Completed fMRI Task Names: ParallelAdaptation, wm, em, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, task, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, task, balloonanalogrisktask, objectviewing, dts, retrieval, encoding, flavor, flanker
 
 ## Overview
 
@@ -80,15 +80,27 @@ For items related to specific issues, please use the `Issues` tab. There are sep
   - [DataLad](https://www.datalad.org/)
   - Git (≥ 2.2)
 
-- **Python Dependencies**:
-  - Python 3.12+
-  - Major packages:
-    - numpy (≥ 1.26.0)
-    - pandas (≥ 2.0.0)
-    - nilearn (≥ 0.9.2)
-    - matplotlib (≥ 3.7.0)
-    - seaborn (≥ 0.12.0)
-    - jupyter ecosystem (nbformat, IPython, notebook)
+### **Python Dependencies**
+
+- **Python version**: 3.12+  
+
+- **Major packages**:
+  - `numpy` (≥ 1.26.0)
+  - `pandas` (≥ 2.0.0)
+  - `datalad` (≥ 0.16.0)
+  - `nilearn` (≥ 0.9.2) - pre-dates issue for returned maps in computed_fixed estimates for `precision_weighted=True`
+  - `matplotlib` (>=3.7.0)
+  - `seaborn` (>=0.12.0)
+  - Jupyter ecosystem:
+    - `nbformat` (≥ 5.8.0)
+    - `IPython` (≥ 8.0.0)
+    - `jupyter` (≥ 1.0.0)
+    - `notebook` (≥ 7.0.0)
+  - `awscli`
+  - `scipy`
+  - `argparse`
+  - `pyrelimri`
+  - `templateflow`
     - awscli, scipy, argparse
   - Custom installations to resolve compatibility issues:
     - fitlins: `git+https://github.com/jmumford/fitlins.git@paddedint`
@@ -144,16 +156,82 @@ Within the `cluster_jobs` subfolder, submit the job with the OpenNeuro ID: Updat
 sbatch recreate_fmriprep.sh ds003425
 ```
 
-### 3. Modify Events/BOLD/Confound Files
+### 3. Modify Events/BOLD/Confound Files and Check Event Counts
 
 ```bash
-bash 2_modify_boldeventfiles.sh ds003425 learning
+bash 2_modifycheck_boldeventfiles.sh ds003425 learning
 ```
 
 This step:
 - Trims initial volumes from preprocessed BOLD data and confound files, if needed, if calibration/dummy volumes `dummy_volumes` flag in the details JSON `> 0` (writes out files to `derivatives_alt` subfolder)
 - Modifies events files (currently in place), if needed, based on the `preproc_events` flag in the details JSON
 - The modified BOLD and/confounds files are saved to `derivatives_alt` fMRIPrep subfolder. Associated `.json` files are moved, too, that provided important metadata for FitLins.
+- Checks whether subjects have equal events files for each run and/or session. Reports to terminal. This check should be used to 1) double check the exist files and 2) adjust subject/runs in the model specs, accordingly.
+
+Example for `ds001229 EM task`
+```bash
+_________ANALYZING TASK: *em* one session_________
+
+Subjects with incomplete event files:
+18: 2 event file(s) (missing N = 1 runs)
+
+All subjects have event files
+
+_____Summary of Missing Files_____
+Total alerts: 1
+⚠️ Subject 18 is missing 1 event file(s)
+```
+
+Example for `ds003425 prelearning task`
+```bash
+_________ANALYZING TASK: *prelearning* across 2 sessions:['01', '02']_________
+
+=== Analysis for Session: 01 ===
+
+Subjects with incomplete event files:
+01: 2 event file(s) (missing N = 1 runs)
+05: 2 event file(s) (missing N = 1 runs)
+
+All subjects have event files
+
+=== Analysis for Session: 02 ===
+
+All subjects with events have complete files
+
+Subjects with NO event files:
+Subject 09
+Subject 01
+Subject 06
+Subject 11
+Subject 08
+Subject 10
+Subject 03
+Subject 05
+Subject 04
+Subject 07
+Subject 02
+Subject 12
+Subject 13
+
+_____Summary of Missing Files_____
+Total alerts: 15
+⚠️ Session 01: Subject 01 is missing 1 event file(s)
+⚠️ Session 01: Subject 05 is missing 1 event file(s)
+⚠️ Session 02: Subject 09 has NO event files
+⚠️ Session 02: Subject 01 has NO event files
+⚠️ Session 02: Subject 06 has NO event files
+⚠️ Session 02: Subject 11 has NO event files
+⚠️ Session 02: Subject 08 has NO event files
+⚠️ Session 02: Subject 10 has NO event files
+⚠️ Session 02: Subject 03 has NO event files
+⚠️ Session 02: Subject 05 has NO event files
+⚠️ Session 02: Subject 04 has NO event files
+⚠️ Session 02: Subject 07 has NO event files
+⚠️ Session 02: Subject 02 has NO event files
+⚠️ Session 02: Subject 12 has NO event files
+⚠️ Session 02: Subject 13 has NO event files
+```
+
 
 **Important**: For event preprocessing, you must create a study-specific function in `modify_events.py`. Example:
 
@@ -189,6 +267,12 @@ This step:
 - Creates a BIDS Stats Models specification (e.g. spec for [ds003425_task-learning](./statsmodel_specs/ds003425/ds003425-learning_specs.json)) file based on the task, subjects, and contrasts
 - Generates a template that should be reviewed and potentially modified before running FitLins
 - Customizations might include changing transformations, adding temporal derivatives, or removing processing nodes
+- After the file is created, the final code confirms that the conditions in contrasts in the spec file match the columns available in resulting design matrix created by BIDS Stats Models. Example report in terminal:
+```bash
+Confirming contrast conditions map to available design matrix columns.
+** All contrast conditions are present in at least one design matrix. ** 
+
+Conditions used in contrasts specification exist in all design matrices.```
 
 ### 5. Run FitLins Model
 

@@ -228,6 +228,7 @@ def extract_model_info(model_spec):
                 for contrast in node.get("Contrasts", [])
             ],
             "convolve_model": "spm",  # Default value spm
+            "convolve_inputs": [],            # Obtain regressors that were convolved
             "if_derivative_hrf": False,    # Track if HRF derivative is used
             "if_dispersion_hrf": False    # Track if HRF dispersion is used
         }
@@ -239,6 +240,7 @@ def extract_model_info(model_spec):
                 node_info["convolve_model"] = instruction.get("Model", "Unknown")
                 node_info["if_derivative_hrf"] = instruction.get("Derivative", False) == True
                 node_info["if_dispersion_hrf"] = instruction.get("Dispersion", False) == True
+                node_info["convolve_inputs"] = instruction.get("Input", [])
                 break  # Stop searching after finding first Convolve transformation
 
         extracted_info["nodes"].append(node_info)
@@ -486,3 +488,189 @@ def get_low_quality_subs(ratio_df, dice_thresh=0.85, voxout_thresh=0.10):
     
     low_quality_imgs = sorted(low_quality['img1'].tolist())
     return low_quality_imgs
+
+
+# qc subjects' events files 
+def eval_missing_events(dir_layout, taskname):
+    """
+    Evaluate missing event files for subjects in a BIDS directory
+    
+    Parameters:
+    dir_layout: BIDSLayout() object
+    taskname: The name of the task to analyze
+        
+    Returns:
+    A dictionary containing analysis results for each session if sess_info provided,
+    otherwise returns results for the entire dataset
+    """
+    all_subjects = dir_layout.get_subjects()
+    sess_info = dir_layout.get_sessions()
+    all_results = {}
+    alerts = []
+    
+    # If session info is provided, analyze each session separately
+    if sess_info:
+        print(f"\n_________ANALYZING TASK: *{taskname}* across {len(sess_info)} sessions:{sess_info}_________")
+        for sess in sess_info:
+            session_alerts = []
+            print(f"\n=== Analysis for Session: {sess} ===")
+            events_list = dir_layout.get(task=taskname, session=sess, suffix="events", extension=".tsv")
+            subject_counts = {}
+            
+            # Count event files for each subject in this session
+            for event_file in events_list:
+                subject = event_file.entities['subject']
+                if subject in subject_counts:
+                    subject_counts[subject] += 1
+                else:
+                    subject_counts[subject] = 1
+            
+            # Calculate statistics for this session
+            max_events = max(subject_counts.values()) if subject_counts else 0
+            incomplete_subjects = {subj: count for subj, count in subject_counts.items() if count < max_events}
+            
+            # Find subjects with no event files in this session
+            subjects_with_events = set(subject_counts.keys())
+            subjects_without_events = set(all_subjects) - subjects_with_events
+            
+            # Count missing files for this session
+            total_missing_from_incomplete = sum(max_events - count for count in incomplete_subjects.values())
+            total_missing_from_no_events = len(subjects_without_events) * max_events
+            total_missing = total_missing_from_incomplete + total_missing_from_no_events
+            
+            # Print results and generate alerts for this session
+            if incomplete_subjects:
+                print("\nSubjects with incomplete event files:")
+                for subject, count in incomplete_subjects.items():
+                    missing_count = max_events - count
+                    print(f"{subject}: {count} event file(s) (missing N = {missing_count} runs)")
+                    session_alerts.append(f"⚠️ Session {sess}: Subject {subject} is missing {missing_count} event file(s)")
+            else:
+                print("\nAll subjects with events have complete files")
+            
+            if subjects_without_events:
+                print("\nSubjects with NO event files:")
+                for subject in subjects_without_events:
+                    print(f"Subject {subject}")
+                    session_alerts.append(f"⚠️ Session {sess}: Subject {subject} has NO event files")
+            else:
+                print("\nAll subjects have event files")
+            
+            # Store results for this session
+            all_results[sess] = {
+                "max_events_per_subject": max_events,
+                "subjects_with_events": subjects_with_events,
+                "subjects_without_events": subjects_without_events,
+                "incomplete_subjects": incomplete_subjects,
+                "total_subjects": len(all_subjects),
+                "subjects_with_events_count": len(subjects_with_events),
+                "subjects_without_events_count": len(subjects_without_events),
+                "incomplete_subjects_count": len(incomplete_subjects),
+                "missing_files_from_incomplete": total_missing_from_incomplete,
+                "missing_files_from_no_events": total_missing_from_no_events,
+                "total_missing_files": total_missing,
+                "alerts": session_alerts
+            }
+            
+            # Add this session's alerts to the overall alerts
+            alerts.extend(session_alerts)
+
+        # Print overall summary and alerts
+        print("\n_____Summary of Missing Files_____")
+        if alerts:
+            print(f"Total alerts: {len(alerts)}")
+            for alert in alerts:
+                print(alert)
+        else:
+            print("No missing files detected across all sessions.")
+            
+        return all_results
+    
+    # If no session info, analyze the entire dataset
+    else:
+        print(f"\n_________ANALYZING TASK: *{taskname}* one session_________")
+        events_list = dir_layout.get(task=taskname, suffix="events", extension=".tsv")
+        subject_counts = {}
+        
+        # Count event files for each subject
+        for event_file in events_list:
+            subject = event_file.entities['subject']
+            if subject in subject_counts:
+                subject_counts[subject] += 1
+            else:
+                subject_counts[subject] = 1
+        
+        # Calculate statistics
+        max_events = max(subject_counts.values()) if subject_counts else 0
+        incomplete_subjects = {subj: count for subj, count in subject_counts.items() if count < max_events}
+        
+        # Find subjects with no event files
+        subjects_with_events = set(subject_counts.keys())
+        subjects_without_events = set(all_subjects) - subjects_with_events
+        
+        # Count missing files
+        total_missing_from_incomplete = sum(max_events - count for count in incomplete_subjects.values())
+        total_missing_from_no_events = len(subjects_without_events) * max_events
+        total_missing = total_missing_from_incomplete + total_missing_from_no_events
+        
+        # Print results and generate alerts
+        if incomplete_subjects:
+            print("\nSubjects with incomplete event files:")
+            for subject, count in incomplete_subjects.items():
+                missing_count = max_events - count
+                print(f"{subject}: {count} event file(s) (missing N = {missing_count} runs)")
+                alerts.append(f"⚠️ Subject {subject} is missing {missing_count} event file(s)")
+        else:
+            print("\nAll subjects with events have complete files")
+        
+        if subjects_without_events:
+            print("\nSubjects with NO event files:")
+            for subject in subjects_without_events:
+                print(f"Subject {subject}")
+                alerts.append(f"* {subject} has NO event files")
+        else:
+            print("\nAll subjects have event files")
+        
+        # Print summary of alerts
+        print("\n_____Summary of Missing Files_____")
+        if alerts:
+            print(f"Total alerts: {len(alerts)}")
+            for alert in alerts:
+                print(alert)
+        else:
+            print("No missing files detected.")
+        
+        # Return results including alerts
+        results = {
+            "max_events_per_subject": max_events,
+            "subjects_with_events": subjects_with_events,
+            "subjects_without_events": subjects_without_events,
+            "incomplete_subjects": incomplete_subjects,
+            "total_subjects": len(all_subjects),
+            "subjects_with_events_count": len(subjects_with_events),
+            "subjects_without_events_count": len(subjects_without_events),
+            "incomplete_subjects_count": len(incomplete_subjects),
+            "missing_files_from_incomplete": total_missing_from_incomplete,
+            "missing_files_from_no_events": total_missing_from_no_events,
+            "total_missing_files": total_missing,
+            "alerts": alerts
+        }
+        
+        return results
+
+
+def pull_contrast_conditions_spec(spec_content):
+    """
+    get unique condition list values from spec content
+    """
+    condition_vals = set()
+    
+    # At node with contrasts, get condition lists
+    for node in spec_content.get("Nodes", []):
+        for contrast in node.get("Contrasts", []):
+            condition_list = contrast.get("ConditionList", [])
+
+            for condition in condition_list:
+                condition_vals.add(condition)
+                
+    return sorted(list(condition_vals))

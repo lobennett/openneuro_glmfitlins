@@ -30,26 +30,20 @@ scratch=$(jq -r '.tmp_folder' "$config_file")
 model_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_specs.json"
 contrasts_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_contrasts.json"
 subjects_json="${repo_dir}/statsmodel_specs/${openneuro_id}/${openneuro_id}-${task_label}_subjects.json"
+bids_dir_data_dir="${data}/input/${openneuro_id}"
 
 # gen model specifications if not present
-if [[ -f "$model_json" ]]; then
-  echo "INFO: Model specification file already exists:"
-  echo "      $model_json"
+# Check if contrasts.json and _subjects.json exist
+if [[ -f "$contrasts_json" && -f "$subjects_json" ]]; then
+  echo "INFO: Required Subject and Contrast Files found. Creating model specifications..."
+  
+  # run the script to create the model specs
+  uv --project ${repo_dir} run python "${scripts_dir}/prep_report_py/create_mod_specs.py" \
+      --openneuro_study ${openneuro_id} \
+      --task ${task_label} \
+      --script_dir ${scripts_dir} \
+      --input_dir ${bids_dir_data_dir} 
 else
-  # Check if contrasts.json and _subjects.json exist
-  if [[ -f "$contrasts_json" && -f "$subjects_json" ]]; then
-    echo "INFO: Required Subject and Contrast Files found. Creating model specifications..."
-    
-    # run the script to create the model specs
-    uv --project ${repo_dir} run python "${scripts_dir}/prep_report_py/create_mod_specs.py" \
-        --openneuro_study ${openneuro_id} \
-        --task ${task_label} \
-        --script_dir ${scripts_dir}
-    
-    echo "SUCCESS: Model specification file created at:"
-    echo "         $model_json"
-  else
-    echo "ERROR: Cannot create model specifications."
-    echo "       Missing contrasts.json or subjects.json files."
-  fi
+  echo "ERROR: Cannot create model specifications."
+  echo "       Missing contrasts.json or subjects.json files."
 fi

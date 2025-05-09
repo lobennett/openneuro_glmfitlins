@@ -5,7 +5,7 @@ The size of the Fitlins Derivatives for ds000102 flanker is 2.5G with 1736 files
 ## Statistical Analysis Boilerplate
 
 ### First-level Analysis
-FitLins was employed to estimate task-related BOLD activity in the flanker task for 26 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 6 regressors of interest (see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 27 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean BOLD signal. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 3 distinct contrast estimates were computed (see list below).
+FitLins was employed to estimate task-related BOLD activity in the flanker task for 26 subjects. In this instance, FitLins used the Nilearn estimator in its statistical modeling of the BOLD data. For each participant, 5 regressors of interest (out of total 6 regressors; see list below) were convolved with a spm hemodynamic response function in Nilearn. The design matrix incorporated both regressors of interest and 27 additional components, including a drift cosine basis set and nuisance regressors to account for sources of noise in the BOLD signal. Following Nilearn's *FirstLevelModel* default procedure, each voxel's timeseries was mean-scaled by each voxel's mean of the timeseries. Data were smoothed at each run using a 5mm full-width at half maximum smoothing kernal (default: isotropic additive smoothing). From the resulting model, 3 distinct contrast estimates were computed (see list below).
 
 ### Model Outputs
 For each participant's run, outputs include but are not limited to:
@@ -21,6 +21,8 @@ Within-subject runs were combined using Nilearn's *compute_fixed_effects* functi
 ## Additional Analysis Details 
 ### Regressors of Interest
 trial_type.congruent_correct, trial_type.congruent_incorrect, trial_type.incongruent_correct, trial_type.incongruent_incorrect, rt_reg.rt, intercept
+#### Convolved Regressors
+trial_type.congruent_correct, trial_type.congruent_incorrect, trial_type.incongruent_correct, trial_type.incongruent_incorrect, rt_reg.rt
 ### Nuisance Regressors
 trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_y, trans_y_derivative1, trans_y_derivative1_power2, trans_y_power2, trans_z, trans_z_derivative1, trans_z_derivative1_power2, trans_z_power2, rot_x, rot_x_derivative1, rot_x_derivative1_power2, rot_x_power2, rot_y, rot_y_derivative1, rot_y_derivative1_power2, rot_y_power2, rot_z, rot_z_derivative1, rot_z_derivative1_power2, rot_z_power2, cosine00, cosine01, cosine02
 ## Model Structure
@@ -35,17 +37,17 @@ trans_x, trans_x_derivative1, trans_x_derivative1_power2, trans_x_power2, trans_
 ## Figures
 
 ### Contrast Weights
-![Contrast Weight](./imgs/ds000102_task-flanker_contrast-matrix.svg)
+![Contrast Weight](./files/ds000102_task-flanker_contrast-matrix.svg)
 
 The contrast maps represents the weights used to model brain activity.
 
 ### Design Matrix
-![Design Matrix](./imgs/ds000102_task-flanker_design-matrix.svg)
+![Design Matrix](./files/ds000102_task-flanker_design-matrix.svg)
 
 The example design matrix illustrates the model used in the statistical analyses for this task (Note: if motion outliers are included, the number of these will vary between subjects). Each column represents a regressor (of interest or not of interest, based on the above), and each row represents a time point in the BOLD timeseries. The colored patterns show how different experimental conditions are modeled across the scan duration (HRF model).
 
 ### Variance Inflation Factor (VIF)
-![VIF Distribution](./imgs/ds000102_task-flanker_vif-boxplot.png)
+![VIF Distribution](./files/ds000102_task-flanker_vif-boxplot.png)
 
 The above includes 1) regressor and 2) contrast VIF estimates. The VIF boxplot quantifies multicollinearity between model regressors and how they impact contrasts (for more on contrasts VIFs, see [Dr. Mumford's repo](https://github.com/jmumford/vif_contrasts)). Lower VIF values indicate more statistically independent regressors, which is desirable for reliable parameter estimation. VIFs were estimated using the first-level model design matrices -- nusiance regressors are excluded here for brevity.
 
@@ -54,7 +56,7 @@ Voxelwise R-squared values represent the proportion of variance explained by the
 
 #### Voxelwise Average (Mean)
 The **mean** R-squared image reflect the average of the R-squared values across all subjects and runs.In other words, the fluctuation in how much variability in the BOLD signal the model explains at a given voxel.
-![R Square](./imgs/ds000102_task-flanker_rsquare-mean.png)
+![R Square](./files/ds000102_task-flanker_rsquare-mean.png)
 
 #### Voxelwise Variance (Standard Deviation)
 The **standard deviation** (or variance) image provides insights into the variability of model performance.In otherwords, across subjects, runs and/or sessions, how much variability there is in the models ability to explain the BOLD at a given voxel.
@@ -62,24 +64,24 @@ The **standard deviation** (or variance) image provides insights into the variab
 #### Flagged Subjects
 The quality assessment pipeline evaluates volumetric data across multiple dimensions to identify problematic datasets. Subjects are flagged using: 
 
-  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .85 
-  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD) 
+  - Dice Estimate: Similarity coefficient between subject r-squared maps and Target Space MNI152 mask falls below .80 (captures dropout and excess non-brain voxels) 
+  - Voxels Outside of Mask: Percentage of voxels outside of the target brain mask is greater than the .10% (liberal threshold due to liberal brain masks in fMRIPrep BOLD, captures mostly non-brain voxels) 
 
 The subjects flagged for flanker are:
 sub-16_run-1, sub-16_run-2
 
 The distribution for subjects and runs in flanker are below. 
 
-![Dice](./imgs/ds000102_task-flanker_hist-dicesimilarity.png)
-![Voxels Out](./imgs/ds000102_task-flanker_hist-voxoutmask.png)
+![Dice](./files/ds000102_task-flanker_hist-dicesimilarity.png)
+![Voxels Out](./files/ds000102_task-flanker_hist-voxoutmask.png)
 
 ### Statistical Maps
 
 #### inVcon
-![inVcon Map](./imgs/ds000102_task-flanker_contrast-inVcon_map.png)
+![inVcon Map](./files/ds000102_task-flanker_contrast-inVcon_map.png)
 
 #### inVbase
-![inVbase Map](./imgs/ds000102_task-flanker_contrast-inVbase_map.png)
+![inVbase Map](./files/ds000102_task-flanker_contrast-inVbase_map.png)
 
 #### rt
-![rt Map](./imgs/ds000102_task-flanker_contrast-rt_map.png)
+![rt Map](./files/ds000102_task-flanker_contrast-rt_map.png)

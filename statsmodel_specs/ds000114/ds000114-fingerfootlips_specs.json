@@ -60,72 +60,107 @@
         "Type": "glm"
       },
       "Contrasts": [
-        {
-          "Name": "finger",
-          "ConditionList": [
-            "trial_type.Finger"
-          ],
-          "Weights": [
-            1
-          ],
-          "Test": "t"
-        },
-        {
-          "Name": "foot",
-          "ConditionList": [
-            "trial_type.Foot"
-          ],
-          "Weights": [
-            1
-          ],
-          "Test": "t"
-        },
-        {
-          "Name": "lips",
-          "ConditionList": [
-            "trial_type.Lips"
-          ],
-          "Weights": [
-            1
-          ],
-          "Test": "t"
-        },
-        {
-          "Name": "fingervfoot",
-          "ConditionList": [
-            "trial_type.Finger",
-            "trial_type.Foot"
-          ],
-          "Weights": [
-            1,
-            -1
-          ],
-          "Test": "t"
-        },
-        {
-          "Name": "fingervlips",
-          "ConditionList": [
-            "trial_type.Finger",
-            "trial_type.Lips"
-          ],
-          "Weights": [
-            1,
-            -1
-          ],
-          "Test": "t"
-        },
-        {
-          "Name": "footvlips",
-          "ConditionList": [
-            "trial_type.Foot",
-            "trial_type.Lips"
-          ],
-          "Weights": [
-            1,
-            -1
-          ],
-          "Test": "t"
-        }
+          {
+              "Name": "finger",
+              "ConditionList": [
+                  "trial_type.Finger"
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "foot",
+              "ConditionList": [
+                  "trial_type.Foot"
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "lips",
+              "ConditionList": [
+                  "trial_type.Lips"
+              ],
+              "Weights": [
+                  1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "fingervfoot",
+              "ConditionList": [
+                  "trial_type.Finger",
+                  "trial_type.Foot"
+
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "fingervlips",
+              "ConditionList": [
+                  "trial_type.Finger",
+                  "trial_type.Lips"
+
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "footvlips",
+              "ConditionList": [
+                  "trial_type.Foot",
+                  "trial_type.Lips"
+
+              ],
+              "Weights": [
+                  1,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "footlipsvfinger",
+              "ConditionList": [
+                  "trial_type.Foot",
+                  "trial_type.Lips",
+                  "trial_type.Finger"
+
+
+              ],
+              "Weights": [
+                  0.5,
+                  0.5,
+                  -1
+              ],
+              "Test": "t"
+          },
+          {
+              "Name": "fingerlipsvfoot",
+              "ConditionList": [
+                  "trial_type.Finger",
+                  "trial_type.Lips",
+                  "trial_type.Foot"
+
+
+              ],
+              "Weights": [
+                  0.5,
+                  0.5,
+                  -1
+              ],
+              "Test": "t"
+          }
       ]
     },
     {

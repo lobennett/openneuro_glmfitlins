@@ -1,0 +1,95 @@
+{
+    "Subjects": [
+        "01",
+        "02",
+        "03",
+        "04",
+        "05",
+        "06",
+        "07",
+        "08",
+        "09",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30",
+        "31",
+        "32",
+        "33"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "faceidentityoddball": {
+            "plot_coords": [
+                50,
+                -54,
+                30
+            ],
+            "bold_volumes": 154,
+            "dummy_volumes": null,
+            "preproc_events": true,
+            "task_runs": [
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "float64",
+                "duration": "float64",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                "+fill0",
+                "+fill1",
+                "+fill2",
+                "friend1",
+                "oddball1",
+                "motor",
+                "self",
+                "control2",
+                "control3",
+                "control4",
+                "friend4",
+                "blank",
+                "control1",
+                "friend3",
+                "friend2",
+                "oddball4",
+                "oddball3",
+                "oddball2",
+                "+fill3"
+            ]
+        }
+    }
+}

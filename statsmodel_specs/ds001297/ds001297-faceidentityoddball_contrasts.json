@@ -1,0 +1,85 @@
+{
+    "Contrasts": [
+        {
+            "Name": "friendvcontrol",
+            "ConditionList": [
+                "trial_type.friend",
+                "trial_type.control"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "selfvfriends",
+            "ConditionList": [
+                "trial_type.self",
+                "trial_type.friend"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "selfvcontrol",
+            "ConditionList": [
+                "trial_type.self",
+                "trial_type.control"
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },{
+            "Name": "friendvoddball",
+            "ConditionList": [
+                "trial_type.friend",
+                "trial_type.oddball"
+
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "controlvoddball",
+            "ConditionList": [
+                "trial_type.control",
+                "trial_type.oddball"
+
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "motor",
+            "ConditionList": [
+                "trial_type.motor"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "buffer",
+            "ConditionList": [
+                "trial_type.fill"
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        }
+    ]
+}

@@ -138,7 +138,7 @@ else:
 
 
 # check subjects events files
-print("Checking missing events files across subjects, runs and/or sessions. This will take a moment.")
+print("\n\nChecking missing events files across subjects, runs and/or sessions. This will take a moment.")
 inpdir_layout = BIDSLayout(eventspath, derivatives=False)
 
 _ = eval_missing_events(dir_layout=inpdir_layout, taskname=taskname)

@@ -3,19 +3,19 @@
 
 **Curator & Maintainer**: Michael Demidenko  
 
-<small>*While I created this repo, it is only made possible by those who made their data publicly available, the awesome people who have worked on and continue to work on OpenNeuro, BIDS Stats Models and Fitlins.*</small>
+>> *This repository would not be possible if researchers did not make their task fMRI data publicly available, and the awesome people who have worked on and continue to work on OpenNeuro, BIDS Stats Models and Fitlins.*
 
 **Contact**: [demidenko.michael@gmail.com](mailto:demidenko.michael@gmail.com)
 
-*This repository is in active development. `Last updated: 2025-05-09`*
+*This repository is in active development. `Last updated: 2025-05-10`*
 
 
 
 N OpenNeuro Studies: 23
 
-N OpenNeuro Task fMRI Group Summaries: 35
+N OpenNeuro Task fMRI Group Summaries: 36
 
-Completed fMRI Task Names: ParallelAdaptation, wm, em, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, task, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, task, balloonanalogrisktask, objectviewing, dts, retrieval, encoding, flavor, flanker
+Completed fMRI Task Names: ParallelAdaptation, wm, em, regulate, prelearning, training, learning, mixedgamblestask, MGT, illusion, Emotionregulation, stopsignal, conditionalstopsignal, figure2backwith1backlures, reversalweatherprediction, weatherprediction, overtwordrepetition, overtverbgeneration, linebisection, covertverbgeneration, fingerfootlips, theoryofmindwithmanualresponse, task, mixedeventrelatedprobe, probabilisticclassification, deterministicclassification, ChangeDetection, task, balloonanalogrisktask, faceidentityoddball, objectviewing, dts, retrieval, encoding, flavor, flanker
 
 ## Overview
 

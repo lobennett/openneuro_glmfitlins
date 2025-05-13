@@ -1,0 +1,137 @@
+{
+  "Name": "ds000170",
+  "BIDSModelVersion": "1.0.0",
+  "Input": {
+    "subject": [
+      "1700",
+      "1701",
+      "1702",
+      "1707",
+      "1708",
+      "1709",
+      "1710",
+      "1712",
+      "1713",
+      "1714",
+      "1715",
+      "1716",
+      "1717",
+      "1718"
+    ],
+    "task": [
+      "TrainedHandUntrainedSequence"
+    ],
+    "run": [
+      1,
+      2,
+      3
+    ]
+  },
+  "Nodes": [
+    {
+      "Level": "Run",
+      "Name": "run_level",
+      "GroupBy": [
+        "run",
+        "subject"
+      ],
+      "Transformations": {
+        "Transformer": "pybids-transforms-v1",
+        "Instructions": [
+          {
+            "Name": "Factor",
+            "Input": [
+              "trial_type"
+            ]
+          },
+          {
+            "Name": "Convolve",
+            "Model": "spm",
+            "Input": [
+              "trial_type.Perf_1",
+              "trial_type.Perf_2"
+            ]
+          }
+        ]
+      },
+      "Model": {
+        "X": [
+          1,
+          "trial_type.Perf_1",
+          "trial_type.Perf_2",
+          "trans_*",
+          "rot_*",
+          "cosine*"
+        ],
+        "Type": "glm"
+      },
+      "Contrasts": [
+        {
+          "Name": "perf1",
+          "ConditionList": [
+            "trial_type.Perf_1"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "perf2",
+          "ConditionList": [
+            "trial_type.Perf_2"
+          ],
+          "Weights": [
+            1
+          ],
+          "Test": "t"
+        },
+        {
+          "Name": "perf2v1",
+          "ConditionList": [
+            "trial_type.Perf_2",
+            "trial_type.Perf_1"
+          ],
+          "Weights": [
+            1,
+            -1
+          ],
+          "Test": "t"
+        }
+      ]
+    },
+    {
+      "Level": "Subject",
+      "Name": "subject_level",
+      "GroupBy": [
+        "subject",
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    },
+    {
+      "Level": "Dataset",
+      "Name": "data_level",
+      "GroupBy": [
+        "contrast"
+      ],
+      "Model": {
+        "X": [
+          1
+        ],
+        "Type": "glm"
+      },
+      "DummyContrasts": {
+        "Test": "t"
+      }
+    }
+  ]
+}

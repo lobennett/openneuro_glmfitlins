@@ -1,0 +1,36 @@
+{
+    "Contrasts": [
+        {
+            "Name": "perf1",
+            "ConditionList": [
+                "trial_type.Perf_1"            
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "perf2",
+            "ConditionList": [
+                "trial_type.Perf_2"            
+            ],
+            "Weights": [
+                1
+            ],
+            "Test": "t"
+        },
+        {
+            "Name": "perf2v1",
+            "ConditionList": [
+                "trial_type.Perf_2",
+                "trial_type.Perf_1"            
+            ],
+            "Weights": [
+                1,
+                -1
+            ],
+            "Test": "t"
+        }
+    ]
+}

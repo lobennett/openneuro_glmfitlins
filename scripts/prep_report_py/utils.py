@@ -518,12 +518,22 @@ def eval_missing_events(dir_layout, taskname):
             subject_counts = {}
             
             # Count event files for each subject in this session
-            for event_file in events_list:
-                subject = event_file.entities['subject']
-                if subject in subject_counts:
-                    subject_counts[subject] += 1
-                else:
-                    subject_counts[subject] = 1
+            for i, event_file in enumerate(events_list):
+                try:
+                    # Access the subject directly with error handling
+                    subject = event_file.entities['subject']
+                    
+                    if subject in subject_counts:
+                        subject_counts[subject] += 1
+                    else:
+                        subject_counts[subject] = 1
+                except (AttributeError, KeyError, IndexError) as e:
+                    print(f"Error accessing subject for event file at index {event_file}: {e}")
+                    if i < len(events_list) - 1:
+                        print("Attempting to continue with next file...")
+                    else:
+                        print("No more files to process.")
+                    continue
             
             # Calculate statistics for this session
             max_events = max(subject_counts.values()) if subject_counts else 0
@@ -593,12 +603,22 @@ def eval_missing_events(dir_layout, taskname):
         subject_counts = {}
         
         # Count event files for each subject
-        for event_file in events_list:
-            subject = event_file.entities['subject']
-            if subject in subject_counts:
-                subject_counts[subject] += 1
-            else:
-                subject_counts[subject] = 1
+        for i, event_file in enumerate(events_list):
+                try:
+                    # Access the subject directly with error handling
+                    subject = event_file.entities['subject']
+                    
+                    if subject in subject_counts:
+                        subject_counts[subject] += 1
+                    else:
+                        subject_counts[subject] = 1
+                except (AttributeError, KeyError, IndexError) as e:
+                    print(f"Error accessing subject for event file {event_file}: {e}")
+                    if i < len(events_list) - 1:
+                        print("Attempting to continue with next file...")
+                    else:
+                        print("No more files to process.")
+                    continue
         
         # Calculate statistics
         max_events = max(subject_counts.values()) if subject_counts else 0

@@ -1,0 +1,170 @@
+{
+    "Subjects": [
+        "1700",
+        "1701",
+        "1702",
+        "1707",
+        "1708",
+        "1709",
+        "1710",
+        "1712",
+        "1713",
+        "1714",
+        "1715",
+        "1716",
+        "1717",
+        "1718",
+        "1719"
+    ],
+    "Sessions": [],
+    "Tasks": {
+        "TrainedHandTrainedSequence": {
+            "plot_coords": [
+                -36,
+                2,
+                55
+            ],
+            "bold_volumes": 45,
+            "dummy_volumes": null,
+            "preproc_events": false,
+            "task_runs": [
+                1,
+                2,
+                3
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "name",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "int64",
+                "duration": "int64",
+                "name": "object",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                NaN,
+                "Start_1",
+                "Perf_1",
+                "Stop_1",
+                "Start_2",
+                "Perf_2",
+                "Stop_2"
+            ]
+        },
+        "TrainedHandUntrainedSequence": {
+            "plot_coords": [
+                -36,
+                2,
+                55
+            ],
+            "bold_volumes": 45,
+            "dummy_volumes": null,
+            "preproc_events": false,
+            "task_runs": [
+                1,
+                2,
+                3
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "name",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "int64",
+                "duration": "int64",
+                "name": "object",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                NaN,
+                "Start_1",
+                "Perf_1",
+                "Stop_1",
+                "Start_2",
+                "Perf_2",
+                "Stop_2"
+            ]
+        },
+        "UntrainedHandTrainedSequence": {
+            "plot_coords": [
+                -36,
+                2,
+                55
+            ],
+            "bold_volumes": 45,
+            "dummy_volumes": null,
+            "preproc_events": false,
+            "task_runs": [
+                1,
+                2,
+                3
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "name",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "int64",
+                "duration": "int64",
+                "name": "object",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                NaN,
+                "Start_1",
+                "Perf_1",
+                "Stop_1",
+                "Start_2",
+                "Perf_2",
+                "Stop_2"
+            ]
+        },
+        "UntrainedHandUntrainedSequence": {
+            "plot_coords": [
+                -36,
+                2,
+                55
+            ],
+            "bold_volumes": 45,
+            "dummy_volumes": null,
+            "preproc_events": false,
+            "task_runs": [
+                1,
+                2,
+                3
+            ],
+            "task_sessions": [],
+            "column_names": [
+                "onset",
+                "duration",
+                "name",
+                "trial_type"
+            ],
+            "column_data_types": {
+                "onset": "int64",
+                "duration": "int64",
+                "name": "object",
+                "trial_type": "object"
+            },
+            "trial_type_values": [
+                NaN,
+                "Start_1",
+                "Perf_1",
+                "Stop_1",
+                "Start_2",
+                "Perf_2",
+                "Stop_2"
+            ]
+        }
+    }
+}

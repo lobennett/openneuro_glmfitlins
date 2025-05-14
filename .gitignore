@@ -1,3 +1,9 @@
+# VSCode Settings
+.vscode/
+
+# Input directories
+data/
+
 # Python-generated files
 *.ipynb_checkpoints*
 __pycache__/

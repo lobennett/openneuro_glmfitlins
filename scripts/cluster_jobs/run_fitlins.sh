@@ -8,7 +8,7 @@
 # Output and notifications
 #SBATCH --output=./logs/fitlins.%A_%a.out
 #SBATCH --error=./logs/fitlins.%A_%a.err
-#SBATCH --mail-user=demidenm@stanford.edu
+#SBATCH --mail-user=logben@stanford.edu
 #SBATCH --mail-type=ALL
 
 # Prevent SLURM jobs runaway errors, i.e instances where more threads are ran than requested

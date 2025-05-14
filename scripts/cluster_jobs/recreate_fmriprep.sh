@@ -9,7 +9,7 @@
 # Outputs ----------------------------------
 #SBATCH --output=./logs/regen_fmriprep.%A_%a.out
 #SBATCH --error=./logs/regen_fmriprep.%A_%a.err
-#SBATCH --mail-user=demidenm@stanford.edu
+#SBATCH --mail-user=logben@stanford.edu
 #SBATCH --mail-type=ALL
 # ------------------------------------------
 
